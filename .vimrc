@@ -144,7 +144,9 @@ let g:qb_hotkey = "<Space>b"
 
 "----------------------------------------
 " neocomplete.vim
-let g:neocomplcache_enable_at_startup = 1
+if v:version >= 702
+    let g:neocomplcache_enable_at_startup = 1
+endif
 
 "----------------------------------------
 " quickrun.vim
