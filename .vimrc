@@ -149,7 +149,7 @@ let g:neocomplcache_enable_at_startup = 1
 "----------------------------------------
 " quickrun.vim
 "let g:quickrun_no_default_key_mappings = 0
-silent! nnoremap <unique> <Space>r <Plug>(quickrun)
+"silent! nnoremap <Space>r <Plug>(quickrun)
 
 "----------------------------------------
 " savevers.vim
