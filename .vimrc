@@ -2,10 +2,9 @@ syntax on
 if has('win32')
     colorscheme user_color      "カラースキーム設定
 endif
-if has('mac')
+if has('unix')
     colorscheme desert          "カラースキーム設定
 endif
-colorscheme desert          "カラースキーム設定
 
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
@@ -53,7 +52,7 @@ nnoremap j gj
 nnoremap k gk
 nnoremap l zv<Right>
 
-if has('mac')
+if has('unix')
     nnoremap Y y$
 "nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
 "vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
@@ -150,7 +149,7 @@ let g:neocomplcache_enable_at_startup = 1
 "----------------------------------------
 " quickrun.vim
 "let g:quickrun_no_default_key_mappings = 0
-silent! nnoremap <unique> <Space>c <Plug>(quickrun)
+silent! nnoremap <unique> <Space>r <Plug>(quickrun)
 
 "----------------------------------------
 " savevers.vim
