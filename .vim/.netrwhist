@@ -1,7 +1,9 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_cnt =7
 let g:netrw_dirhist_1='/Users/yanagikenji/.vim/bundle'
 let g:netrw_dirhist_2='/Users/yanagikenji/.vim'
 let g:netrw_dirhist_3='/Users/yanagikenji'
 let g:netrw_dirhist_4='/usr/share/vim/vim73/autoload'
 let g:netrw_dirhist_5='/usr/share/vim/vim73'
+let g:netrw_dirhist_6='/Users/yanagikenji/.vim'
+let g:netrw_dirhist_7='/Users/yanagikenji'
