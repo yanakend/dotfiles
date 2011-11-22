@@ -16,4 +16,5 @@
 
 /.vim/backup/*
 /.vim/swap/*
+/.vim/.netrwhist
 /.vim/.netrwhist.clean

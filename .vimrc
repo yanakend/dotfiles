@@ -28,8 +28,8 @@ set smartcase
 set showcmd                         " 入力中のコマンドをステータスに表示する
 set laststatus=2                    " ステータスラインを常に表示
 set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l/%L:%p%%>
-set autoindent
-set cindent
+"set autoindent
+"set cindent
 "set shellslash                      "Windowsでディレクトリパスの区切り文字表示に / を使えるようにする
 set ambiwidth=double                "□や○の文字があってもカーソル位置がずれないようにする
 set whichwrap=b,s,[,],<,>           "カーソルキーで行末／行頭の移動可能に設定
@@ -109,6 +109,8 @@ command!                 UTF8 edit ++enc=utf-8
 command!                 Jis Iso2022jp
 command!                 Sjis Cp932
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
+autocmd FileType * setlocal formatoptions-=ro " 挿入モードで改行した時に # を自動挿入しない ノーマルモードで o や O をした時に # を自動挿入しない
+autocmd FileType *.html.php setlocal tabstop=2
 
 "----------------------------------------
 " function
