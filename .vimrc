@@ -10,7 +10,7 @@ set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set guioptions=mr
 
-set nocompatible                    iとの互換性を取らない
+set nocompatible                    " viとの互換性を取らない
 set number                          " 行数表示
 set hlsearch                        " 索文字列を色づけ
 set ignorecase                      " 文字小文字を判別しない
@@ -28,7 +28,7 @@ set smartcase
 set showcmd                         " 入力中のコマンドをステータスに表示する
 set laststatus=2                    " ステータスラインを常に表示
 set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l/%L:%p%%>
-"set autoindent
+set autoindent
 set cindent
 "set shellslash                      " Windowsでディレクトリパスの区切り文字表示に / を使えるようにする
 set ambiwidth=double                " □や○の文字があってもカーソル位置がずれないようにする
@@ -81,7 +81,7 @@ if has('win32')
     vnoremap X "+X
 endif
 
-nnoremap <C-]> :noh<CR>
+nnoremap <C-[> :noh<CR>
 nnoremap ZZ <Nop>
 
 nnoremap <Space>e  :Exp<CR>
@@ -121,7 +121,7 @@ command!                 Jis        Iso2022jp
 command!                 Sjis       Cp932
 command!                 Vimrc      50split ~/.vimrc|setlocal bufhidden=delete|setlocal nobuflisted
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
-autocmd FileType *.html.php setlocal tabstop=2
+"autocmd FileType *.html.php setlocal tabstop=2
 
 "----------------------------------------
 " function
