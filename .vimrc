@@ -1,41 +1,41 @@
 syntax on
 if has('win32')
-    colorscheme user_color      "カラースキーム設定
+    colorscheme user_color          "カラースキーム設定
 endif
 if has('unix')
-    colorscheme desert          "カラースキーム設定
+    colorscheme desert              "カラースキーム設定
 endif
 
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set guioptions=mr
 
-set nocompatible                    "viとの互換性を取らない
-set number                          "行数表示
-set hlsearch                        "検索文字列を色づけ
-set ignorecase                      "大文字小文字を判別しない
-set incsearch                       "インクリメンタルサーチ
-set nowrapscan                      "検索をファイルの末尾まで検索したら、ファイルの先頭へループする
-set noterse                         "ファイルの端まで検索してしまったときのメッセージが表示しない
-set smartcase                       "でも大文字小文字が混ざって入力されたら区別する
-set tabstop=4                       "4タブ
-set shiftwidth=4                    "4タブ
-set expandtab                       "タブを空白に
-set wrap!                           "折り返さない
-set cmdheight=1                     "コマンドラインの高さ(GUI使用時)
+set nocompatible                    iとの互換性を取らない
+set number                          " 行数表示
+set hlsearch                        " 索文字列を色づけ
+set ignorecase                      " 文字小文字を判別しない
+set incsearch                       " インクリメンタルサーチ
+set nowrapscan                      " 検索をファイルの末尾まで検索したら、ファイルの先頭へループする
+set noterse                         " ファイルの端まで検索してしまったときのメッセージが表示しない
+set smartcase                       " でも大文字小文字が混ざって入力されたら区別する
+set tabstop=4                       " 4タブ
+set shiftwidth=4                    " 4タブ
+set expandtab                       " タブを空白に
+set wrap!                           " 折り返さない
+set cmdheight=1                     " コマンドラインの高さ(GUI使用時)
 set ignorecase
 set smartcase
 set showcmd                         " 入力中のコマンドをステータスに表示する
 set laststatus=2                    " ステータスラインを常に表示
 set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l/%L:%p%%>
 "set autoindent
-"set cindent
-"set shellslash                      "Windowsでディレクトリパスの区切り文字表示に / を使えるようにする
-set ambiwidth=double                "□や○の文字があってもカーソル位置がずれないようにする
-set whichwrap=b,s,[,],<,>           "カーソルキーで行末／行頭の移動可能に設定
-set vb t_vb=                        "ビープ音を鳴らさない
+set cindent
+"set shellslash                      " Windowsでディレクトリパスの区切り文字表示に / を使えるようにする
+set ambiwidth=double                " □や○の文字があってもカーソル位置がずれないようにする
+set whichwrap=b,s,[,],<,>           " カーソルキーで行末／行頭の移動可能に設定
+set vb t_vb=                        " ビープ音を鳴らさない
 set title                           " タイトルをウインドウ枠に表示する
-set hidden                          " バッファを切替えてもundoの効力を失わない
+" バッファを切替えてもundoの効力を失わない
 set shortmess+=I                    " 起動時のメッセージを表示しない
 
 set backup
@@ -44,6 +44,10 @@ set backupdir=~/.vim/backup
 set directory=~/.vim/swap
 set imsearch=0
 set iminsert=0
+set formatoptions-=ro
+
+set diffopt=filler,vertical,foldcolumn:0
+"zi do dp [c ]c diffoff!
 
 "----------------------------------------
 " map
@@ -54,11 +58,10 @@ nnoremap l zv<Right>
 
 if has('unix')
     nnoremap Y y$
-"nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
-"vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
-"nnoremap <silent> <Space>p :r !pbpaste<CR>
-"vnoremap <silent> <Space>p :r !pbpaste<CR>
-
+    "nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
+    "vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
+    "nnoremap <silent> <Space>p :r !pbpaste<CR>
+    "vnoremap <silent> <Space>p :r !pbpaste<CR>
 endif
 if has('win32')
     nnoremap y "+y
@@ -73,6 +76,9 @@ if has('win32')
     vnoremap x "+x
     nnoremap X "_X
     vnoremap X "+X
+    inoremap <C-v> <C-R>+
+    cnoremap <C-v> <C-R>+
+    vnoremap X "+X
 endif
 
 nnoremap <C-]> :noh<CR>
@@ -82,34 +88,39 @@ nnoremap <Space>e  :Exp<CR>
 nnoremap <Space>d  :Kwbd<CR>
 nnoremap <Space>w  :write<CR>
 nnoremap <Space>m  :MRU<CR>
-nnoremap <Space>g  :Grep<CR>
+nnoremap <Space>g  :GrepT<CR>
 nnoremap <Space>td :Td<CR>
 nnoremap <Space>tl :Tl<CR>
-
-nnoremap <C-h>     <C-w>h
-nnoremap <C-j>     <C-w>j
-nnoremap <C-k>     <C-w>k
-nnoremap <C-l>     <C-w>l
+nnoremap <Space>v  :Vimrc<CR>
 
 nnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
 vnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
 vnoremap <silent> /  :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
 nnoremap <C-g> `.
 
+cnoremap <C-a>     <Home>
+cnoremap <C-f>     <Right>
+cnoremap <C-b>     <Left>
+cnoremap <M-w>     <Home>\<<End>\><Left><Left>
+cnoremap <M-c>     <End>\C
+
+vnoremap <         <gv
+vnoremap >         >gv
+
 "----------------------------------------
 " command
-command!                 Td    :silent !start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff              /path:"%" /notempfile /closeonend<CR>
-command!                 Tl    :silent !start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log               /path:"%" /notempfile /closeonend<CR>
-command!                 Kwbd  let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn 
-command!                 Grep  :silent !"C:\Program Files\Yokka\NoEditor\Grep.exe.lnk"<CR>
-command!                 Cp932 edit ++enc=cp932
-command!                 Eucjp edit ++enc=euc-jp
-command!                 Iso2022jp edit ++enc=iso-2022-jp
-command!                 UTF8 edit ++enc=utf-8
-command!                 Jis Iso2022jp
-command!                 Sjis Cp932
+command!                 Td         :silent !start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff              /path:"%" /notempfile /closeonend<CR>
+command!                 Tl         :silent !start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log               /path:"%" /notempfile /closeonend<CR>
+command!                 Kwbd       let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn 
+command!                 GrepT      :silent !"C:\Program Files\Yokka\NoEditor\Grep.exe.lnk"<CR>
+command!                 Cp932      edit ++enc=cp932
+command!                 Eucjp      edit ++enc=euc-jp
+command!                 Iso2022jp  edit ++enc=iso-2022-jp
+command!                 UTF8       edit ++enc=utf-8
+command!                 Jis        Iso2022jp
+command!                 Sjis       Cp932
+command!                 Vimrc      50split ~/.vimrc|setlocal bufhidden=delete|setlocal nobuflisted
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
-autocmd FileType * setlocal formatoptions-=ro " 挿入モードで改行した時に # を自動挿入しない ノーマルモードで o や O をした時に # を自動挿入しない
 autocmd FileType *.html.php setlocal tabstop=2
 
 "----------------------------------------
@@ -119,17 +130,17 @@ autocmd FileType *.html.php setlocal tabstop=2
 "何か追加パラメータが設定されていたら、単語単位検索に。
 """"""""""""""""""""""""""""""
 function! MySetSearch(cmd, ...)
-  let saved_reg = @"
-  if a:cmd != ''
+    let saved_reg = @"
+    if a:cmd != ''
     silent exec 'normal! '.a:cmd
-  endif
-  let pattern = escape(@", '\\/.*$^~[]')
-  let pattern = substitute(pattern, '\n$', '', '')
-  if a:0 > 0
+    endif
+    let pattern = escape(@", '\\/.*$^~[]')
+    let pattern = substitute(pattern, '\n$', '', '')
+    if a:0 > 0
     let pattern = '\<'.pattern.'\>'
-  endif
-  let @/ = pattern
-  let @" = saved_reg
+    endif
+    let @/ = pattern
+    let @" = saved_reg
 endfunction 
 
 "----------------------------------------
