@@ -121,7 +121,8 @@ command!                 Jis        Iso2022jp
 command!                 Sjis       Cp932
 command!                 Vimrc      50split ~/.vimrc|setlocal bufhidden=delete|setlocal nobuflisted
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
-"autocmd FileType *.html.php setlocal tabstop=2
+autocmd FileType *.html.php setlocal tabstop=2 shiftwidth=2
+autocmd FileType *.css setlocal tabstop=2 shiftwidth=2
 
 "----------------------------------------
 " function
