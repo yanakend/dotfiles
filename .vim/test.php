@@ -1,3 +1,3 @@
 <?php
 
-echo 'ah';
+echo 'Hello CyberX!';
