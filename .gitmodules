@@ -8,3 +8,6 @@
 	path = .vim/bundle/zencoding
 	url = git://github.com/mattn/zencoding-vim.git
 
+[submodule ".vim/bundle/qfixhowm"]
+	path = .vim/bundle/qfixhowm
+	url = git://github.com/fuenor/qfixhowm.git

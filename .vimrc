@@ -11,7 +11,7 @@ set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set guioptions=mr
 
 set nocompatible                    " viとの互換性を取らない
-set number                          " 行数表示
+set nonumber                        " 行数表示
 set hlsearch                        " 索文字列を色づけ
 set ignorecase                      " 文字小文字を判別しない
 set incsearch                       " インクリメンタルサーチ
@@ -21,7 +21,7 @@ set smartcase                       " でも大文字小文字が混ざって入
 set tabstop=4                       " 4タブ
 set shiftwidth=4                    " 4タブ
 set expandtab                       " タブを空白に
-set wrap!                           " 折り返さない
+set nowrap                          " 折り返さない
 set cmdheight=1                     " コマンドラインの高さ(GUI使用時)
 set ignorecase
 set smartcase
@@ -36,7 +36,7 @@ set whichwrap=b,s,[,],<,>           " カーソルキーで行末／行頭の移
 set vb t_vb=                        " ビープ音を鳴らさない
 set title                           " タイトルをウインドウ枠に表示する
 " バッファを切替えてもundoの効力を失わない
-set shortmess+=I                    " 起動時のメッセージを表示しない
+"set shortmess+=I                    " 起動時のメッセージを表示しない
 
 set backup
 set writebackup
@@ -88,10 +88,11 @@ nnoremap <Space>e  :Exp<CR>
 nnoremap <Space>d  :Kwbd<CR>
 nnoremap <Space>w  :write<CR>
 nnoremap <Space>m  :MRU<CR>
-nnoremap <Space>g  :GrepT<CR>
+"nnoremap <Space>g  :GrepT<CR>
+nnoremap <Space>g  :<Up><Home>
 nnoremap <Space>td :Td<CR>
 nnoremap <Space>tl :Tl<CR>
-nnoremap <Space>v  :Vimrc<CR>
+nnoremap <Space>v  :e ~/.vimrc<CR>
 
 nnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
 vnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
@@ -101,8 +102,7 @@ nnoremap <C-g> `.
 cnoremap <C-a>     <Home>
 cnoremap <C-f>     <Right>
 cnoremap <C-b>     <Left>
-cnoremap <M-w>     <Home>\<<End>\><Left><Left>
-cnoremap <M-c>     <End>\C
+cnoremap <C-d>     <Delete>
 
 vnoremap <         <gv
 vnoremap >         >gv
@@ -119,7 +119,6 @@ command!                 Iso2022jp  edit ++enc=iso-2022-jp
 command!                 UTF8       edit ++enc=utf-8
 command!                 Jis        Iso2022jp
 command!                 Sjis       Cp932
-command!                 Vimrc      50split ~/.vimrc|setlocal bufhidden=delete|setlocal nobuflisted
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
 autocmd FileType *.html.php setlocal tabstop=2 shiftwidth=2
 autocmd FileType *.css setlocal tabstop=2 shiftwidth=2
@@ -178,3 +177,7 @@ nnoremap <silent> <Space>sd- :VersDiff -<cr>
 nnoremap <silent> <Space>sd+ :VersDiff +<cr>
 nnoremap <silent> <Space>sdc :VersDiff -c<cr>
 
+
+set runtimepath+=~/.vim/bundle/qfixapp
+
+let MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|[/\\]\.svn[/\\]'

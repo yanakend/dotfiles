@@ -1,12 +1,11 @@
 "=============================================================================
 "    Description: QFixPreview
 "                 Preview, sortings and advanced search for Quickfix.
-"         Author: Futoshi Ueno <fuenor@gmail.com>
+"         Author: fuenor <fuenor@gmail.com>
 "                 http://sites.google.com/site/fudist/Home  (Japanese)
-"  Last Modified: 2011-11-02 23:57
 "=============================================================================
 scriptencoding utf-8
-let s:Version = 2.87
+let s:Version = 2.90
 
 " What Is This:
 "   This plugin adds preview, sortings and advanced search to your quickfix window.
@@ -35,23 +34,25 @@ let s:Version = 2.87
 "   | u | Undo
 "   | U | Undo all
 "
+"   | & | Copy to Location list
 "   | A | Save
 "   | O | Restore
 "=============================================================================
-if exists('disable_QFixWin') && disable_QFixWin == 1
+if exists('g:disable_QFixWin') && g:disable_QFixWin == 1
   finish
 endif
 if exists('g:QFixWin_version') && g:QFixWin_version < s:Version
-  unlet loaded_QFixWin
+  let g:loaded_QFixWin = 0
 endif
-if exists("loaded_QFixWin") && !exists('g:fudist')
-  finish
-endif
-if v:version < 700 || &cp || !has('quickfix')
+if exists("g:loaded_QFixWin") && g:loaded_QFixWin && !exists('g:fudist')
   finish
 endif
 let g:QFixWin_version = s:Version
-let loaded_QFixWin = 1
+let g:loaded_QFixWin = 1
+if v:version < 700 || &cp || !has('quickfix')
+  finish
+endif
+let s:debug = exists('g:fudist') ? g:fudist : 0
 
 " ロケーションリスト使用
 if !exists('g:QFix_UseLocationList')
@@ -85,6 +86,9 @@ endif
 if !exists('g:QFix_PreviewWidth')
   let g:QFix_PreviewWidth = 0
 endif
+if !exists('g:QFix_PreviewHeight')
+  " let g:QFix_PreviewHeight = &previewheight'
+endif
 " プレビューウィンドウの折り返し
 if !exists('g:QFix_PreviewWrap')
   let g:QFix_PreviewWrap = 1
@@ -101,6 +105,10 @@ endif
 if !exists('g:QFix_Edit')
   let g:QFix_Edit = ''
 endif
+" QFixWin独自の<CR>コマンドを使用する
+if !exists('g:QFix_UseAltCR')
+  " let g:QFix_UseAltCR = 1
+endif
 " ファイルを開くとQuickfixウィンドウを閉じる
 if !exists('g:QFix_CloseOnJump')
   let g:QFix_CloseOnJump = 0
@@ -115,18 +123,14 @@ if !exists('g:QFix_PreviewExclude')
 endif
 
 " プレビューする間隔
-" (この値で判定しているのでユニークな奇数を推奨)
+" (この値でプレビューが有効か判定しているのでユニーク値を推奨)
 if !exists('g:QFix_PreviewUpdatetime')
-  let g:QFix_PreviewUpdatetime = 13
+  let g:QFix_PreviewUpdatetime = 17
 endif
+let g:QFix_DefaultUpdatetime = &updatetime
 " ファイル名取得の高速化
 if !exists('g:QFix_HighSpeedPreview')
   let g:QFix_HighSpeedPreview = 0
-endif
-
-" Quickfixウィンドウのサイズをキープする
-if !exists('g:QFix_HeightFixMode')
-  let g:QFix_HeightFixMode = 0
 endif
 
 " プレビューウィンドウタイトル
@@ -152,10 +156,13 @@ if !exists('g:QFix_Preview_winfixheight')
   let g:QFix_Preview_winfixheight = 1
 endif
 if !exists('g:QFix_Preview_winfixwidth')
-  let g:QFix_Preview_winfixwidth  = 1
+  let g:QFix_Preview_winfixwidth  = 0
 endif
 if !exists('g:QFix_TabEditMode')
   let g:QFix_TabEditMode = 1
+endif
+if !exists('g:QFix_SearchPathMode')
+  let g:QFix_SearchPathMode = 1
 endif
 
 """"""""""""""""""""""""""""""
@@ -172,7 +179,6 @@ command! -count OpenQFixWin call OpenQFixWin(<line2>-<line1>+1)
 command! CloseQFixWin call QFixCclose()
 command! -count ToggleQFixWin call ToggleQFixWin(<line2>-<line1>+1)
 command! -count MoveToQFixWin call MoveToQFixWin(<line2>-<line1>+1)
-command! -count ResizeQFixWin call ResizeQFixWin(<line2>-<line1>+1)
 command! -nargs=* -bang QFixCopen call QFixCopen(<q-args>, <bang>0)
 command! QFixCclose   call QFixCclose()
 command! -count ResizeOnQFix call ResizeOnQFix(<count>)
@@ -184,10 +190,7 @@ command! -nargs=* FList call s:FL(<q-args>)
 """"""""""""""""""""""""""""""
 " 内部変数
 """"""""""""""""""""""""""""""
-let s:debug = 0
-if exists('g:fudist') && g:fudist
-  let s:debug = 1
-else
+if !s:debug
   "デフォルトで使用させない
   let g:QFix_HighSpeedPreview = 0
 endif
@@ -201,7 +204,6 @@ if !exists('g:QFixWin_QuickFixTitleReg')
 endif
 
 let g:QFix_Win = -1
-let g:QFix_DefaultUpdatetime = &updatetime
 
 let s:QFix_PreviewWin = -1
 let s:QFixPreviewfile = ''
@@ -216,14 +218,15 @@ let g:QFix_HSPSearchPath = ''
 let g:QFix_Disable = 0
 let g:QFix_Resize = 1
 let g:QFix_PreviewEnableLock = 0
-let g:QFix_PreviousPath = getcwd()
 
 if !exists('g:qfixtempname')
   let g:qfixtempname = tempname()
 endif
 let s:tempdir = fnamemodify(g:qfixtempname, ':p:h')
-silent! function FudistPerf(title)
+if !exists('*FudistPerf')
+function FudistPerf(...)
 endfunction
+endif
 function! FudistEnv()
   if has('unix')
     silent! redir @">
@@ -289,11 +292,7 @@ endfunction
 " QuickFixウィンドウ
 " BufWinEnter
 function! s:QFBufWinEnter(...)
-  if !exists('b:qfixwin_buftype')
-    silent! let info = s:QFixGetBufInfo(bufnr('%'))
-    let b:qfixwin_buftype = info !~ g:QFixWin_QuickFixTitleReg
-  endif
-
+  call s:QFixSetBuftype()
   if b:qfixwin_buftype == g:QFix_UseLocationList
     let g:QFix_Win = expand('<abuf>')
   endif
@@ -317,7 +316,15 @@ function! s:QFBufWinEnter(...)
   nnoremap <buffer> <silent> q :close<CR>
   call QFixAltWincmdMap()
 
-  nnoremap <buffer> <silent> <CR>   :call <SID>BeforeJump()<CR><CR>:call <SID>AfterJump()<CR>
+  if !exists('g:QFix_UseAltCR')
+    let g:QFix_UseAltCR = 1
+  endif
+  if g:QFix_UseAltCR == 1
+    nnoremap <buffer> <silent> <CR>   :call <SID>BeforeJump()<CR><CR>:call <SID>AfterJump()<CR>
+  elseif g:QFix_UseAltCR == 2
+    nnoremap <buffer> <silent> <CR>   :call <SID>BeforeJump()<CR><CR>:call <SID>AfterJump()<CR>
+    vnoremap <buffer> <silent> <CR>   :call <SID>VisCR()<CR>
+  endif
   nnoremap <buffer> <silent> <S-CR> :call <SID>BeforeJump()<CR>:call <SID>QFixSplit()<CR>:call <SID>AfterJump()<CR>
   if g:QFix_Edit == 'tab'
     nnoremap <buffer> <silent> <S-CR> :call <SID>BeforeJump()<CR>:call <SID>QFixEdit()<CR>:call <SID>AfterJump()<CR>
@@ -325,32 +332,47 @@ function! s:QFBufWinEnter(...)
 
   nnoremap <buffer> <silent> <C-w>. :ResizeOnQFix<CR>
   nnoremap <buffer> <silent> i      :<C-u>call <SID>QFixTogglePreview()<CR>
-  nnoremap <buffer> <silent> I      :<C-u>call QFixToggleHighlight()<CR>
-  nnoremap <buffer> <silent> J      :<C-u>call QFixCmd_J()<CR>
+  nnoremap <buffer> <silent> I      :<C-u>call <SID>QFixToggleHighlight()<CR>
+  nnoremap <buffer> <silent> &      :<C-u>call <SID>QFixCmd_LocListCopy('normal')<CR>
+  vnoremap <buffer> <silent> &      :<C-u>call <SID>QFixCmd_LocListCopy('visual')<CR>
+  nnoremap <buffer> <silent> J      :<C-u>call <SID>QFixCmd_J()<CR>
   nnoremap <buffer> <silent> A      :MyGrepWriteResult<CR>
   nnoremap <buffer> <silent> O      :MyGrepReadResult<CR>
+  nnoremap <buffer> <silent> <C-l>  :<C-u>call QFixSetqfShortPath()<CR>:exe 'normal! <C-l>'<CR>
   silent! nnoremap <buffer> <unique> <silent> o :MyGrepWriteResult<CR>
 
   if b:qfixwin_buftype == g:QFix_UseLocationList
     " ハイスピードモードは使えない
     nnoremap <buffer> <silent> <C-h> :<C-u>call <SID>QFixTogglePreviewMode()<CR>
   endif
-  nnoremap <buffer> <silent> r :<C-u>call QFixSearchStringsR()<CR>
-  nnoremap <buffer> <silent> s :<C-u>call QFixSearchStrings()<CR>
-  nnoremap <buffer> <silent> u :<C-u>call QFixRestoreUndo()<CR>
-  nnoremap <buffer> <silent> U :<C-u>call QFixRestoreUndo('init')<CR>
+  nnoremap <buffer> <silent> r :<C-u>call <SID>QFixSearchStringsR()<CR>
+  nnoremap <buffer> <silent> s :<C-u>call <SID>QFixSearchStrings()<CR>
+  nnoremap <buffer> <silent> u :<C-u>call <SID>QFixRestoreUndo()<CR>
+  nnoremap <buffer> <silent> U :<C-u>call <SID>QFixRestoreUndo('init')<CR>
   " S はQFixMemo/Howm定義を上書きしない
   silent! nnoremap <buffer> <unique> <silent> S :<C-u>call QFixSortExec()<CR>
   nnoremap <buffer> <silent> dd :call <SID>QFixDelete()<CR>
   nnoremap <buffer> <silent> p  :call <SID>QFixPut(0)<CR>
   nnoremap <buffer> <silent> P  :call <SID>QFixPut(1)<CR>
   vnoremap <buffer> <silent> d  :call <SID>QFixDelete()<CR>
-  nnoremap <buffer> <silent> Q :<C-u>call QFdofe('', 'normal')<CR>
-  vnoremap <buffer> <silent> Q :<C-u>call QFdofe('', 'visual')<CR>
+  nnoremap <buffer> <silent> Q :<C-u>call <SID>QFdofe('', 'normal')<CR>
+  vnoremap <buffer> <silent> Q :<C-u>call <SID>QFdofe('', 'visual')<CR>
 
   call QFixResize(g:QFix_Height)
+  if &buftype == 'quickfix'
+    let b:qfixwin_height = winheight(0)
+    let b:qfixwin_width  = winwidth(0)
+    let g:QFix_Height = b:qfixwin_height
+  endif
   if exists("*QFixSetupPost")
     call QFixSetupPost()
+  endif
+endfunction
+
+function! s:QFixSetBuftype(...)
+  if &buftype == 'quickfix' && !exists('b:qfixwin_buftype')
+    silent! let info = s:QFixGetBufInfo(bufnr('%'))
+    let b:qfixwin_buftype = info !~ g:QFixWin_QuickFixTitleReg
   endif
 endfunction
 
@@ -379,24 +401,16 @@ endfunction
 
 command! -nargs=1 -count QFixAltWincmd call QFixAltWincmd_(count, <q-args>)
 function! QFixAltWincmd_(cnt, cmd)
-  call QFixPclose()
+  call QFixPclose(1)
   let cnt = a:cnt == 0 ? 1 : a:cnt
-  exec cnt.'wincmd '.a:cmd
+  exe cnt.'wincmd '.a:cmd
   return
 endfunction
 
 " Quickfix ウィンドウPreview ON/OFF。
 function! s:QFixTogglePreview()
-  if g:QFix_PreviewEnable <= 0
-    let g:QFix_PreviewEnable = 1
-  else
-    let g:QFix_PreviewEnable = 0
-    if winnr('$') == 2
-      wincmd o
-      return
-    endif
-  endif
-  silent! pclose!
+  let g:QFix_PreviewEnable = !g:QFix_PreviewEnable
+  call QFixPclose(1)
 endfunction
 
 " BufEnter
@@ -407,36 +421,40 @@ function! s:QFixBufEnter(...)
         call QFixPclose()
       else
         let winnum = bufwinnr(g:QFix_Win)
-        exec winnum . 'wincmd w'
+        exe winnum . 'wincmd w'
       endif
     endif
     return
   elseif &buftype == 'quickfix'
-    if !exists('b:qfixwin_buftype')
-      silent! let info = s:QFixGetBufInfo(bufnr('%'))
-      let b:qfixwin_buftype = info !~ g:QFixWin_QuickFixTitleReg
-    endif
+    call s:QFixSetBuftype()
     if expand('<abuf>') == g:QFix_Win
+      let w = &lines - winheight(0) - &cmdheight - (&laststatus > 0 ? 1 : 0)
+      if w > 0
+        if exists('b:qfixwin_height') && b:qfixwin_height
+          exe 'resize '. b:qfixwin_height
+        endif
+      endif
+      if exists('b:qfixwin_width') && b:qfixwin_width
+        " exe 'vertical resize '. b:qfixwin_width
+      endif
       if g:QFix_PreviewEnable > 0
         call QFixPclose()
       endif
-      wincmd p
-      let g:QFix_PreviousPath = getcwd()
-      wincmd p
-      call QFixResize(g:QFix_Height)
       if g:QFix_HighSpeedPreview
         let cmd = g:QFix_UseLocationList ? 'lopen' : 'copen'
         exe cmd
       endif
-      exe 'let lnum = g:QFix_SelectedLine'.b:qfixwin_buftype
     endif
   endif
 endfunction
 
 " BufLeave
 function! s:QFixBufLeave(...)
-  if exists('b:qfixwin_buftype')
+  if &buftype == 'quickfix'
     exe 'let g:QFix_SelectedLine'.b:qfixwin_buftype.'='.line('.')
+    let b:qfixwin_height = winheight(0)
+    let b:qfixwin_width  = winwidth(0)
+    let g:QFix_Height = b:qfixwin_height
     call QFixPclose()
   endif
 endfunction
@@ -461,7 +479,7 @@ endfunction
 let s:UndoDic0 = []
 let s:UndoDic1 = []
 " Quickfixウィンドウ用アンドゥ保存
-function! QFixSaveUndo(id, qf, lnum)
+function! s:QFixSaveUndo(id, qf, lnum)
   let id = a:id
   let lnum = a:lnum
   let path = g:QFix_SearchPath
@@ -470,7 +488,7 @@ function! QFixSaveUndo(id, qf, lnum)
 endfunction
 
 " Quickfixウィンドウ用アンドゥ
-function! QFixRestoreUndo(...)
+function! s:QFixRestoreUndo(...)
   let type = b:qfixwin_buftype
   exe 'let dic = s:UndoDic'.type
   if len(dic) == 0
@@ -493,7 +511,6 @@ endfunction
 """"""""""""""""""""""""""""""
 function! s:QFixEdit()
   let qfbuf = bufnr('%')
-  let h = g:QFix_Height
   let qf = QFixGetqflist()
   let bufnum = qf[line('.')-1]['bufnr']
   let lnum = qf[line('.')-1]['lnum']
@@ -506,7 +523,7 @@ function! s:QFixEdit()
   call QFixEditFile(file)
   if g:QFix_TabEditMode == 1
     QFixCopen
-    wincmd p
+    silent! wincmd p
   endif
   return
 endfunction
@@ -526,18 +543,18 @@ function! s:QFixSplit()
   let winnum = bufwinnr(bufnum)
   if g:QFix_CopenCmd !~ 'vertical'
     split
-    exec 'edit ' . escape(file, ' #%')
+    exe 'edit ' . escape(file, ' #%')
   else
     if winnum == -1
       let winnr = QFixWinnr()
       if winnr < 1
       else
-        exec winnr.'wincmd w'
+        exe winnr.'wincmd w'
       endif
       split
-      exec 'edit ' . escape(file, ' #%')
+      exe 'edit ' . escape(file, ' #%')
     else
-      exec winnum.'wincmd w'
+      exe winnum.'wincmd w'
       split
     endif
   endif
@@ -549,14 +566,15 @@ endfunction
 """"""""""""""""""""""""""""""
 " Before <CR>
 """"""""""""""""""""""""""""""
-function! s:BeforeJump() range
-  cal QFixPclose()
+function! s:BeforeJump()
+  call QFixPclose()
   call QFixCR('before')
   if count == 0
     return
   endif
   call cursor(count, 1)
 endfunction
+
 silent! function QFixCR(mode)
 endfunction
 
@@ -565,9 +583,6 @@ endfunction
 """"""""""""""""""""""""""""""
 function! s:AfterJump(...)
   exe "normal! zz"
-  if winheight(0) < g:QFix_WindowHeightMin
-    exec 'resize '. g:QFix_WindowHeightMin
-  endif
   call QFixCR('after')
   if g:QFix_CloseOnJump
     QFixCclose
@@ -575,9 +590,57 @@ function! s:AfterJump(...)
 endfunction
 
 """"""""""""""""""""""""""""""
+" Visual mode <CR>
+""""""""""""""""""""""""""""""
+function! s:VisCR() range
+  let fline = a:firstline
+  let lline = a:lastline
+  call s:BeforeJump()
+  let qf = QFixGetqflist()
+  for l in range(fline, lline)
+    let bufnr = qf[l-1]['bufnr']
+    let lnum  = qf[l-1]['lnum']
+    let col   = qf[l-1]['col']
+    let file = fnamemodify(bufname(bufnr), ':p')
+    call QFixEditFile(file)
+    call cursor(lnum, col)
+  endfor
+  call QFixCR('after')
+  if g:QFix_CloseOnJump
+    QFixCclose
+  endif
+endfunction
+
+""""""""""""""""""""""""""""""
+" 選択中のqflistを取得
+""""""""""""""""""""""""""""""
+function! s:QFixCmd_LocListCopy(mode) range
+  let lastline = line('$')
+  let firstline = a:firstline
+  if a:firstline != a:lastline || a:mode =~ 'visual'
+    let lastline = a:lastline
+  else
+    let firstline = 1
+  endif
+  if exists('b:qfixwin_buftype')
+    let sq = b:qfixwin_buftype ? getloclist(0) : getqflist()
+  else
+    let sq = QFixGetqflist()
+  endif
+  if lastline != line('$')
+    call remove(sq, lastline-1, -1)
+  endif
+  if firstline > 1
+    call remove(sq, 0, firstline - 2)
+  endif
+  call setloclist(0, sq)
+  lopen
+endfunction
+
+""""""""""""""""""""""""""""""
 " ジャンプ後のウィンドウ動作切替
 """"""""""""""""""""""""""""""
-function! QFixCmd_J()
+function! s:QFixCmd_J()
   let g:QFix_CloseOnJump = !g:QFix_CloseOnJump
   echo 'Close on jump : ' . (g:QFix_CloseOnJump? 'ON' : 'OFF')
 endfunction
@@ -586,11 +649,18 @@ endfunction
 " リサイズ
 """"""""""""""""""""""""""""""
 function! QFixResize(size)
+  let size = a:size
+  if exists('b:qfixwin_height') && size < b:qfixwin_height
+    let size = b:qfixwin_height
+  endif
+  if size < g:QFix_HeightDefault
+    let size = g:QFix_HeightDefault
+  endif
   let w = &lines - winheight(0) - &cmdheight - (&laststatus > 0 ? 1 : 0)
   if w  > 0
-    exec 'resize ' . a:size
+    exe 'resize ' . size
   endif
-  let g:QFix_Height = a:size
+  let g:QFix_Height = size
 endfunction
 
 """"""""""""""""""""""""""""""
@@ -608,14 +678,14 @@ function! s:QFixDelete() range
   let lnum = line('.')
   let qf = s:GetBufqflist()
   let type = b:qfixwin_buftype
-  call QFixSaveUndo(type, qf, lnum)
+  call s:QFixSaveUndo(type, qf, lnum)
   let l = line('.') - 1
   let g:QFixDelete = []
   for loop in range(a:firstline, a:lastline)
     call add(g:QFixDelete, remove(qf, l))
   endfor
   call s:SetBufqflistOpen(qf)
-  silent! exec 'normal! '.lnum.'G'
+  silent! exe 'normal! '.lnum.'G'
   return
 endfunction
 
@@ -628,10 +698,10 @@ function! s:QFixPut(ofs)
   let l = line('.') - a:ofs
   let qf = s:GetBufqflist()
   let type = b:qfixwin_buftype
-  call QFixSaveUndo(type, qf, lnum)
+  call s:QFixSaveUndo(type, qf, lnum)
   call extend(qf, g:QFixDelete, l)
   call s:SetBufqflistOpen(qf)
-  silent! exec 'normal! '.lnum.'G'
+  silent! exe 'normal! '.lnum.'G'
 endfunction
 
 """"""""""""""""""""""""""""""
@@ -708,6 +778,12 @@ endfunction
 """"""""""""""""""""""""""""""
 " quickfix比較
 """"""""""""""""""""""""""""""
+function! QFixCompareBufnr(v1, v2)
+  if a:v1.bufnr == a:v2.bufnr
+    return (a:v1.lnum > a:v2.lnum?1:-1)
+  endif
+  return a:v1.bufnr>a:v2.bufnr?1:-1
+endfunction
 function! QFixCompareName(v1, v2)
   if a:v1.bufnr == a:v2.bufnr
     return (a:v1.lnum > a:v2.lnum?1:-1)
@@ -733,7 +809,7 @@ endfunction
 """"""""""""""""""""""""""""""
 " Quickfixウィンドウを文字列で絞り込み。
 """"""""""""""""""""""""""""""
-function! QFixSearchStrings(...)
+function! s:QFixSearchStrings(...)
   if a:0
     let _key = a:1
   else
@@ -745,7 +821,7 @@ function! QFixSearchStrings(...)
   let qf = s:GetBufqflist()
   let type = b:qfixwin_buftype
   let lnum = line('.')
-  call QFixSaveUndo(type, qf, lnum)
+  call s:QFixSaveUndo(type, qf, lnum)
   let idx = 0
   for d in qf
     if d['text'] !~ _key && bufname(d['bufnr']) !~ _key
@@ -763,7 +839,7 @@ endfunction
 """"""""""""""""""""""""""""""
 " Quickfixウィンドウを文字列で絞り込み。
 """"""""""""""""""""""""""""""
-function! QFixSearchStringsR(...)
+function! s:QFixSearchStringsR(...)
   if a:0
     let _key = a:1
   else
@@ -775,7 +851,7 @@ function! QFixSearchStringsR(...)
   let qf = s:GetBufqflist()
   let type = b:qfixwin_buftype
   let lnum = line('.')
-  call QFixSaveUndo(type, qf, lnum)
+  call s:QFixSaveUndo(type, qf, lnum)
 
   let idx = 0
   for d in qf
@@ -811,11 +887,11 @@ function! s:SetBufqflistOpen(qf, ...)
   endif
   if type
     let qf = setloclist(0, a:qf)
-    silent! exec 'lchdir ' . escape(dir, ' ')
+    silent! exe 'lchdir ' . escape(dir, ' ')
     lopen
   else
     let qf = setqflist(a:qf)
-    silent! exec 'lchdir ' . escape(dir, ' ')
+    silent! exe 'lchdir ' . escape(dir, ' ')
     copen
   endif
   return qf
@@ -845,13 +921,13 @@ function! s:HighlightSearchWord(searchWordType)
   endif
   silent! syntax clear QFixSearchWord
   hi QFixSearchWord ctermfg=Red ctermbg=Grey guifg=Red guibg=bg
-  silent! exec 'syntax match QFixSearchWord display "' . escape(pat, '"') . '"'
+  silent! exe 'syntax match QFixSearchWord display "' . escape(pat, '"') . '"'
 endfunction
 
 """"""""""""""""""""""""""""""
 " ハイライト切替
 """"""""""""""""""""""""""""""
-function! QFixToggleHighlight()
+function! s:QFixToggleHighlight()
   let g:QFix_PreviewFtypeHighlight = !g:QFix_PreviewFtypeHighlight
   let s:QFixPreviewfile = ''
   echo 'FileType syntax : ' . (g:QFix_PreviewFtypeHighlight? 'ON' : 'OFF')
@@ -901,7 +977,7 @@ function! MoveToQFixWin(...)
     QFixCopen
   else
     if winnum != winnr()
-      exec winnum . 'wincmd w'
+      exe winnum . 'wincmd w'
     endif
   endif
   if a:0 && a:1 > 1
@@ -935,7 +1011,7 @@ function! ToggleQFixWin(...)
       close
       return
     else
-      exec winnr.'wincmd w'
+      exe winnr.'wincmd w'
     endif
   endif
   QFixCopen
@@ -944,21 +1020,6 @@ endfunction
 """"""""""""""""""""""""""""""
 " サイズを変更する
 """"""""""""""""""""""""""""""
-function! ResizeQFixWin(...)
-  if &buftype != 'quickfix'
-    return
-  endif
-  let size = g:QFix_HeightDefault
-  if a:0 && a:1 > 1
-    let size = a:1
-  endif
-  let g:QFix_Height = size
-  MoveToQFixWin
-  call QFixResize(g:QFix_Height)
-  let g:QFix_Height = size
-  silent! wincmd p
-endfunction
-
 function! ResizeOnQFix(...)
   if &buftype != 'quickfix'
     return
@@ -973,9 +1034,27 @@ endfunction
 
 """"""""""""""""""""""""""""""
 " copen代替
+" CAUTION: cclose/copenでバッファ番号が変わるので b: は実質的に保存されない
 """"""""""""""""""""""""""""""
 function! QFixCopen(cmd, mode)
   if g:QFix_Disable
+    return
+  endif
+  if &buftype == 'quickfix'
+    let b:qfixwin_height = winheight(0)
+    let b:qfixwin_width  = winwidth(0)
+    let g:QFix_Height = b:qfixwin_height
+  endif
+  let qf = QFixGetqflist()
+  let idx = len(qf)
+  if idx == 0
+    echohl ErrorMsg
+    if g:QFix_UseLocationList
+      redraw|echom 'QFixWin : no location list'
+    else
+      redraw|echom 'QFixWin : no list'
+    endif
+    echohl None
     return
   endif
   if a:cmd == ''
@@ -986,76 +1065,164 @@ function! QFixCopen(cmd, mode)
   else
     let cmd = a:cmd
   endif
-  exe 'let g:QFix_SearchPath'.g:QFix_UseLocationList.'=g:QFix_SearchPath'
-
-  let spath = g:QFix_SearchPath
-  let spath = expand(spath)
-  let opath = getcwd()
-
-  let qf = QFixGetqflist()
-  let idx = len(qf)-1
-  if idx < 0
-    if g:QFix_UseLocationList
-      echohl ErrorMsg
-      redraw|echom 'QFixWin : no location list'
-      echohl None
-      return
-    endif
-    let g:QFix_SearchPath = ''
-    echohl ErrorMsg
-    redraw|echom 'QFixWin : Nothing in list!'
-    echohl None
-    return
-  endif
-  call QFixPclose()
-  let saved_pe = g:QFix_PreviewEnable
   let cmd = cmd . (g:QFix_UseLocationList ? ' l' : ' c')
+  let saved_pe = g:QFix_PreviewEnable
   let g:QFix_PreviewEnable = 0
-  silent! exec cmd . 'open ' . g:QFix_Height
-  if spath != ''
-    silent! exec 'lchdir ' . escape(spath, ' ')
-    silent! exec cmd .'open ' . g:QFix_Height
+  call QFixPclose()
+  silent! exe cmd . 'open ' . g:QFix_Height
+  call s:QFixSetBuftype()
+  if !exists('b:QFix_SearchPath')
+    if exists('g:QFix_SearchPath'.b:qfixwin_buftype)
+      exe 'let b:QFix_SearchPath=g:QFix_SearchPath'.b:qfixwin_buftype
+    else
+      exe 'let b:QFix_SearchPath=g:QFix_SearchPath'
+    endif
+    let b:QFix_SearchPath = QFixNormalizePath(fnamemodify(b:QFix_SearchPath, ':p:h'))
+    " let b:QFix_SearchPath = ''
   endif
 
-  if spath != '' && a:mode == 0 && g:QFix_UseLocationList == 0
-    "登録されている半分のファイルが QFix_SearchPath以下になかったらクリア
-    let none = 0
-    let cpath = g:QFix_SearchPath
-    let cpath = expand(cpath)
-    let ppath = '|'
-    let none = idx / 2
-    for n in qf
-      let file = bufname(n['bufnr'])
-      let path = fnamemodify(file, ':h')
-      if path == ppath
-        let none -= 1
-      else
-        let file = printf("%s/%s", cpath, file)
-        if filereadable(file)
-          let none -= 1
-          let ppath = path
-        endif
-      endif
-      if none < 1
-        break
-      endif
-    endfor
-    if none > 0
-      silent! exec 'lchdir ' . escape(opath, ' ')
-      silent! exec cmd .'open ' . g:QFix_Height
-      let g:QFix_SearchPath = ''
-      exe 'let g:QFix_SelectedLine'.b:qfixwin_buftype. '=1'
+  let spath = ''
+  if g:QFix_SearchPathMode == 1
+    if !s:SetSearchPath(qf, g:QFix_SearchPath, cmd.'open '.g:QFix_Height)
+      let spath = QFixNormalizePath(fnamemodify(g:QFix_SearchPath, ':p:h'))
+    endif
+  elseif g:QFix_SearchPathMode == 2
+    let spath = QFixGetqfRootPath(qf)
+    if spath != ''
+      silent! exe 'lchdir ' . escape(spath, ' ')
+      silent! exe cmd . 'open ' . g:QFix_Height
     endif
   endif
+  if b:QFix_SearchPath != spath
+    exe 'let g:QFix_SelectedLine'.b:qfixwin_buftype. '=1'
+  endif
+  exe 'let lnum=g:QFix_SelectedLine'.b:qfixwin_buftype
+  call cursor(lnum, 1)
+  silent! exe 'normal! zz'
+  let b:QFix_SearchPath = spath
+  exe 'let g:QFix_SearchPath'.b:qfixwin_buftype.'=b:QFix_SearchPath'
   let g:QFix_Win = bufnr('%')
   if g:QFix_Width > 0
-    exe "normal! ".g:QFix_Width."\<C-W>|"
+    exe "vertical resize ".g:QFix_Width
   endif
   let g:QFix_PreviewEnable = saved_pe
   let &winfixheight = g:QFix_Copen_winfixheight
   let &winfixwidth  = g:QFix_Copen_winfixwidth
-  exe 'let lnum=g:QFix_SelectedLine'.b:qfixwin_buftype
-  silent! exe 'normal! '.lnum.'G'
+endfunction
+
+" Windowsパス正規化
+let s:MSWindows = has('win95') + has('win16') + has('win32') + has('win64')
+function! QFixNormalizePath(path, ...)
+  let path = a:path
+  " let path = expand(a:path)
+  if s:MSWindows
+    if a:0 " 比較しかしないならキャピタライズ
+      let path = toupper(path)
+    else
+      " expand('~') で展開されるとドライブレターは大文字、
+      " expand('c:/')ではそのままなので統一
+      let path = substitute(path, '^\([a-z]\):', '\u\1:', '')
+    endif
+    let path = substitute(path, '\\', '/', 'g')
+  endif
+  return path
+endfunction
+
+" パス表示を短くする
+function! QFixSetqfShortPath()
+  if &buftype != 'quickfix'
+    return
+  endif
+  redraw|echo 'QFixWin : Search root path...'
+  let qf = b:qfixwin_buftype ? getloclist(0) : getqflist()
+  let wh = winheight(0)
+  let spath = QFixGetqfRootPath(qf)
+  let cmd = b:qfixwin_buftype ? 'l' : 'c'
+  if spath != ''
+    silent! exe 'lchdir ' . escape(spath, ' ')
+    silent! exe cmd . 'open '
+    let w = &lines - winheight(0) - &cmdheight - (&laststatus > 0 ? 1 : 0)
+    if w > 0 && &buftype == 'quickfix'
+      exe 'resize '. wh
+      " exe 'vertical resize '. ww
+    endif
+  endif
+endfunction
+
+" パス表示を最も短くするディレクトリを探す
+function! QFixGetqfRootPath(qf)
+  if len(a:qf) == 0
+    return ''
+  endif
+  if exists('+shellslash')
+    let saved_ssl = &shellslash
+    set shellslash
+  endif
+  let qf = deepcopy(a:qf)
+  let pbuf = -1
+  for n in qf
+    if bufexists(n['bufnr'])
+      let pbuf = n['bufnr']
+      break
+    endif
+  endfor
+  if pbuf == -1
+    return ''
+  endif
+  let qf = sort(qf, "QFixCompareBufnr")
+  let spath = fnamemodify(bufname(qf[0]['bufnr']), ':p:h')
+  for n in qf
+    if n['bufnr'] == pbuf
+      continue
+    endif
+    let pbuf = n['bufnr']
+    let path = fnamemodify(bufname(pbuf), ':p:h')
+    let head = spath
+    let slen = strlen(head)
+    while 1
+      if path =~ '^\V'.head
+        let spath = head
+        break
+      endif
+      let head = fnamemodify(head, ':h')
+      let hlen = strlen(head)
+      if hlen == slen
+        break
+      endif
+      let slen = hlen
+    endwhile
+  endfor
+  if exists('+shellslash')
+    let &shellslash = saved_ssl
+  endif
+  return spath
+endfunction
+
+function! s:SetSearchPath(qf, path, ...)
+  let prevPath = escape(getcwd(), ' ')
+  silent! exe 'lchdir ' . escape(expand(a:path), ' ')
+  if a:0
+    let cmd = a:1
+  else
+    let cmd = 'copen'
+  endif
+  silent! exe cmd
+  " 登録されている半分のファイルが path以下になかったらクリア
+  let none = len(a:qf) / 2 +1
+  for n in a:qf
+    let file = bufname(n['bufnr'])
+    if file =~ '^\([\\/~:]\|[A-Za-z]:\)'
+      let none -= 1
+    endif
+    if none < 1
+      break
+    endif
+  endfor
+  if none <= 0
+    silent! exe 'lchdir ' . prevPath
+    silent! exe cmd
+  endif
+  return none <= 0
 endfunction
 
 """"""""""""""""""""""""""""""
@@ -1076,11 +1243,18 @@ endfunction
 " setqflist代替
 """""""""""""""""""""""""""""
 function! QFixSetqflist(sq, ...)
+  let wh = winheight(0)
+  let ww = winwidth(0)
   let cmd = 'a:sq'. (a:0 == 0 ? '' : ",'".a:1."'")
   if g:QFix_UseLocationList
-    exec 'call setloclist(0, '.cmd.')'
+    exe 'call setloclist(0, '.cmd.')'
   else
-    exec 'call setqflist('.cmd.')'
+    exe 'call setqflist('.cmd.')'
+  endif
+  let w = &lines - winheight(0) - &cmdheight - (&laststatus > 0 ? 1 : 0)
+  if w > 0 && &buftype == 'quickfix'
+    exe 'resize '. wh
+    exe 'vertical resize '. ww
   endif
 endfunction
 
@@ -1098,36 +1272,35 @@ endfunction
 """"""""""""""""""""""""""""""
 " pclose代替
 """"""""""""""""""""""""""""""
-function! QFixPclose()
-  if g:QFix_Disable
+function! QFixPclose(...)
+  if g:QFix_Disable && !a:0
     return
   endif
-  if g:QFix_PreviewEnable < 1
+  if g:QFix_PreviewEnable < 1 && !a:0
     return
   endif
-  if g:QFix_PreviewEnableLock == 1
+  if g:QFix_PreviewEnableLock == 1 && !a:0
     return
   endif
   let s:UseQFixPreviewOpen = 0
-  let h = g:QFix_Height
-  if &buftype == 'quickfix' && g:QFix_HeightFixMode == 0 && g:QFix_Resize > 0
-    let h = winheight(0)
-  endif
   if winnr('$') == 2 && tabpagenr('$') > 1 && g:QFix_PreviewEnable
   elseif winnr('$') == 1 && tabpagenr('$') > 1 && &previewwindow
     tabclose
   else
     let saved_winfixheight = &winfixheight
     let saved_winfixwidth  = &winfixwidth
-    setlocal nowinfixheight
-    setlocal nowinfixwidth
+    let wh = winheight(0)
+    let ww = winwidth(0)
+    setlocal winfixheight
+    setlocal winfixwidth
     silent! pclose!
     let &winfixheight = saved_winfixheight
     let &winfixwidth  = saved_winfixwidth
-  endif
-  if &buftype == 'quickfix'
-    call QFixResize(h)
-    let g:QFix_Height = h
+    let w = &lines - winheight(0) - &cmdheight - (&laststatus > 0 ? 1 : 0)
+    if w > 0
+      exe 'resize '.wh
+      " exe 'vertical resize '.ww
+    endif
   endif
   let s:UseQFixPreviewOpen = 1
 endfunction
@@ -1191,7 +1364,7 @@ function! QFixPreviewOpen(file, line, ...)
         silent! wincmd p
         return
       endif
-      silent! exec 'normal '. a:line .'Gzz'
+      silent! exe 'normal '. a:line .'Gzz'
       if g:QFix_PreviewCursorLine
         setlocal cursorline
       else
@@ -1208,7 +1381,7 @@ function! QFixPreviewOpen(file, line, ...)
     let saved_winfixwidth  = &winfixwidth
     " setlocal winfixheight
     " setlocal winfixwidth
-    silent! exec 'silent! '.g:QFix_PreviewOpenCmd.' pedit! '.s:tempdir.'/'.g:QFix_PreviewName
+    silent! exe 'silent! '.g:QFix_PreviewOpenCmd.' pedit! '.s:tempdir.'/'.g:QFix_PreviewName
     let &winfixheight = saved_winfixheight
     let &winfixwidth  = saved_winfixwidth
   endif
@@ -1224,10 +1397,10 @@ function! QFixPreviewOpen(file, line, ...)
   let &winfixheight = g:QFix_Preview_winfixheight
   let &winfixwidth  = g:QFix_Preview_winfixwidth
   if g:QFix_PreviewWidth > 0
-    exe "normal! ".g:QFix_PreviewWidth."\<C-W>|"
+    exe "vertical resize ".g:QFix_PreviewWidth
   endif
   if exists('g:QFix_PreviewHeight')
-    exec 'resize '.g:QFix_PreviewHeight
+    exe 'resize '.g:QFix_PreviewHeight
   endif
   setlocal modifiable
   silent! %delete _
@@ -1239,7 +1412,7 @@ function! QFixPreviewOpen(file, line, ...)
 
   let prevPath = escape(getcwd(), ' ')
   if g:QFix_SearchPath != ''
-    silent! exec 'lchdir ' . escape(g:QFix_SearchPath, ' ')
+    silent! exe 'lchdir ' . escape(g:QFix_SearchPath, ' ')
   endif
 
   syntax clear
@@ -1258,24 +1431,28 @@ function! QFixPreviewOpen(file, line, ...)
     let cmd = '-r '
     let file = substitute(file, '\\', '/', 'g')
     let cmd = cmd . QFixPreviewReadOpt(file)
-    silent! exec cmd.' '.escape(file, ' %#')
-    silent! $delete _
+    if filereadable(file)
+      silent! exe cmd.' '.escape(file, ' %#')
+      silent! $delete _
+    endif
   endif
-  silent! exec 'normal! '. a:line .'Gzz'
+  silent! exe 'normal! '. a:line .'Gzz'
   if g:QFix_PreviewCursorLine
     setlocal cursorline
   else
     setlocal nocursorline
   endif
   setlocal nomodifiable
-  silent! exec 'lchdir ' . prevPath
+  silent! exe 'lchdir ' . prevPath
   silent! wincmd p
 endfunction
 
 " プレビューのエンコーディング強制オプション
-silent! function QFixPreviewReadOpt(file)
+if !exists('*QFixPreviewReadOpt')
+function QFixPreviewReadOpt(file)
   return ''
 endfunction
+endif
 
 """"""""""""""""""""""""""""""
 " filetypeを返す
@@ -1286,14 +1463,14 @@ function! s:QFixFtype_(file)
     let suffix = fnamemodify(a:file, ':e')
     silent! let pft = g:QFix_PreviewFtype[suffix]
     if exists('pft')
-      silent! exec 'setlocal filetype='.pft
+      silent! exe 'setlocal filetype='.pft
       return pft
     endif
   endif
   let file = fnamemodify(a:file, ':t')
   "for QFixHowm
   if !QFixFtype(a:file)
-    exec 'silent! doau BufNewFile '.file
+    exe 'silent! doau BufNewFile '.file
   endif
   return ''
 endfunction
@@ -1374,7 +1551,7 @@ function! QFixEditFile(file, ...)
     return
   endif
   if winnum != -1
-    exec winnum . 'wincmd w'
+    exe winnum . 'wincmd w'
     return
   endif
 
@@ -1382,14 +1559,14 @@ function! QFixEditFile(file, ...)
   if winnr < 1 || mode == 'split'
     split
   else
-    exec winnr.'wincmd w'
+    exe winnr.'wincmd w'
   endif
 
   let dir = fnamemodify(file, ':h')
   if isdirectory(dir) == 0
     call mkdir(dir, 'p')
   endif
-  exec g:QFix_Edit.'edit ' . opt . escape(file, ' #%')
+  exe g:QFix_Edit.'edit ' . opt . escape(file, ' #%')
 endfunction
 
 """"""""""""""""""""""""""""""
@@ -1408,7 +1585,7 @@ function! QFixWinnr()
   let hidden = &hidden
   let w = -1
   for i in range(1, max)
-    exec i . 'wincmd w'
+    exe i . 'wincmd w'
     if &buftype == '' && &previewwindow == 0
       if &modified == 0
         let w = i
@@ -1419,7 +1596,7 @@ function! QFixWinnr()
       endif
     endif
   endfor
-  exec pwin.'wincmd w'
+  exe pwin.'wincmd w'
   let g:QFix_PreviewEnableLock = 0
   return w
 endfunction
@@ -1561,8 +1738,7 @@ endfunction
 function! s:addtitle(path, list)
   let prevPath = escape(getcwd(), ' ')
   let h = g:QFix_Height
-  silent! exec 'split '
-  silent! exec 'silent! edit '.g:qfixtempname
+  silent! exe 'silent! split ' . escape(qfixtempname, ' #%')
   setlocal buftype=nofile
   setlocal bufhidden=hide
   setlocal noswapfile
@@ -1579,7 +1755,7 @@ function! s:addtitle(path, list)
     if prevfname != file
       silent! %delete _
       let tmpfile = escape(file, ' #%')
-      silent! exec '0read '.tmpfile
+      silent! exe '0read '.tmpfile
       silent! $delete _
     endif
     let prevfname = file
@@ -1593,8 +1769,7 @@ function! s:addtitle(path, list)
       endif
     endfor
   endfor
-  silent! exec 'silent! edit '.g:qfixtempname
-  setlocal buftype=nofile
+  silent! exe 'silent! edit ' . escape(qfixtempname, ' #%')
   silent! bd!
   let g:QFix_Height = h
 endfunction
@@ -1610,11 +1785,11 @@ function! QFdo(cmd, cnt)
   if cmd == ''
     return
   endif
-  call QFdoexec(cmd, a:firstline, a:cnt)
+  call s:QFdoexec(cmd, a:firstline, a:cnt)
 endfunction
 
 let s:prevcmd=''
-function! QFdofe(cmd, mode) range
+function! s:QFdofe(cmd, mode) range
   let cmd = a:cmd
   if a:cmd == ''
     let cmd = input('command? ', s:prevcmd)
@@ -1630,10 +1805,10 @@ function! QFdofe(cmd, mode) range
     let fline = 1
     let lline = 0
   endif
-  call QFdoexec(cmd, fline, lline)
+  call s:QFdoexec(cmd, fline, lline)
 endfunction
 
-function! QFdoexec(cmd, fline, lline)
+function! s:QFdoexec(cmd, fline, lline)
   let qf = QFixGetqflist()
   if len(qf) == 0
     echohl ErrorMsg
@@ -1656,36 +1831,12 @@ function! QFdoexec(cmd, fline, lline)
   let mru = 0
   silent! let mru = g:QFixHowm_UseMRU
   let g:QFixHowm_UseMRU = 0
-  exec 'cr '.fline
+  exe 'cr '.fline
   for l in range(cnt)
-    silent! exec cmd
+    silent! exe cmd
     silent! cn
   endfor
-  exec 'cr '.fline
+  exe 'cr '.fline
   let g:QFixHowm_UseMRU = mru
-endfunction
-
-""""""""""""""""""""""""""""""
-" mru.vim対策
-" nnoremap <silent> gkm :let QFix_Resize = 0<CR>:MRU<CR>
-" MRU起動前にQFix_Resizeを0にして下さい
-""""""""""""""""""""""""""""""
-augroup QFixResize
-  au!
-  au BufWinEnter __MRU_Files__ let g:QFix_Resize = 0
-  au BufWinLeave __MRU_Files__ let g:QFix_Resize = -1
-  au BufEnter * call QFixResizeBufEnter()
-augroup END
-
-function! QFixResizeBufEnter()
-  if g:QFix_Resize == -1
-    call ResizeQFixWin(g:QFix_Height)
-    let g:QFix_Resize = 1
-  endif
-endfunction
-
-function! QFixExec(cmd)
-  let g:QFix_Resize = 0
-  exec a:cmd
 endfunction
 
