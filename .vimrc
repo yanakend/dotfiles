@@ -1,3 +1,12 @@
+"----------------------------------------
+" ユーザーランタイムパス設定
+"Windows, unixでのruntimepathの違いを吸収するためのもの。 
+"$MY_VIMRUNTIMEはユーザーランタイムディレクトリを示す。 
+":echo $MY_VIMRUNTIMEで実際のパスを確認できます。 
+if isdirectory($HOME . '/.vim') 
+  let $MY_VIMRUNTIME = $HOME.'/.vim'
+endif 
+set runtimepath+=$MY_VIMRUNTIME
 syntax on
 if has('win32')
     colorscheme user_color          "カラースキーム設定
@@ -33,8 +42,8 @@ set cindent
 "set shellslash                      " Windowsでディレクトリパスの区切り文字表示に / を使えるようにする
 set ambiwidth=double                " □や○の文字があってもカーソル位置がずれないようにする
 set whichwrap=b,s,[,],<,>           " カーソルキーで行末／行頭の移動可能に設定
-set vb t_vb=                        " ビープ音を鳴らさない
 set title                           " タイトルをウインドウ枠に表示する
+set virtualedit=block               "ブロック選択時にフリーカーソルモード
 " バッファを切替えてもundoの効力を失わない
 "set shortmess+=I                    " 起動時のメッセージを表示しない
 
@@ -51,17 +60,34 @@ set diffopt=filler,vertical,foldcolumn:0
 
 "----------------------------------------
 " map
+nnoremap <silent> <C-[><C-[> :noh<CR>
 nnoremap h zv<Left>
 nnoremap j gj
 nnoremap k gk
 nnoremap l zv<Right>
 
+nnoremap n nzz
+nnoremap N Nzz
+nnoremap * *zz
+nnoremap # #zz
+
 if has('unix')
-    nnoremap Y y$
+    nnoremap y "ay
+    vnoremap y "ay
+    nnoremap Y "ay$
+    vnoremap Y "ay$
+    nnoremap p "agp
+    vnoremap p "agp
+    nnoremap P "agP
+    vnoremap P "agP
+    vnoremap x "ax
+    inoremap <C-v> <C-R>a
+    cnoremap <C-v> <C-R>a
     "nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
     "vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
     "nnoremap <silent> <Space>p :r !pbpaste<CR>
     "vnoremap <silent> <Space>p :r !pbpaste<CR>
+    nnoremap <Space>g  :REGrep<CR>
 endif
 if has('win32')
     nnoremap y "+y
@@ -78,41 +104,43 @@ if has('win32')
     vnoremap X "+X
     inoremap <C-v> <C-R>+
     cnoremap <C-v> <C-R>+
-    vnoremap X "+X
+    nnoremap <Space>g  :silent !"C:\Program Files\Yokka\NoEditor\Grep.exe.lnk"<CR>
 endif
 
-nnoremap <C-[> :noh<CR>
 nnoremap ZZ <Nop>
 
 nnoremap <Space>e  :Exp<CR>
-nnoremap <Space>d  :Kwbd<CR>
+nnoremap <Space>d  :bd<CR>
 nnoremap <Space>w  :write<CR>
 nnoremap <Space>m  :MRU<CR>
-"nnoremap <Space>g  :GrepT<CR>
-nnoremap <Space>g  :<Up><Home>
-nnoremap <Space>td :Td<CR>
-nnoremap <Space>tl :Tl<CR>
 nnoremap <Space>v  :e ~/.vimrc<CR>
+if has('win32')
+    nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
+    nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
+    nnoremap <Space>tl :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log  /path:"%" /notempfile /closeonend<CR>
+endif
+if has('unix')
+    nnoremap <Space>f  :e /Users/yanagikenji/Dropbox/free_memo.txt<CR>
+endif
 
-nnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
-vnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
+"nnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
+"vnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
 vnoremap <silent> /  :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
 nnoremap <C-g> `.
 
-cnoremap <C-a>     <Home>
-cnoremap <C-f>     <Right>
-cnoremap <C-b>     <Left>
-cnoremap <C-d>     <Delete>
+cnoremap <C-a>    <Home>
+cnoremap <C-f>    <Right>
+cnoremap <C-b>    <Left>
+cnoremap <C-d>    <Delete>
+cnoremap <C-w>     <Home>\<<End>\><Left><Left>
+cnoremap <C-c>     <End>\C
 
 vnoremap <         <gv
 vnoremap >         >gv
 
 "----------------------------------------
 " command
-command!                 Td         :silent !start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff              /path:"%" /notempfile /closeonend<CR>
-command!                 Tl         :silent !start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log               /path:"%" /notempfile /closeonend<CR>
 command!                 Kwbd       let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn 
-command!                 GrepT      :silent !"C:\Program Files\Yokka\NoEditor\Grep.exe.lnk"<CR>
 command!                 Cp932      edit ++enc=cp932
 command!                 Eucjp      edit ++enc=euc-jp
 command!                 Iso2022jp  edit ++enc=iso-2022-jp
@@ -120,15 +148,15 @@ command!                 UTF8       edit ++enc=utf-8
 command!                 Jis        Iso2022jp
 command!                 Sjis       Cp932
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
-autocmd FileType *.html.php setlocal tabstop=2 shiftwidth=2
-autocmd FileType *.css setlocal tabstop=2 shiftwidth=2
+"autocmd FileType *.html.php setlocal tabstop=2 shiftwidth=2
+"autocmd FileType *.css setlocal tabstop=2 shiftwidth=2
 
 "----------------------------------------
 " function
-""""""""""""""""""""""""""""""
-"検索ワードをセットする。
-"何か追加パラメータが設定されていたら、単語単位検索に。
-""""""""""""""""""""""""""""""
+
+"----------------------------------------
+" 検索ワードをセットする。
+" 何か追加パラメータが設定されていたら、単語単位検索に。
 function! MySetSearch(cmd, ...)
     let saved_reg = @"
     if a:cmd != ''
@@ -156,12 +184,6 @@ filetype plugin on
 let g:qb_hotkey = "<Space>b"
 
 "----------------------------------------
-" neocomplete.vim
-if v:version >= 702
-    let g:neocomplcache_enable_at_startup = 1
-endif
-
-"----------------------------------------
 " quickrun.vim
 "let g:quickrun_no_default_key_mappings = 0
 "silent! nnoremap <Space>r <Plug>(quickrun)
@@ -169,15 +191,36 @@ endif
 "----------------------------------------
 " savevers.vim
 set patchmode=.clean            " バックアップファイルの設定" savevers.vimのためにパッチモードにします
-let savevers_types = "*"        " カンマで区切られたバックアップを作成するファイル名です "*.c,*.h,*.vim"
-let savevers_dirs = &backupdir  " バックアップファイルが書き込まれるディレクトリです ここでは、オプション"backupdir"と同じディレクト
+let savevers_types = "*"        " カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
+let savevers_dirs = &backupdir  " バックアップファイルが書き込まれるディレクトリです ここでは、オプション'backupdir'と同じディレクト
 let versdiff_no_resize=1        " バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
 let savevers_max = 99           " 
 nnoremap <silent> <Space>sd- :VersDiff -<cr>
 nnoremap <silent> <Space>sd+ :VersDiff +<cr>
 nnoremap <silent> <Space>sdc :VersDiff -c<cr>
 
-
-set runtimepath+=~/.vim/bundle/qfixapp
-
+"----------------------------------------
+" qfixhowm.vim
 let MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|[/\\]\.svn[/\\]'
+
+"----------------------------------------
+" EnhancedCommentify.vim
+nnoremap <Space>c :call EnhancedCommentify('', 'guess')<CR>
+
+"----------------------------------------
+" neocomplecache.vim
+function InsertTabWrapper()
+    if pumvisible()
+        return "\<c-n>"
+    endif
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k\|<\|/'
+        return "\<tab>"
+    elseif exists('&omnifunc') && &omnifunc == ''
+        return "\<c-n>"
+    else
+        return "\<c-x>\<c-o>"
+    endif
+endfunction
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+

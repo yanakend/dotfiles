@@ -11,3 +11,18 @@
 [submodule ".vim/bundle/qfixhowm"]
 	path = .vim/bundle/qfixhowm
 	url = git://github.com/fuenor/qfixhowm.git
+[submodule ".vim/bundle/css_color"]
+	path = .vim/bundle/css_color
+	url = git://github.com/vim-scripts/css_color.vim.git
+[submodule ".vim/bundle/EnhCommentify"]
+	path = .vim/bundle/EnhCommentify
+	url = git://github.com/vim-scripts/EnhCommentify.vim.git
+[submodule ".vim/bundle/vtreeexplorer"]
+	path = .vim/bundle/vtreeexplorer
+	url = git://github.com/vim-scripts/vtreeexplorer.git
+[submodule ".vim/bundle/opsplorer"]
+	path = .vim/bundle/opsplorer
+	url = git://github.com/vim-scripts/opsplorer.git
+[submodule ".vim/bundle/Theh-NERD-tree"]
+	path = .vim/bundle/Theh-NERD-tree
+	url = git://github.com/vim-scripts/The-NERD-tree.git
