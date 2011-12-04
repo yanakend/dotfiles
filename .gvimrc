@@ -7,3 +7,6 @@ if has('win32')
       set ambiwidth=auto
     endif
 endif
+if has('unix')
+    colorscheme desert
+endif

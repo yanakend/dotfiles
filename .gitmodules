@@ -7,7 +7,10 @@
 [submodule ".vim/bundle/zencoding"]
 	path = .vim/bundle/zencoding
 	url = git://github.com/mattn/zencoding-vim.git
-
 [submodule ".vim/bundle/qfixhowm"]
 	path = .vim/bundle/qfixhowm
 	url = git://github.com/fuenor/qfixhowm.git
+[submodule ".vim/bundle/EnhCommentify"]
+	path = .vim/bundle/EnhCommentify
+	url = git://github.com/vim-scripts/EnhCommentify.vim.git
+
