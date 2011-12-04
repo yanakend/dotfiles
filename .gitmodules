@@ -1,16 +1,21 @@
 [submodule ".vim/bundle/vim-pathogen"]
 	path = .vim/bundle/vim-pathogen
 	url = git://github.com/sejaeger/vim-pathogen.git
+    ignore = untracked
 [submodule ".vim/bundle/quickrun"]
 	path = .vim/bundle/quickrun
 	url = git://github.com/thinca/vim-quickrun.git
+    ignore = untracked
 [submodule ".vim/bundle/zencoding"]
 	path = .vim/bundle/zencoding
 	url = git://github.com/mattn/zencoding-vim.git
+    ignore = untracked
 [submodule ".vim/bundle/qfixhowm"]
 	path = .vim/bundle/qfixhowm
 	url = git://github.com/fuenor/qfixhowm.git
+    ignore = untracked
 [submodule ".vim/bundle/EnhCommentify"]
 	path = .vim/bundle/EnhCommentify
 	url = git://github.com/vim-scripts/EnhCommentify.vim.git
+    ignore = untracked
 
