@@ -7,12 +7,17 @@ if isdirectory($HOME . '/.vim')
   let $MY_VIMRUNTIME = $HOME.'/.vim'
 endif 
 set runtimepath+=$MY_VIMRUNTIME
+
+"----------------------------------------
+" settings
 syntax on
+set t_Co=256                        "256色に
+"カラースキーム設定
 if has('win32')
-    colorscheme user_color          "カラースキーム設定
+    colorscheme user_color
 endif
 if has('unix')
-    colorscheme desert              "カラースキーム設定
+    colorscheme desert
 endif
 
 set encoding=utf-8
@@ -148,8 +153,10 @@ command!                 UTF8       edit ++enc=utf-8
 command!                 Jis        Iso2022jp
 command!                 Sjis       Cp932
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
-"autocmd FileType *.html.php setlocal tabstop=2 shiftwidth=2
-"autocmd FileType *.css setlocal tabstop=2 shiftwidth=2
+if has('unix')
+    autocmd BufNewFile,BufRead *.html.php setlocal tabstop=2 shiftwidth=2
+    autocmd BufNewFile,BufRead *.css setlocal tabstop=2 shiftwidth=2
+endif
 
 "----------------------------------------
 " function
@@ -206,10 +213,11 @@ let MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.
 "----------------------------------------
 " EnhancedCommentify.vim
 nnoremap <Space>c :call EnhancedCommentify('', 'guess')<CR>
+vnoremap <Space>c :call EnhancedCommentify('', 'guess')<CR>
 
 "----------------------------------------
 " neocomplecache.vim
-function InsertTabWrapper()
+function! InsertTabWrapper()
     if pumvisible()
         return "\<c-n>"
     endif
@@ -222,5 +230,31 @@ function InsertTabWrapper()
         return "\<c-x>\<c-o>"
     endif
 endfunction
+function! InsertShiftTabWrapper()
+    if pumvisible()
+        return "\<c-p>"
+    endif
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k\|<\|/'
+        return "\<S-tab>"
+    elseif exists('&omnifunc') && &omnifunc == ''
+        return "\<c-p>"
+    else
+        return "\<c-x>\<c-o>"
+    endif
+endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <S-tab> <c-r>=InsertShiftTabWrapper()<cr>
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_enable_smart_case = 1
+let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_min_syntax_length = 3
+
+inoremap <expr><C-y> neocomplcache#close_popup()
+inoremap <expr><C-h> neocomplcache#smart_close_popup().”\<C-h>
+inoremap <expr><C-l> neocomplcache#complete_common_string()
+imap <C-k> <Plug>(neocomplcache_snippets_expand)
+inoremap <expr><C-g> neocomplcache#undo_completion()
+
+
 
