@@ -19,3 +19,7 @@
 	url = git://github.com/vim-scripts/EnhCommentify.vim.git
     ignore = untracked
 
+[submodule ".vim/bundle/vim-ref"]
+	path = .vim/bundle/vim-ref
+	url = git://github.com/thinca/vim-ref.git
+    ignore = untracked
