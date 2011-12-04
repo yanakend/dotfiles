@@ -256,5 +256,6 @@ inoremap <expr><C-l> neocomplcache#complete_common_string()
 imap <C-k> <Plug>(neocomplcache_snippets_expand)
 inoremap <expr><C-g> neocomplcache#undo_completion()
 
-
-
+"----------------------------------------
+" ref.vim
+let g:ref_phpmanual_path = '~/.vim/php_doc/php-chunked-xhtml'
