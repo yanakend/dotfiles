@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>TTL の設定</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="mysqlnd-qc.basic_usage.html">基本的な使用法</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="mysqlnd-qc.cache_by_default.html">デフォルトでキャッシュ</a></div>
+ <div class="up"><a href="mysqlnd-qc.usage.html">例</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="mysqlnd-qc.per_query_ttl" class="section">
+  <h2 class="title">TTL の設定</h2>
+  <p class="para">
+   クエリ･キャッシュ・プラグインのデフォルトの失効方式は、生存期間
+   (Time-to-Live <i>TTL</i>) です。
+   クエリ文字列が別の <i>TTL</i> を設定する SQL ヒントを含まない限り、
+   PHP 構成ディレクティブ 
+   <i>
+    <a href="mysqlnd-qc.configuration.html" class="link">mysqlnd_qc.ttl</a>
+   </i> で定義されたデフォルトの
+   <i>TTL</i> が組み込みのストレージ･ハンドラで使用されます。
+   <i>TTL</i> は秒単位で指定されます。
+  </p>
+  <p class="para">
+   <i>TTL</i> に基づくキャッシュは全て、データを陳腐化することが
+   あります。基礎をなすデータが変わっても、キャッシュエントリは自動的に失効しません。
+  </p>
+  <p class="para">
+   この制約を変えるために、
+   ユーザー定義のキャッシュ･ストレージ・ハンドラは任意の失効戦略を実装できます。
+  </p>
+  <p class="para">
+   <div class="example" id="example-1678">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br /></span><span style="color: #FF8000">/*&nbsp;接続し、テストテーブルを作成してデータを読み込みます&nbsp;*/<br /></span><span style="color: #0000BB">$mysqli&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">mysqli</span><span style="color: #007700">(</span><span style="color: #DD0000">"host"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"user"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"password"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"schema"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"port"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"socket"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"DROP&nbsp;TABLE&nbsp;IF&nbsp;EXISTS&nbsp;test"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"CREATE&nbsp;TABLE&nbsp;test(id&nbsp;INT)"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;test(id)&nbsp;VALUES&nbsp;(1),&nbsp;(2)"</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">printf</span><span style="color: #007700">(</span><span style="color: #DD0000">"Default&nbsp;TTL\t:&nbsp;%d&nbsp;seconds\n"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">ini_get</span><span style="color: #007700">(</span><span style="color: #DD0000">"mysqlnd_qc.ttl"</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">/*&nbsp;SQL&nbsp;ヒントによってキャッシュされます&nbsp;*/<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"/*"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">MYSQLND_QC_ENABLE_SWITCH&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"*/"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;id&nbsp;FROM&nbsp;test&nbsp;WHERE&nbsp;id&nbsp;=&nbsp;1"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_assoc</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">free</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"DELETE&nbsp;FROM&nbsp;test&nbsp;WHERE&nbsp;id&nbsp;=&nbsp;1"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*&nbsp;ヒットしたキャッシュ&nbsp;-&nbsp;自動で失効しません！&nbsp;*/<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"/*"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">MYSQLND_QC_ENABLE_SWITCH&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"*/"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;id&nbsp;FROM&nbsp;test&nbsp;WHERE&nbsp;id&nbsp;=&nbsp;1"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_assoc</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">free</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">sleep</span><span style="color: #007700">(</span><span style="color: #0000BB">ini_get</span><span style="color: #007700">(</span><span style="color: #DD0000">"mysqlnd_qc.ttl"</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">/*&nbsp;失敗したキャッシュ&nbsp;-&nbsp;キャッシュエントリの有効期限が切れました&nbsp;*/<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"/*"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">MYSQLND_QC_ENABLE_SWITCH&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"*/"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;id&nbsp;FROM&nbsp;test&nbsp;WHERE&nbsp;id&nbsp;=&nbsp;1"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_assoc</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">free</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   <div class="example-contents"><p>上の例の出力は以下となります。</p></div>
+    <div class="example-contents screen">
+<div class="cdata"><pre>
+Default TTL:    : 30 seconds
+array(1) {
+  [&quot;id&quot;]=&gt;
+  string(1) &quot;1&quot;
+}
+array(1) {
+  [&quot;id&quot;]=&gt;
+  string(1) &quot;1&quot;
+}
+NULL
+</pre></div>
+    </div>
+
+   </div>
+  </p>
+  <p class="para">
+   SQL ヒント <i>/*qc_tt=seconds*/</i> を使用してデフォルトの
+   <i>TTL</i> を却下できます。その SQL ヒントは、
+   キャッシュを使用可能にする SQL ヒントの直後に書かれなければいけません。
+   文字列の値を使う代わりに、PHP 定数
+   <i>
+    <a href="mysqlnd-qc.constants.html" class="link">MYSQLND_QC_TTL_SWITCH</a>
+   </i> の使用が推奨されます。
+  </p>
+  <p class="para">
+   <div class="example" id="example-1679">
+    <div class="example-contents">
+<div class="phpcode"><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php<br />$start&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">microtime</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*&nbsp;接続し、テストテーブルを作成してデータを読み込みます&nbsp;*/<br /></span><span style="color: #0000BB">$mysqli&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">mysqli</span><span style="color: #007700">(</span><span style="color: #DD0000">"host"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"user"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"password"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"schema"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"port"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"socket"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"DROP&nbsp;TABLE&nbsp;IF&nbsp;EXISTS&nbsp;test"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"CREATE&nbsp;TABLE&nbsp;test(id&nbsp;INT)"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"INSERT&nbsp;INTO&nbsp;test(id)&nbsp;VALUES&nbsp;(1),&nbsp;(2)"</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">printf</span><span style="color: #007700">(</span><span style="color: #DD0000">"Default&nbsp;TTL\t:&nbsp;%d&nbsp;seconds\n"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">ini_get</span><span style="color: #007700">(</span><span style="color: #DD0000">"mysqlnd_qc.ttl"</span><span style="color: #007700">));<br /><br /></span><span style="color: #FF8000">/*&nbsp;２秒間キャッシュされます&nbsp;*/<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">sprintf</span><span style="color: #007700">(</span><span style="color: #DD0000">"/*%s*//*%s%d*/SELECT&nbsp;id&nbsp;FROM&nbsp;test&nbsp;WHERE&nbsp;id&nbsp;=&nbsp;1"</span><span style="color: #007700">,<br />&nbsp;</span><span style="color: #0000BB">MYSQLND_QC_ENABLE_SWITCH</span><span style="color: #007700">,<br />&nbsp;</span><span style="color: #0000BB">MYSQLND_QC_TTL_SWITCH</span><span style="color: #007700">,<br />&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_assoc</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">free</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"DELETE&nbsp;FROM&nbsp;test&nbsp;WHERE&nbsp;id&nbsp;=&nbsp;1"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">sleep</span><span style="color: #007700">(</span><span style="color: #0000BB">1</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*&nbsp;ヒットしたキャッシュ&nbsp;-&nbsp;自動で失効せず、まだ有効です！&nbsp;*/<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_assoc</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">free</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">sleep</span><span style="color: #007700">(</span><span style="color: #0000BB">2</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">/*&nbsp;失敗したキャッシュ&nbsp;-&nbsp;キャッシュエントリの有効期限が切れました&nbsp;*/<br /></span><span style="color: #0000BB">$res&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$mysqli</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">var_dump</span><span style="color: #007700">(</span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_assoc</span><span style="color: #007700">());<br /></span><span style="color: #0000BB">$res</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">free</span><span style="color: #007700">();<br /><br /></span><span style="color: #0000BB">printf</span><span style="color: #007700">(</span><span style="color: #DD0000">"Script&nbsp;runtime\t:&nbsp;%d&nbsp;seconds\n"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">microtime</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">)&nbsp;-&nbsp;</span><span style="color: #0000BB">$start</span><span style="color: #007700">);<br /><br /></span><span style="color: #0000BB">?&gt;</span>
+</span>
+</code></div>
+    </div>
+
+   <div class="example-contents"><p>上の例の出力は以下となります。</p></div>
+    <div class="example-contents screen">
+<div class="cdata"><pre>
+Default TTL     : 30 seconds
+array(1) {
+  [&quot;id&quot;]=&gt;
+  string(1) &quot;1&quot;
+}
+array(1) {
+  [&quot;id&quot;]=&gt;
+  string(1) &quot;1&quot;
+}
+NULL
+Script runtime  : 3 seconds
+
+</pre></div>
+    </div>
+
+   </div>
+  </p>
+
+ </div><hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="mysqlnd-qc.basic_usage.html">基本的な使用法</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="mysqlnd-qc.cache_by_default.html">デフォルトでキャッシュ</a></div>
+ <div class="up"><a href="mysqlnd-qc.usage.html">例</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>

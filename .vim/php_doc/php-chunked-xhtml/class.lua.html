@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Lua クラス</title>
+
+ </head>
+ <body><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="lua.resources.html">リソース型</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="lua.__call.html">Lua::__call</a></div>
+ <div class="up"><a href="book.lua.html">Lua</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div><hr /><div id="class.lua" class="reference">
+
+ <h1 class="title">Lua クラス</h1>
+ 
+
+ <div class="partintro">
+
+
+  <div class="section" id="lua.intro">
+   <h2 class="title">導入</h2>
+   <p class="para">
+
+   </p>
+  </div>
+
+
+  <div class="section" id="lua.synopsis">
+   <h2 class="title">クラス概要</h2>
+
+
+   <div class="classsynopsis">
+    <div class="ooclass"></div>
+
+
+    <div class="classsynopsisinfo">
+     <span class="ooclass">
+      <b class="classname">Lua</b>
+     </span>
+     {</div>
+
+    <div class="classsynopsisinfo classsynopsisinfo_comment">/* 定数 */</div>
+    <div class="fieldsynopsis">
+     <span class="modifier">const</span>
+     <span class="type">string</span>
+      <var class="fieldsynopsis_varname"><a href="class.lua.html#lua.constants.lua-version"><var class="varname">LUA_VERSION</var></a></var>
+     <span class="initializer"> = Lua 5.1.4</span>
+    ;</div>
+
+
+    <div class="classsynopsisinfo classsynopsisinfo_comment">/* プロパティ */</div>
+    <div class="fieldsynopsis">
+     <span class="modifier">static</span>
+      <var class="varname"><a href="class.lua.html#lua.props.callbacks">$<var class="varname">Lua-&gt;_callbacks</var></a></var>
+    ;</div>
+
+
+    
+    <div class="classsynopsisinfo classsynopsisinfo_comment">/* メソッド */</div>
+    <div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">void</span> <span class="methodname"><a href="lua.call.html" class="methodname">Lua::call</a></span>
+    ( <span class="methodparam"><span class="type">string</span> <tt class="parameter">$lua_func</tt></span>
+   , <span class="methodparam"><span class="type">array</span> <tt class="parameter">$args</tt></span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">void</span> <span class="methodname"><a href="lua.assign.html" class="methodname">Lua::assign</a></span>
+    ( <span class="methodparam"><span class="type">string</span> <tt class="parameter">$name</tt></span>
+   , <span class="methodparam"><span class="type">string</span> <tt class="parameter">$value</tt></span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">void</span> <span class="methodname"><a href="lua.call.html" class="methodname">Lua::call</a></span>
+    ( <span class="methodparam"><span class="type"><a href="language.pseudo-types.html#language.types.mixed" class="type mixed">mixed</a></span> <tt class="parameter">$lua_func</tt></span>
+   , <span class="methodparam"><span class="type">array</span> <tt class="parameter">$args</tt></span>
+   )</div>
+<div class="methodsynopsis dc-description">
+    <span class="methodname"><a href="lua.construct.html" class="methodname">Lua::__construct</a></span>
+    ( <span class="methodparam"><span class="type">string</span> <tt class="parameter">$lua_script_file</tt><span class="initializer"> = NULL</span></span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">void</span> <span class="methodname"><a href="lua.eval.html" class="methodname">Lua::eval</a></span>
+    ( <span class="methodparam"><span class="type">string</span> <tt class="parameter">$statements</tt></span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">void</span> <span class="methodname"><a href="lua.getversion.html" class="methodname">Lua::getversion</a></span>
+    ( <span class="methodparam">void</span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">void</span> <span class="methodname"><a href="lua.include.html" class="methodname">Lua::include</a></span>
+    ( <span class="methodparam"><span class="type">string</span> <tt class="parameter">$file</tt></span>
+   )</div>
+<div class="methodsynopsis dc-description">
+   <span class="modifier">public</span> <span class="type">void</span> <span class="methodname"><a href="lua.register.html" class="methodname">Lua::registerCallback</a></span>
+    ( <span class="methodparam"><span class="type">string</span> <tt class="parameter">$name</tt></span>
+   , <span class="methodparam"><span class="type"><a href="language.pseudo-types.html#language.types.callback" class="type callback">callback</a></span> <tt class="parameter">$function</tt></span>
+   )</div>
+
+   }</div>
+
+
+  </div>
+
+  
+
+  <div class="section" id="lua.props">
+   <h2 class="title">プロパティ</h2>
+   <dl>
+
+    <dt id="lua.props.callbacks">
+     <span class="term"><var class="varname"><var class="varname">_callbacks</var></var></span>
+     <dd>
+
+      <p class="para"/>
+     </dd>
+
+    </dt>
+
+   </dl>
+
+  </div>
+
+
+  
+
+  <div class="section" id="lua.constants">
+   <h2 class="title">定義済み定数</h2>
+   <div class="section" id="lua.constants.types">
+    <h2 class="title">Lua ノード型</h2>
+    <dl>
+
+
+     <dt id="lua.constants.lua-version">
+      <span class="term"><b><tt>Lua::LUA_VERSION</tt></b></span>
+      <dd>
+
+       <p class="para"/>
+      </dd>
+
+     </dt>
+
+
+    </dl>
+
+   </div>
+  </div>
+
+
+
+ </div>
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>目次</h2><ul class="chunklist chunklist_reference"><li><a href="lua.__call.html">Lua::__call</a> — Lua 関数を呼び出すための Lua 用マジックメソッド</li><li><a href="lua.assign.html">Lua::assign</a> — PHP 変数を Lua にアサイン</li><li><a href="lua.call.html">Lua::call</a> — Lua 関数を呼び出す</li><li><a href="lua.construct.html">Lua::__construct</a> — Lua コンストラクタ</li><li><a href="lua.eval.html">Lua::eval</a> — 文字列を Lua コードとして評価</li><li><a href="lua.getversion.html">Lua::getversion</a> — getversion 用途</li><li><a href="lua.include.html">Lua::include</a> — Lua スクリプトファイルをパース</li><li><a href="lua.register.html">Lua::registerCallback</a> — PHP 関数を Lua に登録</li></ul>
+</div>
+<hr /><div class="manualnavbar" style="text-align: center;">
+ <div class="prev" style="text-align: left; float: left;"><a href="lua.resources.html">リソース型</a></div>
+ <div class="next" style="text-align: right; float: right;"><a href="lua.__call.html">Lua::__call</a></div>
+ <div class="up"><a href="book.lua.html">Lua</a></div>
+ <div class="home"><a href="index.html">PHP Manual</a></div>
+</div></body></html>
