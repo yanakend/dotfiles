@@ -70,6 +70,10 @@ nnoremap h zv<Left>
 nnoremap j gj
 nnoremap k gk
 nnoremap l zv<Right>
+nnoremap <C-k> <C-w>k
+nnoremap <C-j> <C-w>j
+nnoremap <C-h> <C-w>h
+nnoremap <C-l> <C-w>l
 
 nnoremap n nzz
 nnoremap N Nzz
@@ -115,9 +119,9 @@ endif
 nnoremap ZZ <Nop>
 
 nnoremap <Space>e  :Exp<CR>
-nnoremap <Space>d  :bd<CR>
+nnoremap <Space>d  :Kwbd<CR>
 nnoremap <Space>w  :write<CR>
-nnoremap <Space>m  :MRU<CR>
+"nnoremap <Space>m  :MRU<CR>
 nnoremap <Space>v  :e ~/.vimrc<CR>
 if has('win32')
     nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
@@ -131,17 +135,26 @@ endif
 "nnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
 "vnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
 vnoremap <silent> /  :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
-nnoremap <C-g> `.
+nnoremap <C-g>    `.
 
 cnoremap <C-a>    <Home>
 cnoremap <C-f>    <Right>
 cnoremap <C-b>    <Left>
 cnoremap <C-d>    <Delete>
-cnoremap <C-w>     <Home>\<<End>\><Left><Left>
-cnoremap <C-c>     <End>\C
+cnoremap <C-w>    <Home>\<<End>\><Left><Left>
+cnoremap <C-c>    <End>\C
+cnoremap <C-k>    <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
 
-vnoremap <         <gv
-vnoremap >         >gv
+vnoremap <        <gv
+vnoremap >        >gv
+
+"ヤンクした文字列とカーソル位置の単語を置換する vim bible p123
+"cy カーソル位置移行の文字列とヤンクした単語を置換
+"ciyテキストオブジェクト的にカーソルが単語内のどこにあってもヤンクした文字列と置換
+"必要ならn.で繰り返し実行
+nnoremap <silent> cy ce<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
+vnoremap <silent> cy c<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
+nnoremap <silent> ciy ciw<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 
 "----------------------------------------
 " command
@@ -188,7 +201,7 @@ filetype plugin on
 
 "----------------------------------------
 " quickbuf.vim
-let g:qb_hotkey = "<Space>b"
+"let g:qb_hotkey = "<Space>b"
 
 "----------------------------------------
 " quickrun.vim
@@ -239,7 +252,7 @@ function! InsertShiftTabWrapper()
         return "\<S-tab>"
     elseif exists('&omnifunc') && &omnifunc == ''
         return "\<c-p>"
-    else
+    elsese
         return "\<c-x>\<c-o>"
     endif
 endfunction
@@ -251,11 +264,30 @@ let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_min_syntax_length = 3
 
 inoremap <expr><C-y> neocomplcache#close_popup()
-inoremap <expr><C-h> neocomplcache#smart_close_popup().”\<C-h>
 inoremap <expr><C-l> neocomplcache#complete_common_string()
 imap <C-k> <Plug>(neocomplcache_snippets_expand)
 inoremap <expr><C-g> neocomplcache#undo_completion()
 
 "----------------------------------------
 " ref.vim
-let g:ref_phpmanual_path = '~/.vim/php_doc/php-chunked-xhtml'
+let g:ref_use_vimproc = 0   " vimprocをインストールしてない場合は0を指定
+let g:ref_phpmanual_path = '~/.vim/php_doc/php-chunked-xhtml/'
+let g:ref_phpmanual_cmd = 'w3m -dump %s'
+
+
+""" unite.vim
+" 入力モードで開始する
+"let g:unite_enable_start_insert=1
+" バッファ一覧
+nnoremap <silent> <Space>b :<C-u>Unite buffer<CR>
+" ファイル一覧
+nnoremap <silent> ,uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+" レジスタ一覧
+nnoremap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
+" 最近使用したファイル一覧
+nnoremap <silent> <Space>m :<C-u>Unite file_mru<CR>
+" 常用セット
+nnoremap <silent> ,uu :<C-u>Unite buffer file_mru<CR>
+" 全部乗せ
+nnoremap <silent> ,ua :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
+
