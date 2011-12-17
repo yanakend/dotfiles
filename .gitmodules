@@ -26,6 +26,8 @@
 [submodule ".vim/bundle/unite"]
 	path = .vim/bundle/unite
 	url = git://github.com/vim-scripts/unite.vim.git
+    ignore = untracked
 [submodule ".vim/bundle/vimfiler"]
 	path = .vim/bundle/vimfiler
 	url = git://github.com/Shougo/vimfiler.git
+    ignore = untracked
