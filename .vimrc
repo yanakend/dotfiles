@@ -265,9 +265,8 @@ inoremap <expr><C-g> neocomplcache#undo_completion()
 
 "----------------------------------------
 " ref.vim
-let g:ref_use_vimproc = 0   " vimprocをインストールしてない場合は0を指定
-let g:ref_phpmanual_path = '~/.vim/php_doc/php-chunked-xhtml/'
-let g:ref_phpmanual_cmd = 'w3m -dump %s'
+let g:ref_phpmanual_path = '/Users/yanagikenji/.vim/php_doc/php-chunked-xhtml/'
+"let g:ref_phpmanual_cmd = 'w3m -dump %s'
 
 "----------------------------------------
 " unite.vim
