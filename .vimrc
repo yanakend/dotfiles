@@ -70,10 +70,10 @@ nnoremap h zv<Left>
 nnoremap j gj
 nnoremap k gk
 nnoremap l zv<Right>
-nnoremap <C-k> <C-w>k
-nnoremap <C-j> <C-w>j
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
+"nnoremap <C-k> <C-w>k
+"nnoremap <C-j> <C-w>j
+"nnoremap <C-h> <C-w>h
+"nnoremap <C-l> <C-w>l
 
 nnoremap n nzz
 nnoremap N Nzz
@@ -118,10 +118,9 @@ endif
 
 nnoremap ZZ <Nop>
 
-nnoremap <Space>e  :Exp<CR>
+nnoremap <Space>e  :VimFiler<CR>
 nnoremap <Space>d  :Kwbd<CR>
 nnoremap <Space>w  :write<CR>
-"nnoremap <Space>m  :MRU<CR>
 nnoremap <Space>v  :e ~/.vimrc<CR>
 if has('win32')
     nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
@@ -200,10 +199,6 @@ set helpfile=$VIMRUNTIME/doc/help.txt
 filetype plugin on
 
 "----------------------------------------
-" quickbuf.vim
-"let g:qb_hotkey = "<Space>b"
-
-"----------------------------------------
 " quickrun.vim
 "let g:quickrun_no_default_key_mappings = 0
 "silent! nnoremap <Space>r <Plug>(quickrun)
@@ -225,8 +220,8 @@ let MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.
 
 "----------------------------------------
 " EnhancedCommentify.vim
-nnoremap <Space>c :call EnhancedCommentify('', 'guess')<CR>
-vnoremap <Space>c :call EnhancedCommentify('', 'guess')<CR>
+nnoremap <Space>/ :call EnhancedCommentify('', 'guess')<CR>
+vnoremap <Space>/ :call EnhancedCommentify('', 'guess')<CR>
 
 "----------------------------------------
 " neocomplecache.vim
@@ -274,20 +269,25 @@ let g:ref_use_vimproc = 0   " vimprocをインストールしてない場合は0
 let g:ref_phpmanual_path = '~/.vim/php_doc/php-chunked-xhtml/'
 let g:ref_phpmanual_cmd = 'w3m -dump %s'
 
-
-""" unite.vim
+"----------------------------------------
+" unite.vim
 " 入力モードで開始する
 "let g:unite_enable_start_insert=1
+let g:vimfiler_as_default_explorer = 1
 " バッファ一覧
-nnoremap <silent> <Space>b :<C-u>Unite buffer<CR>
+nnoremap <silent> <Space>b  :<C-u>Unite buffer<CR>
 " ファイル一覧
-nnoremap <silent> ,uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+nnoremap <silent> <Space>uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 " レジスタ一覧
-nnoremap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
+nnoremap <silent> <Space>ur :<C-u>Unite -buffer-name=register register<CR>
 " 最近使用したファイル一覧
-nnoremap <silent> <Space>m :<C-u>Unite file_mru<CR>
+nnoremap <silent> <Space>m  :<C-u>Unite file_mru<CR>
 " 常用セット
-nnoremap <silent> ,uu :<C-u>Unite buffer file_mru<CR>
+nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru<CR>
 " 全部乗せ
-nnoremap <silent> ,ua :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
+nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
 
+let g:vimfiler_execute_file_list = {}
+let g:vimfiler_execute_file_list['vim'] = 'vim'
+let g:vimfiler_execute_file_list['txt'] = 'vim'
+let g:vimfiler_execute_file_list['php'] = 'vim'
