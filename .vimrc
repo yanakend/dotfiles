@@ -179,12 +179,12 @@ endif
 function! MySetSearch(cmd, ...)
     let saved_reg = @"
     if a:cmd != ''
-    silent exec 'normal! '.a:cmd
+      silent exec 'normal! '.a:cmd
     endif
     let pattern = escape(@", '\\/.*$^~[]')
     let pattern = substitute(pattern, '\n$', '', '')
     if a:0 > 0
-    let pattern = '\<'.pattern.'\>'
+      let pattern = '\<'.pattern.'\>'
     endif
     let @/ = pattern
     let @" = saved_reg
