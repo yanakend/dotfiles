@@ -74,11 +74,11 @@ nnoremap <silent> n nzz
 nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
-
+":vertical diffsplit filename
 nnoremap <silent> <C-j> ]c
 nnoremap <silent> <C-k> [c
-nnoremap <silent> <C-l> do
-nnoremap <silent> <C-h> dp
+nnoremap <silent> <C-l> dp
+nnoremap <silent> <C-h> do
 
 if has('unix')
     nnoremap y "ay
