@@ -10,6 +10,7 @@ set runtimepath+=$MY_VIMRUNTIME
 
 "----------------------------------------
 " settings
+set nocompatible                    " viとの互換性を取らない
 syntax on
 set t_Co=256                        "256色に
 "カラースキーム設定
@@ -24,7 +25,6 @@ set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set guioptions=mr
 
-set nocompatible                    " viとの互換性を取らない
 set nonumber                        " 行数表示
 set hlsearch                        " 索文字列を色づけ
 set ignorecase                      " 文字小文字を判別しない
@@ -49,8 +49,7 @@ set ambiwidth=double                " □や○の文字があってもカーソ
 set whichwrap=b,s,[,],<,>           " カーソルキーで行末／行頭の移動可能に設定
 set title                           " タイトルをウインドウ枠に表示する
 set virtualedit=block               "ブロック選択時にフリーカーソルモード
-" バッファを切替えてもundoの効力を失わない
-"set shortmess+=I                    " 起動時のメッセージを表示しない
+set hidden                          "バッファを切替えてもundoの効力を失わない
 
 set backup
 set writebackup
@@ -59,26 +58,22 @@ set directory=~/.vim/swap
 set imsearch=0
 set iminsert=0
 set formatoptions-=ro
-
+set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
 "zi do dp [c ]c diffoff!
 
 "----------------------------------------
 " map
 nnoremap <silent> <C-[><C-[> :noh<CR>
-nnoremap h zv<Left>
-nnoremap j gj
-nnoremap k gk
-nnoremap l zv<Right>
-"nnoremap <C-k> <C-w>k
-"nnoremap <C-j> <C-w>j
-"nnoremap <C-h> <C-w>h
-"nnoremap <C-l> <C-w>l
+nnoremap <silent> h zv<Left>
+nnoremap <silent> j gj
+nnoremap <silent> k gk
+nnoremap <silent> l zv<Right>
 
-nnoremap n nzz
-nnoremap N Nzz
-nnoremap * *zz
-nnoremap # #zz
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
 
 if has('unix')
     nnoremap y "ay
@@ -122,6 +117,7 @@ nnoremap <Space>e  :VimFiler<CR>
 nnoremap <Space>d  :Kwbd<CR>
 nnoremap <Space>w  :write<CR>
 nnoremap <Space>v  :e ~/.vimrc<CR>
+"nnoremap <Space>c  :cd %:h<CR>
 if has('win32')
     nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
@@ -165,6 +161,7 @@ command!                 UTF8       edit ++enc=utf-8
 command!                 Jis        Iso2022jp
 command!                 Sjis       Cp932
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
+autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 if has('unix')
     autocmd BufNewFile,BufRead *.html.php setlocal tabstop=2 shiftwidth=2
     autocmd BufNewFile,BufRead *.css setlocal tabstop=2 shiftwidth=2
@@ -202,6 +199,16 @@ filetype plugin on
 " quickrun.vim
 "let g:quickrun_no_default_key_mappings = 0
 "silent! nnoremap <Space>r <Plug>(quickrun)
+if !exists("g:quickrun_config")
+    let g:quickrun_config={}
+endif
+let g:quickrun_config["_"] = {
+    \ "runner/vimproc/updatetime" : 80,
+    \ "outputter/buffer/split" : ":rightbelow 8sp",
+    \ "outputter/error/error" : "quickfix",
+    \ "outputter/error/success" : "buffer",
+    \ "outputter" : "error",
+\ }
 
 "----------------------------------------
 " savevers.vim
@@ -247,7 +254,7 @@ function! InsertShiftTabWrapper()
         return "\<S-tab>"
     elseif exists('&omnifunc') && &omnifunc == ''
         return "\<c-p>"
-    elsese
+    else
         return "\<c-x>\<c-o>"
     endif
 endfunction
@@ -265,28 +272,57 @@ inoremap <expr><C-g> neocomplcache#undo_completion()
 
 "----------------------------------------
 " ref.vim
-let g:ref_phpmanual_path = '/Users/yanagikenji/.vim/php_doc/php-chunked-xhtml/'
-"let g:ref_phpmanual_cmd = 'w3m -dump %s'
+if has('unix')
+    let g:ref_phpmanual_path = '/Users/yanagikenji/.vim/php_doc/php-chunked-xhtml/'
+endif
+if has('win32')
+    let g:ref_phpmanual_path = 'C:/Users/yanagikenji/.vim/php_doc/php-chunked-xhtml/'
+endif
 
 "----------------------------------------
 " unite.vim
 " 入力モードで開始する
 "let g:unite_enable_start_insert=1
+"let g:unite_source_file_mru_time_format
 let g:vimfiler_as_default_explorer = 1
 " バッファ一覧
-nnoremap <silent> <Space>b  :<C-u>Unite buffer<CR>
+nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright -auto-resize<CR>
 " ファイル一覧
-nnoremap <silent> <Space>uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
+nnoremap <silent> <Space>uf :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright file -auto-resize<CR>
 " レジスタ一覧
-nnoremap <silent> <Space>ur :<C-u>Unite -buffer-name=register register<CR>
+nnoremap <silent> <Space>ur :<C-u>Unite -buffer-name=register -direction=botright -auto-resize register<CR>
 " 最近使用したファイル一覧
-nnoremap <silent> <Space>m  :<C-u>Unite file_mru<CR>
+nnoremap <silent> <Space>m  :<C-u>Unite file_mru -direction=botright -auto-resize<CR>
 " 常用セット
-nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru<CR>
+nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright -auto-resize<CR>
 " 全部乗せ
-nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
+nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright -auto-resize buffer file_mru bookmark file<CR>
+" unite.vim上でのキーマッピング
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()
+  " 単語単位からパス単位で削除するように変更
+  inoremap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+  " ESCキーを押すと終了する
+  nmap <silent><buffer> <C-[><C-[> q
+  nmap <silent><buffer> <ESC><ESC> q
+endfunction
 
-let g:vimfiler_execute_file_list = {}
-let g:vimfiler_execute_file_list['vim'] = 'vim'
-let g:vimfiler_execute_file_list['txt'] = 'vim'
-let g:vimfiler_execute_file_list['php'] = 'vim'
+"----------------------------------------
+" vim-filer.vim
+nnoremap <Space>e  :VimFiler<CR>
+let g:vimfiler_as_default_explorer = 1
+call vimfiler#set_execute_file('vim', 'vim')
+call vimfiler#set_execute_file('php', 'vim')
+call vimfiler#set_execute_file('ctp', 'vim')
+call vimfiler#set_execute_file('txt', 'vim')
+call vimfiler#set_execute_file('jax', 'vim')
+autocmd FileType vimfiler call s:vimfiler_my_settings()
+function! s:vimfiler_my_settings() " ESCキーを押すと終了する
+  nmap <silent><buffer> <C-[><C-[> <C-o><C-o>
+  nmap <silent><buffer> <ESC><ESC> <C-o><C-o>
+  nmap <silent><buffer> q          <C-o><C-o>
+  nunmap   <buffer> j
+  nunmap   <buffer> k
+endfunction
+
+
