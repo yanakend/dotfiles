@@ -75,6 +75,11 @@ nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 
+nnoremap <silent> <C-j> ]c
+nnoremap <silent> <C-k> [c
+nnoremap <silent> <C-l> do
+nnoremap <silent> <C-h> dp
+
 if has('unix')
     nnoremap y "ay
     vnoremap y "ay
