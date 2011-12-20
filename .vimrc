@@ -64,7 +64,7 @@ set diffopt=filler,vertical,foldcolumn:0
 
 "----------------------------------------
 " map
-nnoremap <silent> <C-[><C-[> :noh<CR>
+nnoremap <silent> <C-[> :noh<CR>
 nnoremap <silent> h zv<Left>
 nnoremap <silent> j gj
 nnoremap <silent> k gk
@@ -303,8 +303,8 @@ function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
   inoremap <buffer> <C-w> <Plug>(unite_delete_backward_path)
   " ESCキーを押すと終了する
-  nmap <silent><buffer> <C-[><C-[> q
-  nmap <silent><buffer> <ESC><ESC> q
+  nmap <silent><buffer> <C-[> q
+  nmap <silent><buffer> <ESC> q
 endfunction
 
 "----------------------------------------
@@ -318,9 +318,9 @@ call vimfiler#set_execute_file('txt', 'vim')
 call vimfiler#set_execute_file('jax', 'vim')
 autocmd FileType vimfiler call s:vimfiler_my_settings()
 function! s:vimfiler_my_settings() " ESCキーを押すと終了する
-  nmap <silent><buffer> <C-[><C-[> <C-o><C-o>
-  nmap <silent><buffer> <ESC><ESC> <C-o><C-o>
-  nmap <silent><buffer> q          <C-o><C-o>
+  nmap <silent><buffer> <C-[> <C-o><C-o>
+  nmap <silent><buffer> <ESC> <C-o><C-o>
+  nmap <silent><buffer> q     <C-o><C-o>
   nunmap   <buffer> j
   nunmap   <buffer> k
 endfunction
