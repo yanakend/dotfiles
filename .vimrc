@@ -75,10 +75,10 @@ nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 ":vertical diffsplit filename
-nnoremap <silent> <C-j> ]c
-nnoremap <silent> <C-k> [c
-nnoremap <silent> <C-l> dp
-nnoremap <silent> <C-h> do
+nnoremap <silent> <S-C-j> ]c
+nnoremap <silent> <S-C-k> [c
+nnoremap <silent> <S-C-l> dp
+nnoremap <silent> <S-C-h> do
 
 if has('unix')
     nnoremap y "ay
@@ -281,13 +281,23 @@ if has('unix')
     let g:ref_phpmanual_path = '/Users/yanagikenji/.vim/php_doc/php-chunked-xhtml/'
 endif
 if has('win32')
-    let g:ref_phpmanual_path = 'C:/Users/yanagikenji/.vim/php_doc/php-chunked-xhtml/'
+    let g:ref_phpmanual_path = 'C:\Users\yanagikenji\.vim\php_doc\php-chunked-xhtml\'
+    let g:ref_phpmanual_encoding = 'Shift-JIS'
+    let $PATH = $PATH . ';C:\Program Files\Lynx for Win32'
 endif
+"let g:ref_phpmanual_cmd = 'w3m -dump %s'
+autocmd FileType ref-phpmanual call s:initialize_ref_viewer()
+function! s:initialize_ref_viewer()
+    nmap <silent><buffer> <ESC> :bd<CR>
+    nmap <silent><buffer> q     :bd<CR>
+    nmap <silent><buffer> <C-]> :bd<CR>
+    setlocal nonumber
+endfunction
 
 "----------------------------------------
 " unite.vim
 " 入力モードで開始する
-"let g:unite_enable_start_insert=1
+let g:unite_enable_start_insert=1
 "let g:unite_source_file_mru_time_format
 let g:vimfiler_as_default_explorer = 1
 nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
@@ -309,8 +319,8 @@ function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
   inoremap <buffer> <C-w> <Plug>(unite_delete_backward_path)
   " ESCキーを押すと終了する
-  nmap <silent><buffer> <C-[> q
-  nmap <silent><buffer> <ESC> q
+  nmap <silent><buffer> <C-[> <Plug>(unite_exit)
+  nmap <silent><buffer> <ESC> <Plug>(unite_exit)
 endfunction
 
 "----------------------------------------
@@ -329,6 +339,5 @@ function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   nmap <silent><buffer> q     <C-o><C-o>
   nunmap   <buffer> j
   nunmap   <buffer> k
-endfunctio 
-
+endfunction
 
