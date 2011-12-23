@@ -290,6 +290,7 @@ endif
 "let g:unite_enable_start_insert=1
 "let g:unite_source_file_mru_time_format
 let g:vimfiler_as_default_explorer = 1
+nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
 " バッファ一覧
 nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright -auto-resize<CR>
 " ファイル一覧
@@ -328,6 +329,6 @@ function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   nmap <silent><buffer> q     <C-o><C-o>
   nunmap   <buffer> j
   nunmap   <buffer> k
-endfunction
+endfunctio 
 
 
