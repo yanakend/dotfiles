@@ -118,11 +118,11 @@ endif
 
 nnoremap ZZ <Nop>
 
-nnoremap <silent><Space>e   :Exp<cr>
+nnoremap <silent><Space>e   :cd %:h<CR>:VimFilerCurrentDir<cr>
+"nnoremap <silent><Space>e   :Exp<cr>
 nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>v  :e ~/.vimrc<CR>
-"nnoremap <Space>c  :cd %:h<CR>
 if has('win32')
     nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
@@ -333,19 +333,18 @@ endfunction
 
 "----------------------------------------
 " vim-filer.vim
-"nnoremap <Space>e  :VimFiler<CR>
-"let g:vimfiler_as_default_explorer = 1
-"call vimfiler#set_execute_file('vim', 'vim')
-"call vimfiler#set_execute_file('php', 'vim')
-"call vimfiler#set_execute_file('ctp', 'vim')
-"call vimfiler#set_execute_file('txt', 'vim')
-"call vimfiler#set_execute_file('jax', 'vim')
-"autocmd FileType vimfiler call s:vimfiler_my_settings()
-"function! s:vimfiler_my_settings() " ESCキーを押すと終了する
-"  nmap <silent><buffer> <C-[> <C-o><C-o>
-"  nmap <silent><buffer> <ESC> <C-o><C-o>
-"  nmap <silent><buffer> q     <C-o><C-o>
-"  nunmap   <buffer> j
-"  nunmap   <buffer> k
-"endfunction
+let g:vimfiler_as_default_explorer = 1
+call vimfiler#set_execute_file('vim', 'vim')
+call vimfiler#set_execute_file('php', 'vim')
+call vimfiler#set_execute_file('ctp', 'vim')
+call vimfiler#set_execute_file('txt', 'vim')
+call vimfiler#set_execute_file('jax', 'vim')
+autocmd FileType vimfiler call s:vimfiler_my_settings()
+function! s:vimfiler_my_settings() " ESCキーを押すと終了する
+  nmap <silent><buffer> <C-[> <C-o><C-o>
+  nmap <silent><buffer> <ESC> <C-o><C-o>
+  nmap <silent><buffer> q     <C-o><C-o>
+  nunmap   <buffer> j
+  nunmap   <buffer> k
+endfunction
 
