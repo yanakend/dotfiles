@@ -118,10 +118,10 @@ endif
 
 nnoremap ZZ <Nop>
 
-nnoremap <Space>e  :VimFiler<CR>
-nnoremap <Space>d  :Kwbd<CR>
-nnoremap <Space>w  :write<CR>
-nnoremap <Space>v  :e ~/.vimrc<CR>
+nnoremap <silent><Space>e   :Exp<cr>
+nnoremap <silent><Space>d  :Kwbd<CR>
+nnoremap <silent><Space>w  :write<CR>
+nnoremap <silent><Space>v  :e ~/.vimrc<CR>
 "nnoremap <Space>c  :cd %:h<CR>
 if has('win32')
     nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
@@ -225,6 +225,14 @@ let savevers_max = 99           "
 nnoremap <silent> <Space>sd- :VersDiff -<cr>
 nnoremap <silent> <Space>sd+ :VersDiff +<cr>
 nnoremap <silent> <Space>sdc :VersDiff -c<cr>
+autocmd FileType netrw call s:retrw_my_settings()
+function! s:retrw_my_settings() " ESCキーを押すと終了する
+  nmap <silent><buffer> <C-[> <C-o>
+  nmap <silent><buffer> <ESC> <C-o>
+  nmap <silent><buffer> q     <C-o>
+  nmap <silent><buffer> l     <cr>
+  nmap <silent><buffer> h     -
+endfunction
 
 "----------------------------------------
 " qfixhowm.vim
@@ -325,19 +333,19 @@ endfunction
 
 "----------------------------------------
 " vim-filer.vim
-nnoremap <Space>e  :VimFiler<CR>
-let g:vimfiler_as_default_explorer = 1
-call vimfiler#set_execute_file('vim', 'vim')
-call vimfiler#set_execute_file('php', 'vim')
-call vimfiler#set_execute_file('ctp', 'vim')
-call vimfiler#set_execute_file('txt', 'vim')
-call vimfiler#set_execute_file('jax', 'vim')
-autocmd FileType vimfiler call s:vimfiler_my_settings()
-function! s:vimfiler_my_settings() " ESCキーを押すと終了する
-  nmap <silent><buffer> <C-[> <C-o><C-o>
-  nmap <silent><buffer> <ESC> <C-o><C-o>
-  nmap <silent><buffer> q     <C-o><C-o>
-  nunmap   <buffer> j
-  nunmap   <buffer> k
-endfunction
+"nnoremap <Space>e  :VimFiler<CR>
+"let g:vimfiler_as_default_explorer = 1
+"call vimfiler#set_execute_file('vim', 'vim')
+"call vimfiler#set_execute_file('php', 'vim')
+"call vimfiler#set_execute_file('ctp', 'vim')
+"call vimfiler#set_execute_file('txt', 'vim')
+"call vimfiler#set_execute_file('jax', 'vim')
+"autocmd FileType vimfiler call s:vimfiler_my_settings()
+"function! s:vimfiler_my_settings() " ESCキーを押すと終了する
+"  nmap <silent><buffer> <C-[> <C-o><C-o>
+"  nmap <silent><buffer> <ESC> <C-o><C-o>
+"  nmap <silent><buffer> q     <C-o><C-o>
+"  nunmap   <buffer> j
+"  nunmap   <buffer> k
+"endfunction
 
