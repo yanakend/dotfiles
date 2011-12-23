@@ -34,3 +34,4 @@
 [submodule ".vim/bundle/vimfiler"]
 	path = .vim/bundle/vimfiler
 	url = git://github.com/Shougo/vimfiler.git
+    ignore = untracked
