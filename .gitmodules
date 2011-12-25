@@ -35,3 +35,7 @@
 	path = .vim/bundle/vimfiler
 	url = git://github.com/Shougo/vimfiler.git
     ignore = untracked
+[submodule ".vim/bundle/git-vim"]
+	path = .vim/bundle/git-vim
+	url = git://github.com/motemen/git-vim.git
+    ignore = untracked

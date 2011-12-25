@@ -12,8 +12,8 @@ set runtimepath+=$MY_VIMRUNTIME
 " settings
 set nocompatible                    " viとの互換性を取らない
 syntax on
-set t_Co=256                        "256色に
-"カラースキーム設定
+set t_Co=256                        " 256色に
+" カラースキーム設定
 if has('win32')
     colorscheme user_color
 endif
@@ -60,7 +60,8 @@ set iminsert=0
 set formatoptions-=ro
 set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
-"zi do dp [c ]c diffoff!
+set undofile
+set undodir=~/.vim/undo
 
 "----------------------------------------
 " map
@@ -75,10 +76,29 @@ nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 ":vertical diffsplit filename
-nnoremap <silent> <S-C-j> ]c
-nnoremap <silent> <S-C-k> [c
-nnoremap <silent> <S-C-l> dp
-nnoremap <silent> <S-C-h> do
+"nnoremap <silent> <S-C-j> ]c
+"nnoremap <silent> <S-C-k> [c
+"nnoremap <silent> <S-C-l> dp
+"nnoremap <silent> <S-C-h> do
+nnoremap <silent> J :call NextDiff()<CR>
+nnoremap <silent> K :call Prevdiff()<CR>
+nnoremap <silent> H dp
+nnoremap <silent> L do
+function! NextDiff()
+    if &diff
+        silent normal! ]c
+    else
+        silent normal! J
+    endif
+endfunction
+function! Prevdiff()
+    if &diff
+        silent normal! [c
+    else
+        silent normal! K
+"        silent execute ":call ref#K('normal')"
+    endif
+endfunction
 
 if has('unix')
     nnoremap y "ay
@@ -96,7 +116,7 @@ if has('unix')
     "vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
     "nnoremap <silent> <Space>p :r !pbpaste<CR>
     "vnoremap <silent> <Space>p :r !pbpaste<CR>
-    nnoremap <Space>g  :REGrep<CR>
+    nnoremap <Space>gg :REGrep<CR>
 endif
 if has('win32')
     nnoremap y "+y
@@ -113,13 +133,12 @@ if has('win32')
     vnoremap X "+X
     inoremap <C-v> <C-R>+
     cnoremap <C-v> <C-R>+
-    nnoremap <Space>g  :silent !"C:\Program Files\Yokka\NoEditor\Grep.exe.lnk"<CR>
+    nnoremap <Space>gg :silent !"C:\Program Files\Yokka\NoEditor\Grep.exe.lnk"<CR>
 endif
 
 nnoremap ZZ <Nop>
 
-nnoremap <silent><Space>e   :cd %:h<CR>:VimFilerCurrentDir<cr>
-"nnoremap <silent><Space>e   :Exp<cr>
+nnoremap <silent><Space>e  :cd %:h<CR>:VimFilerCurrentDir<cr>
 nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>v  :e ~/.vimrc<CR>
@@ -216,6 +235,18 @@ let g:quickrun_config["_"] = {
 \ }
 
 "----------------------------------------
+" netrw.vim
+"nnoremap <silent><Space>e   :Exp<cr>
+"autocmd FileType netrw call s:retrw_my_settings()
+"function! s:retrw_my_settings() " ESCキーを押すと終了する
+"  nmap <silent><buffer> <C-[> <C-o>
+"  nmap <silent><buffer> <ESC> <C-o>
+"  nmap <silent><buffer> q     <C-o>
+"  nmap <silent><buffer> l     <cr>
+"  nmap <silent><buffer> h     -
+"endfunction
+
+"----------------------------------------
 " savevers.vim
 set patchmode=.clean            " バックアップファイルの設定" savevers.vimのためにパッチモードにします
 let savevers_types = "*"        " カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
@@ -225,14 +256,6 @@ let savevers_max = 99           "
 nnoremap <silent> <Space>sd- :VersDiff -<cr>
 nnoremap <silent> <Space>sd+ :VersDiff +<cr>
 nnoremap <silent> <Space>sdc :VersDiff -c<cr>
-autocmd FileType netrw call s:retrw_my_settings()
-function! s:retrw_my_settings() " ESCキーを押すと終了する
-  nmap <silent><buffer> <C-[> <C-o>
-  nmap <silent><buffer> <ESC> <C-o>
-  nmap <silent><buffer> q     <C-o>
-  nmap <silent><buffer> l     <cr>
-  nmap <silent><buffer> h     -
-endfunction
 
 "----------------------------------------
 " qfixhowm.vim
@@ -305,7 +328,7 @@ endfunction
 "----------------------------------------
 " unite.vim
 " 入力モードで開始する
-let g:unite_enable_start_insert=1
+"let g:unite_enable_start_insert=1
 "let g:unite_source_file_mru_time_format
 let g:vimfiler_as_default_explorer = 1
 nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
@@ -339,6 +362,7 @@ call vimfiler#set_execute_file('php', 'vim')
 call vimfiler#set_execute_file('ctp', 'vim')
 call vimfiler#set_execute_file('txt', 'vim')
 call vimfiler#set_execute_file('jax', 'vim')
+call vimfiler#set_execute_file('css', 'vim')
 autocmd FileType vimfiler call s:vimfiler_my_settings()
 function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   nmap <silent><buffer> <C-[> <C-o><C-o>
@@ -347,4 +371,14 @@ function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   nunmap   <buffer> j
   nunmap   <buffer> k
 endfunction
+
+"----------------------------------------
+" git-vim.vim
+nnoremap <silent><Space>gd :GitDiff<cr>
+nnoremap <silent><Space>gd :GitDiff —cache<cr>
+nnoremap <silent><Space>gs :GitStatus<cr>
+nnoremap <silent><Space>gl :GitLog<cr>   
+nnoremap <silent><Space>ga :GitAdd<cr>   
+nnoremap <silent><Space>gA :GitAdd<cr> 
+nnoremap <silent><Space>gc :GitCommit<cr>
 
