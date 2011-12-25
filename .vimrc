@@ -375,7 +375,7 @@ endfunction
 "----------------------------------------
 " git-vim.vim
 nnoremap <silent><Space>gd :GitDiff<cr>
-nnoremap <silent><Space>gd :GitDiff —cache<cr>
+nnoremap <silent><Space>gD :GitDiff —cache<cr>
 nnoremap <silent><Space>gs :GitStatus<cr>
 nnoremap <silent><Space>gl :GitLog<cr>   
 nnoremap <silent><Space>ga :GitAdd<cr>   

@@ -18,5 +18,6 @@
 /.vim/php_doc/*
 /.vim/backup/*
 /.vim/swap/*
+/.vim/undo/*
 /.vim/.netrwhist
 /.vim/.netrwhist.clean
