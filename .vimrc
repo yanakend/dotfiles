@@ -41,7 +41,7 @@ set ignorecase
 set smartcase
 set showcmd                         " 入力中のコマンドをステータスに表示する
 set laststatus=2                    " ステータスラインを常に表示
-set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l/%L:%p%%>
+set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l\|%c\|%L>
 set autoindent
 set cindent
 "set shellslash                      " Windowsでディレクトリパスの区切り文字表示に / を使えるようにする
@@ -60,7 +60,7 @@ set iminsert=0
 set formatoptions-=ro
 set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
-set undofile
+"set undofile
 set undodir=~/.vim/undo
 
 "----------------------------------------
@@ -71,35 +71,33 @@ nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
 
+"sort
+"bufdo diffthis
 nnoremap <silent> n nzz
 nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
-":vertical diffsplit filename
-"nnoremap <silent> <S-C-j> ]c
-"nnoremap <silent> <S-C-k> [c
-"nnoremap <silent> <S-C-l> dp
-"nnoremap <silent> <S-C-h> do
-nnoremap <silent> J :call NextDiff()<CR>
-nnoremap <silent> K :call Prevdiff()<CR>
-nnoremap <silent> H dp
-nnoremap <silent> L do
+nnoremap <silent> <C-j> :call NextDiff()<CR>
+nnoremap <silent> <C-k> :call Prevdiff()<CR>
+nnoremap <silent> <C-h> dp
+nnoremap <silent> <C-l> do
 function! NextDiff()
     if &diff
         silent normal! ]c
     else
-        silent normal! J
+        silent normal! <C-j>
     endif
 endfunction
 function! Prevdiff()
     if &diff
         silent normal! [c
     else
-        silent normal! K
-"        silent execute ":call ref#K('normal')"
+        silent normal! <C-k>
     endif
 endfunction
 
+"inoremap <ESC> <ESC>:set iminsert=0<CR>  " ESCでIMEを確実にOFF
+"set imd
 if has('unix')
     nnoremap y "ay
     vnoremap y "ay
@@ -137,11 +135,11 @@ if has('win32')
 endif
 
 nnoremap ZZ <Nop>
-
-nnoremap <silent><Space>e  :cd %:h<CR>:VimFilerCurrentDir<cr>
+nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>v  :e ~/.vimrc<CR>
+nnoremap <silent><Space>r  :<C-u>Unite ref/phpmanual<CR>
 if has('win32')
     nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
@@ -187,6 +185,7 @@ command!                 Sjis       Cp932
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 if has('unix')
+    autocmd BufNewFile,BufRead *.html setlocal tabstop=2 shiftwidth=2
     autocmd BufNewFile,BufRead *.html.php setlocal tabstop=2 shiftwidth=2
     autocmd BufNewFile,BufRead *.css setlocal tabstop=2 shiftwidth=2
 endif
@@ -236,7 +235,7 @@ let g:quickrun_config["_"] = {
 
 "----------------------------------------
 " netrw.vim
-"nnoremap <silent><Space>e   :Exp<cr>
+"nnoremap <silent><Space>e :Exp<cr>
 "autocmd FileType netrw call s:retrw_my_settings()
 "function! s:retrw_my_settings() " ESCキーを押すと終了する
 "  nmap <silent><buffer> <C-[> <C-o>
@@ -248,14 +247,14 @@ let g:quickrun_config["_"] = {
 
 "----------------------------------------
 " savevers.vim
-set patchmode=.clean            " バックアップファイルの設定" savevers.vimのためにパッチモードにします
+set patchmode=.clean            " バックアップファイルの設定savevers.vimのためにパッチモードにします
 let savevers_types = "*"        " カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
-let savevers_dirs = &backupdir  " バックアップファイルが書き込まれるディレクトリです ここでは、オプション'backupdir'と同じディレクト
+let savevers_dirs = &backupdir  " バックアップファイルが書き込まれるディレクトリです
 let versdiff_no_resize=1        " バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
 let savevers_max = 99           " 
-nnoremap <silent> <Space>sd- :VersDiff -<cr>
-nnoremap <silent> <Space>sd+ :VersDiff +<cr>
-nnoremap <silent> <Space>sdc :VersDiff -c<cr>
+":VersDiff -
+":VersDiff +
+":VersDiff -c
 
 "----------------------------------------
 " qfixhowm.vim
@@ -321,7 +320,7 @@ autocmd FileType ref-phpmanual call s:initialize_ref_viewer()
 function! s:initialize_ref_viewer()
     nmap <silent><buffer> <ESC> :bd<CR>
     nmap <silent><buffer> q     :bd<CR>
-    nmap <silent><buffer> <C-]> :bd<CR>
+    nmap <silent><buffer> <C-[> :bd<CR>
     setlocal nonumber
 endfunction
 
@@ -331,7 +330,6 @@ endfunction
 "let g:unite_enable_start_insert=1
 "let g:unite_source_file_mru_time_format
 let g:vimfiler_as_default_explorer = 1
-nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
 " バッファ一覧
 nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright -auto-resize<CR>
 " ファイル一覧
@@ -357,17 +355,12 @@ endfunction
 "----------------------------------------
 " vim-filer.vim
 let g:vimfiler_as_default_explorer = 1
-call vimfiler#set_execute_file('vim', 'vim')
-call vimfiler#set_execute_file('php', 'vim')
-call vimfiler#set_execute_file('ctp', 'vim')
-call vimfiler#set_execute_file('txt', 'vim')
-call vimfiler#set_execute_file('jax', 'vim')
-call vimfiler#set_execute_file('css', 'vim')
+let g:vimfiler_safe_mode_by_default = 0
+call vimfiler#set_execute_file('vim,php,ctp,txt,jax,css,html,c,cpp', 'vim')
 autocmd FileType vimfiler call s:vimfiler_my_settings()
 function! s:vimfiler_my_settings() " ESCキーを押すと終了する
-  nmap <silent><buffer> <C-[> <C-o><C-o>
-  nmap <silent><buffer> <ESC> <C-o><C-o>
-  nmap <silent><buffer> q     <C-o><C-o>
+  nmap <silent><buffer> <C-[> q
+  nmap <silent><buffer> <ESC> q
   nunmap   <buffer> j
   nunmap   <buffer> k
 endfunction
@@ -377,8 +370,49 @@ endfunction
 nnoremap <silent><Space>gd :GitDiff<cr>
 nnoremap <silent><Space>gD :GitDiff —cache<cr>
 nnoremap <silent><Space>gs :GitStatus<cr>
-nnoremap <silent><Space>gl :GitLog<cr>   
-nnoremap <silent><Space>ga :GitAdd<cr>   
-nnoremap <silent><Space>gA :GitAdd<cr> 
+nnoremap <silent><Space>gl :GitLog<cr>
+nnoremap <silent><Space>ga :GitAdd<cr>
+nnoremap <silent><Space>gA :GitAdd<cr>
 nnoremap <silent><Space>gc :GitCommit<cr>
+
+"----------------------------------------
+" vim-easymotion
+let g:EasyMotion_leader_key = 'f'
+
+"----------------------------------------
+" vim-smartchr
+" 演算子の間に空白を入れる
+inoremap <buffer><expr> < search('^#include\%#', 'bcn')? ' <': smartchr#one_of(' < ', ' << ', '<')
+inoremap <buffer><expr> > search('^#include <.*\%#', 'bcn')? '>': smartchr#one_of(' > ', ' >> ', '>')
+inoremap <buffer><expr> + smartchr#one_of(' + ', '++', '+')
+inoremap <buffer><expr> - smartchr#one_of(' - ', '--', '-')
+inoremap <buffer><expr> / smartchr#one_of(' / ', '// ', '/')
+" *はポインタで使うので、空白はいれない
+inoremap <buffer><expr> & smartchr#one_of(' & ', ' && ', '&')
+inoremap <buffer><expr> % smartchr#one_of(' % ', '%')
+inoremap <buffer><expr> <Bar> smartchr#one_of(' <Bar> ', ' <Bar><Bar> ', '<Bar>')
+inoremap <buffer><expr> , smartchr#one_of(', ', ',')
+" 3項演算子の場合は、後ろのみ空白を入れる
+inoremap <buffer><expr> ? smartchr#one_of('? ', '?')
+inoremap <buffer><expr> : smartchr#one_of(': ', '::', ':')
+
+" =の場合、単純な代入や比較演算子として入力する場合は前後にスペースをいれる。
+" 複合演算代入としての入力の場合は、直前のスペースを削除して=を入力
+inoremap <buffer><expr> = search('\(&\<bar><bar>\<bar>+\<bar>-\<bar>/\<bar>>\<bar><\) \%#', 'bcn')? '<bs>= '
+                \ : search('\(*\<bar>!\)\%#', 'bcn') ? '= '
+                \ : smartchr#one_of(' = ', ' == ', '=')
+
+" 下記の文字は連続して現れることがまれなので、二回続けて入力したら改行する
+inoremap <buffer><expr> } smartchr#one_of('}', '}<cr>')
+inoremap <buffer><expr> ; smartchr#one_of(';', ';<cr>')
+" 「->」は入力しづらいので、..で置換え
+inoremap <buffer><expr> . smartchr#loop('.', '->', '...')
+" 行先頭での@入力で、プリプロセス命令文を入力
+inoremap <buffer><expr> @ search('^\(#.\+\)\?\%#','bcn')? smartchr#one_of('#define', '#include', '#ifdef', '#endif', '@'): '@'
+
+inoremap <buffer><expr> " search('^#include\%#', 'bcn')? ' "': '"'
+" if文直後の(は自動で間に空白を入れる
+inoremap <buffer><expr> ( search('\<\if\%#', 'bcn')? ' (': '('
+
+
 
