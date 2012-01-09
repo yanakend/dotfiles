@@ -19,10 +19,6 @@
 	path = .vim/bundle/vim-ref
 	url = git://github.com/thinca/vim-ref.git
     ignore = untracked
-[submodule ".vim/bundle/unite"]
-	path = .vim/bundle/unite
-	url = git://github.com/vim-scripts/unite.vim.git
-    ignore = untracked
 [submodule ".vim/bundle/snipmate"]
 	path = .vim/bundle/snipmate
 	url = git://github.com/msanders/snipmate.vim.git
@@ -46,4 +42,9 @@
 [submodule ".vim/bundle/vim-smartchr"]
 	path = .vim/bundle/vim-smartchr
 	url = https://github.com/kana/vim-smartchr.git
+    ignore = untracked
+
+[submodule ".vim/bundle/vim-unite"]
+	path = .vim/bundle/vim-unite
+	url = git://github.com/Shougo/unite.vim.git
     ignore = untracked
