@@ -34,7 +34,7 @@ set noterse                         " ファイルの端まで検索してしま
 set smartcase                       " でも大文字小文字が混ざって入力されたら区別する
 set tabstop=4                       " 4タブ
 set shiftwidth=4                    " 4タブ
-set expandtab                       " タブを空白に
+set noexpandtab                       " タブを空白に
 set nowrap                          " 折り返さない
 set cmdheight=1                     " コマンドラインの高さ(GUI使用時)
 set ignorecase
@@ -61,7 +61,7 @@ set formatoptions-=ro
 set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
 "set undofile
-set undodir=~/.vim/undo
+"set undodir=~/.vim/undo
 
 "----------------------------------------
 " map
@@ -114,7 +114,7 @@ if has('unix')
     "vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
     "nnoremap <silent> <Space>p :r !pbpaste<CR>
     "vnoremap <silent> <Space>p :r !pbpaste<CR>
-    nnoremap <Space>gg :REGrep<CR>
+    nnoremap <Space>g :REGrep<CR>
 endif
 if has('win32')
     nnoremap y "+y
@@ -131,7 +131,7 @@ if has('win32')
     vnoremap X "+X
     inoremap <C-v> <C-R>+
     cnoremap <C-v> <C-R>+
-    nnoremap <Space>gg :silent !"C:\Program Files\Yokka\NoEditor\Grep.exe.lnk"<CR>
+    nnoremap <Space>g :silent !"C:\Program Files\Yokka\NoEditor\Grep.exe.lnk"<CR>
 endif
 
 nnoremap ZZ <Nop>
@@ -170,7 +170,7 @@ vnoremap >        >gv
 "ciyテキストオブジェクト的にカーソルが単語内のどこにあってもヤンクした文字列と置換
 "必要ならn.で繰り返し実行
 nnoremap <silent> cy ce<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
-vnoremap <silent> cy c<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
+"vnoremap <silent> cy c<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 nnoremap <silent> ciy ciw<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 
 "----------------------------------------
@@ -189,7 +189,8 @@ if has('unix')
     autocmd BufNewFile,BufRead *.html.php setlocal tabstop=2 shiftwidth=2
     autocmd BufNewFile,BufRead *.css setlocal tabstop=2 shiftwidth=2
 endif
-
+autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
+ 
 "----------------------------------------
 " function
 
@@ -330,6 +331,7 @@ endfunction
 "let g:unite_enable_start_insert=1
 "let g:unite_source_file_mru_time_format
 let g:vimfiler_as_default_explorer = 1
+nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
 " バッファ一覧
 nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright -auto-resize<CR>
 " ファイル一覧
@@ -354,26 +356,28 @@ endfunction
 
 "----------------------------------------
 " vim-filer.vim
-let g:vimfiler_as_default_explorer = 1
-let g:vimfiler_safe_mode_by_default = 0
-call vimfiler#set_execute_file('vim,php,ctp,txt,jax,css,html,c,cpp', 'vim')
 autocmd FileType vimfiler call s:vimfiler_my_settings()
 function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   nmap <silent><buffer> <C-[> q
   nmap <silent><buffer> <ESC> q
-  nunmap   <buffer> j
-  nunmap   <buffer> k
+  nunmap <buffer> j
+  nunmap <buffer> k
+  nunmap <buffer> N
+  hi vimfilerCurrentDirectory gui=UNDERLINE guifg=#0000ff guibg=NONE
 endfunction
+let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_safe_mode_by_default = 0
+call vimfiler#set_execute_file('vim,php,ctp,txt,jax,css,html,c,cpp,js,patch,sql,tpl,csv,log,pl,sh,ini,jmx', 'vim')
 
 "----------------------------------------
 " git-vim.vim
-nnoremap <silent><Space>gd :GitDiff<cr>
-nnoremap <silent><Space>gD :GitDiff —cache<cr>
-nnoremap <silent><Space>gs :GitStatus<cr>
-nnoremap <silent><Space>gl :GitLog<cr>
-nnoremap <silent><Space>ga :GitAdd<cr>
-nnoremap <silent><Space>gA :GitAdd<cr>
-nnoremap <silent><Space>gc :GitCommit<cr>
+nnoremap <silent><Space>id :GitDiff<cr>
+nnoremap <silent><Space>iD :GitDiff —cache<cr>
+nnoremap <silent><Space>is :GitStatus<cr>
+nnoremap <silent><Space>il :GitLog<cr>
+nnoremap <silent><Space>ia :GitAdd<cr>
+nnoremap <silent><Space>iA :GitAdd<cr>
+nnoremap <silent><Space>ic :GitCommit<cr>
 
 "----------------------------------------
 " vim-easymotion
@@ -382,37 +386,37 @@ let g:EasyMotion_leader_key = 'f'
 "----------------------------------------
 " vim-smartchr
 " 演算子の間に空白を入れる
-inoremap <buffer><expr> < search('^#include\%#', 'bcn')? ' <': smartchr#one_of(' < ', ' << ', '<')
-inoremap <buffer><expr> > search('^#include <.*\%#', 'bcn')? '>': smartchr#one_of(' > ', ' >> ', '>')
-inoremap <buffer><expr> + smartchr#one_of(' + ', '++', '+')
-inoremap <buffer><expr> - smartchr#one_of(' - ', '--', '-')
-inoremap <buffer><expr> / smartchr#one_of(' / ', '// ', '/')
-" *はポインタで使うので、空白はいれない
-inoremap <buffer><expr> & smartchr#one_of(' & ', ' && ', '&')
-inoremap <buffer><expr> % smartchr#one_of(' % ', '%')
-inoremap <buffer><expr> <Bar> smartchr#one_of(' <Bar> ', ' <Bar><Bar> ', '<Bar>')
-inoremap <buffer><expr> , smartchr#one_of(', ', ',')
-" 3項演算子の場合は、後ろのみ空白を入れる
-inoremap <buffer><expr> ? smartchr#one_of('? ', '?')
-inoremap <buffer><expr> : smartchr#one_of(': ', '::', ':')
-
-" =の場合、単純な代入や比較演算子として入力する場合は前後にスペースをいれる。
-" 複合演算代入としての入力の場合は、直前のスペースを削除して=を入力
-inoremap <buffer><expr> = search('\(&\<bar><bar>\<bar>+\<bar>-\<bar>/\<bar>>\<bar><\) \%#', 'bcn')? '<bs>= '
-                \ : search('\(*\<bar>!\)\%#', 'bcn') ? '= '
-                \ : smartchr#one_of(' = ', ' == ', '=')
-
-" 下記の文字は連続して現れることがまれなので、二回続けて入力したら改行する
-inoremap <buffer><expr> } smartchr#one_of('}', '}<cr>')
-inoremap <buffer><expr> ; smartchr#one_of(';', ';<cr>')
-" 「->」は入力しづらいので、..で置換え
-inoremap <buffer><expr> . smartchr#loop('.', '->', '...')
-" 行先頭での@入力で、プリプロセス命令文を入力
-inoremap <buffer><expr> @ search('^\(#.\+\)\?\%#','bcn')? smartchr#one_of('#define', '#include', '#ifdef', '#endif', '@'): '@'
-
-inoremap <buffer><expr> " search('^#include\%#', 'bcn')? ' "': '"'
-" if文直後の(は自動で間に空白を入れる
-inoremap <buffer><expr> ( search('\<\if\%#', 'bcn')? ' (': '('
+"inoremap <buffer><expr> < search('^#include\%#', 'bcn')? ' <': smartchr#one_of(' < ', ' << ', '<')
+"inoremap <buffer><expr> > search('^#include <.*\%#', 'bcn')? '>': smartchr#one_of(' > ', ' >> ', '>')
+"inoremap <buffer><expr> + smartchr#one_of(' + ', '++', '+')
+"inoremap <buffer><expr> - smartchr#one_of(' - ', '--', '-')
+"inoremap <buffer><expr> / smartchr#one_of(' / ', '// ', '/')
+"" *はポインタで使うので、空白はいれない
+"inoremap <buffer><expr> & smartchr#one_of(' & ', ' && ', '&')
+"inoremap <buffer><expr> % smartchr#one_of(' % ', '%')
+"inoremap <buffer><expr> <Bar> smartchr#one_of(' <Bar> ', ' <Bar><Bar> ', '<Bar>')
+"inoremap <buffer><expr> , smartchr#one_of(', ', ',')
+"" 3項演算子の場合は、後ろのみ空白を入れる
+"inoremap <buffer><expr> ? smartchr#one_of('? ', '?')
+"inoremap <buffer><expr> : smartchr#one_of(': ', '::', ':')
+"
+"" =の場合、単純な代入や比較演算子として入力する場合は前後にスペースをいれる。
+"" 複合演算代入としての入力の場合は、直前のスペースを削除して=を入力
+"inoremap <buffer><expr> = search('\(&\<bar><bar>\<bar>+\<bar>-\<bar>/\<bar>>\<bar><\) \%#', 'bcn')? '<bs>= '
+"                \ : search('\(*\<bar>!\)\%#', 'bcn') ? '= '
+"                \ : smartchr#one_of(' = ', ' == ', '=')
+"
+"" 下記の文字は連続して現れることがまれなので、二回続けて入力したら改行する
+"inoremap <buffer><expr> } smartchr#one_of('}', '}<cr>')
+"inoremap <buffer><expr> ; smartchr#one_of(';', ';<cr>')
+"" 「->」は入力しづらいので、..で置換え
+"inoremap <buffer><expr> . smartchr#loop('.', '->', '...')
+"" 行先頭での@入力で、プリプロセス命令文を入力
+"inoremap <buffer><expr> @ search('^\(#.\+\)\?\%#','bcn')? smartchr#one_of('#define', '#include', '#ifdef', '#endif', '@'): '@'
+"
+"inoremap <buffer><expr> " search('^#include\%#', 'bcn')? ' "': '"'
+"" if文直後の(は自動で間に空白を入れる
+"inoremap <buffer><expr> ( search('\<\if\%#', 'bcn')? ' (': '('
 
 
 

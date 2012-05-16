@@ -23,10 +23,6 @@
 	path = .vim/bundle/snipmate
 	url = git://github.com/msanders/snipmate.vim.git
     ignore = untracked
-[submodule ".vim/bundle/vim-surround"]
-	path = .vim/bundle/vim-surround
-	url = git://github.com/tpope/vim-surround.git
-    ignore = untracked
 [submodule ".vim/bundle/vimfiler"]
 	path = .vim/bundle/vimfiler
 	url = git://github.com/Shougo/vimfiler.git
@@ -35,16 +31,13 @@
 	path = .vim/bundle/git-vim
 	url = git://github.com/motemen/git-vim.git
     ignore = untracked
-[submodule ".vim/bundle/vim-easymotion"]
-	path = .vim/bundle/vim-easymotion
-	url = https://github.com/Lokaltog/vim-easymotion.git
-    ignore = untracked
-[submodule ".vim/bundle/vim-smartchr"]
-	path = .vim/bundle/vim-smartchr
-	url = https://github.com/kana/vim-smartchr.git
-    ignore = untracked
-
 [submodule ".vim/bundle/vim-unite"]
 	path = .vim/bundle/vim-unite
 	url = git://github.com/Shougo/unite.vim.git
     ignore = untracked
+[submodule ".vim/bundle/vim-powerline"]
+	path = .vim/bundle/vim-powerline
+	url = git://github.com/Lokaltog/vim-powerline.git
+[submodule ".vim/bundle/smarty.vim"]
+	path = .vim/bundle/smarty.vim
+	url = https://github.com/vim-scripts/smarty.vim.git
