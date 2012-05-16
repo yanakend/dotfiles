@@ -259,7 +259,12 @@ let savevers_max = 99           "
 
 "----------------------------------------
 " qfixhowm.vim
-let MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|[/\\]\.svn[/\\]'
+let g:MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|logs[/\\]\|cached[/\\]\|compiled[/\\]\|[/\\]\.svn[/\\]\|[/\\]\.git[/\\]'
+" 検索ディレクトリはカレントディレクトリを基点にする
+let g:MyGrep_CurrentDirMode = 1
+let g:QFix_CloseOnJump = 1
+let g:QFix_HighSpeedPreview = 1
+"let mygrepprg = 'internal'
 
 "----------------------------------------
 " EnhancedCommentify.vim
