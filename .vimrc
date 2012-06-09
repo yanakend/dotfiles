@@ -114,7 +114,7 @@ if has('unix')
     "vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
     "nnoremap <silent> <Space>p :r !pbpaste<CR>
     "vnoremap <silent> <Space>p :r !pbpaste<CR>
-    nnoremap <Space>g :REGrep
+    "nnoremap <Space>g :REGrep
 endif
 if has('win32')
     nnoremap y "+y
@@ -185,7 +185,7 @@ command!                 Sjis       Cp932
 command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 autocmd FileType objc setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
-autocmd FileType objcpp setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
+autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
 
 if has('unix')
     autocmd BufNewFile,BufRead *.html setlocal tabstop=2 shiftwidth=2
@@ -238,6 +238,16 @@ let g:quickrun_config["_"] = {
 \ }
 
 "----------------------------------------
+" qfixhowm.vim
+let g:MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|logs[/\\]\|cached[/\\]\|compiled[/\\]\|[/\\]\.svn[/\\]\|[/\\]\.git[/\\]'
+" 検索ディレクトリはカレントディレクトリを基点にする
+let g:MyGrep_CurrentDirMode = 1
+let g:QFix_CloseOnJump = 1
+let g:QFix_HighSpeedPreview = 1
+let g:qfixmemo_mapleader = '<Space>g'
+nnoremap <Space>gg :cd <C-r>%
+
+"----------------------------------------
 " netrw.vim
 "nnoremap <silent><Space>e :Exp<cr>
 "autocmd FileType netrw call s:retrw_my_settings()
@@ -259,15 +269,6 @@ let savevers_max = 99           "
 ":VersDiff -
 ":VersDiff +
 ":VersDiff -c
-
-"----------------------------------------
-" qfixhowm.vim
-let g:MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|logs[/\\]\|cached[/\\]\|compiled[/\\]\|[/\\]\.svn[/\\]\|[/\\]\.git[/\\]'
-" 検索ディレクトリはカレントディレクトリを基点にする
-let g:MyGrep_CurrentDirMode = 1
-let g:QFix_CloseOnJump = 1
-let g:QFix_HighSpeedPreview = 1
-"let mygrepprg = 'internal'
 
 "----------------------------------------
 " EnhancedCommentify.vim
