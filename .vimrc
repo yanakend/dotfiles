@@ -245,7 +245,7 @@ let g:MyGrep_CurrentDirMode = 1
 let g:QFix_CloseOnJump = 1
 let g:QFix_HighSpeedPreview = 1
 let g:qfixmemo_mapleader = '<Space>g'
-nnoremap <Space>gg :cd <C-r>%
+nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
 
 "----------------------------------------
 " netrw.vim

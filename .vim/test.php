@@ -2,8 +2,6 @@
 
 $text = '%from_owner_id%が%to_owner_id%を%group_name%に誘ってます';
 
-static const TEXT_LIKE = 1;
-static const TEXT_FAVORITE = 2;
 
 $replaceTexts = array(
 	'id' => "4f7846efbd6831e05d00",
@@ -19,6 +17,7 @@ $replaceTexts = array(
 	'created' => '',
 	'modified' => '',
 );
+
 
 var_dump($text);
 foreach ($replaceTexts['options'] as $key => $replaceText) {
