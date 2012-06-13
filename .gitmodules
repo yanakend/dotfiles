@@ -38,9 +38,12 @@
 [submodule ".vim/bundle/vim-powerline"]
 	path = .vim/bundle/vim-powerline
 	url = git://github.com/Lokaltog/vim-powerline.git
+    ignore = untracked
 [submodule ".vim/bundle/smarty.vim"]
 	path = .vim/bundle/smarty.vim
 	url = https://github.com/vim-scripts/smarty.vim.git
+    ignore = untracked
 [submodule ".vim/bundle/cocoa.vim.git"]
 	path = .vim/bundle/cocoa.vim.git
 	url = https://github.com/vim-scripts/cocoa.vim.git
+    ignore = untracked
