@@ -245,6 +245,8 @@ let g:MyGrep_CurrentDirMode = 1
 let g:QFix_CloseOnJump = 1
 let g:QFix_HighSpeedPreview = 1
 let g:qfixmemo_mapleader = '<Space>g'
+" QFixGrepの検索時にカーソル位置の単語を拾う/拾わない
+let MyGrep_DefaultSearchWord = 0
 nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
 
 "----------------------------------------
