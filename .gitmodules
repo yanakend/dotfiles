@@ -47,3 +47,9 @@
 	path = .vim/bundle/cocoa.vim.git
 	url = https://github.com/vim-scripts/cocoa.vim.git
     ignore = untracked
+[submodule ".vim/bundle/vimshell"]
+	path = .vim/bundle/vimshell
+	url = http://github.com/Shougo/vimshell
+[submodule ".vim/bundle/vimproc"]
+	path = .vim/bundle/vimproc
+	url = https://github.com/Shougo/vimproc
