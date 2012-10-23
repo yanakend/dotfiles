@@ -1,6 +1,8 @@
-<script>
-//[{"id":"70c666cbd1db665e35b740bd3e7a80245082","is_read":0,"url":"http:\/\/dev.trimz.jp\/\/style\/user_liked\/101aef2541f06db540dc60e6e845a6e37762","owner_id":"1000018704501940","created":1339847596,"text":"Kenji Yanagi\u304cKenji Yanagi\u306b\uff62\u30a4\u30a4\u30cd\uff63\u3092\u3057\u307e\u3057\u305f\u3002"},{"id":"5ed7b23bafcc2ce1b821b3704011c0c26218","is_read":1,"url":"http:\/\/trimz.jp\/style\/detail\/fb3ed594cc10bfc7747a1ee673ab779b7329","owner_id":"1000018704501940","created":1339834428,"text":"noppoman\u304cKenji Yanagi\u306b\uff62\u30a4\u30a4\u30cd\uff63\u3092\u3057\u307e\u3057\u305f\u3002"},{"id":"a374fec921aa45a6aed7b4026f38a5bb8369","is_read":1,"url":"http:\/\/trimz.jp\/style\/detail\/fb3ed594cc10bfc7747a1ee673ab779b7329","owner_id":"1000018704501940","created":1339834145,"text":"noppoman\u304cKenji Yanagi\u306b\uff62\u30a4\u30a4\u30cd\uff63\u3092\u3057\u307e\u3057\u305f\u3002"},{"id":"6ca417834dc57c18bdf0926c58b34a0f8505","is_read":1,"url":"http:\/\/trimz.jp\/style\/detail\/fb3ed594cc10bfc7747a1ee673ab779b7329","owner_id":"1000018704501940","created":1339833919,"text":"noppoman\u304cKenji Yanagi\u306b\uff62\u30a4\u30a4\u30cd\uff63\u3092\u3057\u307e\u3057\u305f\u3002"},{"id":"d632eb8075c0d7bbdc6bab59358b65243053","is_read":1,"url":"http:\/\/trimz.jp\/style\/detail\/fb3ed594cc10bfc7747a1ee673ab779b7329","owner_id":"1000018704501940","created":1339833905,"text":"noppoman\u304cKenji Yanagi\u306b\uff62\u30a4\u30a4\u30cd\uff63\u3092\u3057\u307e\u3057\u305f\u3002"}] 
-console.log('ff');
 
-
-</script>
+var a = '1001001000';
+for (var i = 0, count=a.length; i < count; i++) {
+	if (a.charAt(i) == 1) {
+		var switchNo = i + 1;
+		print(switchNo + "\n");
+	}
+}

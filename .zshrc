@@ -112,6 +112,8 @@ alias df="df -h"
 
 alias su="su -l"
 
+alias ctags='/Applications/MacVim.app/Contents/MacOS/ctags "$@"'
+
 ## terminal configuration
 #
 unset LSCOLORS

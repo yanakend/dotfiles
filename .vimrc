@@ -186,6 +186,7 @@ command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <co
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 autocmd FileType objc setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
 autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
+autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
 
 if has('unix')
     autocmd BufNewFile,BufRead *.html setlocal tabstop=2 shiftwidth=2
@@ -393,5 +394,3 @@ nnoremap <silent><Space>ic :GitCommit<cr>
 "----------------------------------------
 " vim-easymotion
 let g:EasyMotion_leader_key = 'f'
-
-
