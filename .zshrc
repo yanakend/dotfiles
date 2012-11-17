@@ -111,7 +111,7 @@ alias du="du -h"
 alias df="df -h"
 
 alias su="su -l"
-
+alias rm='rmtrash'
 alias ctags='/Applications/MacVim.app/Contents/MacOS/ctags "$@"'
 
 ## terminal configuration
