@@ -14,7 +14,6 @@
 	path = .vim/bundle/EnhCommentify
 	url = git://github.com/vim-scripts/EnhCommentify.vim.git
     ignore = untracked
-
 [submodule ".vim/bundle/vim-ref"]
 	path = .vim/bundle/vim-ref
 	url = git://github.com/thinca/vim-ref.git
@@ -43,15 +42,11 @@
 	path = .vim/bundle/smarty.vim
 	url = https://github.com/vim-scripts/smarty.vim.git
     ignore = untracked
-[submodule ".vim/bundle/cocoa.vim.git"]
-	path = .vim/bundle/cocoa.vim.git
-	url = https://github.com/vim-scripts/cocoa.vim.git
-    ignore = untracked
 [submodule ".vim/bundle/vimshell"]
 	path = .vim/bundle/vimshell
 	url = http://github.com/Shougo/vimshell
     ignore = untracked
-[submodule ".vim/bundle/vimproc"]
-	path = .vim/bundle/vimproc
-	url = https://github.com/Shougo/vimproc
-    ignore = untracked
+; [submodule ".vim/bundle/vimproc"]
+;     path = .vim/bundle/vimproc
+;     url = https://github.com/Shougo/vimproc
+;     ignore = untracked
