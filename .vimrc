@@ -395,6 +395,3 @@ nnoremap <silent><Space>ia :GitAdd<cr>
 nnoremap <silent><Space>iA :GitAdd<cr>
 nnoremap <silent><Space>ic :GitCommit<cr>
 
-"----------------------------------------
-" vim-easymotion
-let g:EasyMotion_leader_key = 'f'
