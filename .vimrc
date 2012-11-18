@@ -366,18 +366,18 @@ endfunction
 "let g:unite_source_file_mru_time_format
 let g:vimfiler_as_default_explorer = 1
 nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
-" バッファ一覧
-nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright -auto-resize<CR>
+" バッファ一覧  -auto-resize
+nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright<CR>
 " ファイル一覧
-nnoremap <silent> <Space>uf :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright file -auto-resize<CR>
+nnoremap <silent> <Space>uf :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright file<CR>
 " レジスタ一覧
-nnoremap <silent> <Space>ur :<C-u>Unite -buffer-name=register -direction=botright -auto-resize register<CR>
+nnoremap <silent> <Space>ur :<C-u>Unite -buffer-name=register -direction=botright register<CR>
 " 最近使用したファイル一覧
-nnoremap <silent> <Space>m  :<C-u>Unite file_mru -direction=botright -auto-resize<CR>
+nnoremap <silent> <Space>m  :<C-u>Unite file_mru -direction=botright<CR>
 " 常用セット
-nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright -auto-resize<CR>
+nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright<CR>
 " 全部乗せ
-nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright -auto-resize buffer file_mru bookmark file<CR>
+nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright buffer file_mru bookmark file<CR>
 " unite.vim上でのキーマッピング
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()

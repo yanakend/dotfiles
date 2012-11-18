@@ -14,9 +14,4 @@ if has('gui_macvim')
 	set transparency=1	" 透明度を指定
 	set antialias
 "    set imdisable		" IMを無効化
-	
-	"フルスクリーンモード	
-"    set fuoptions=maxvert,maxhorz
-"      autocmd GUIEnter * set fullscreen 
 endif
-
