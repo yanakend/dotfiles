@@ -46,7 +46,7 @@
 	path = .vim/bundle/vimshell
 	url = http://github.com/Shougo/vimshell
     ignore = untracked
-; [submodule ".vim/bundle/vimproc"]
-;     path = .vim/bundle/vimproc
-;     url = https://github.com/Shougo/vimproc
-;     ignore = untracked
+[submodule ".vim/bundle/vimproc"]
+	path = .vim/bundle/vimproc
+	url = git://github.com/Shougo/vimproc.git
+    ignore = untracked

@@ -111,7 +111,11 @@ alias du="du -h"
 alias df="df -h"
 
 alias su="su -l"
-alias rm='rmtrash'
+case "${OSTYPE}" in
+darwin*)
+  alias rm='rmtrash'
+  ;;
+esac
 alias ctags='/Applications/MacVim.app/Contents/MacOS/ctags "$@"'
 
 ## terminal configuration
