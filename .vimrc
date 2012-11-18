@@ -138,7 +138,7 @@ nnoremap ZZ <Nop>
 nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
-nnoremap <silent><Space>v  :e ~/.vimrc<CR>
+nnoremap <silent><Space>vi :e ~/.vimrc<CR>
 nnoremap <silent><Space>r  :<C-u>Unite ref/phpmanual<CR>
 if has('win32')
     nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
@@ -395,3 +395,11 @@ nnoremap <silent><Space>ia :GitAdd<cr>
 nnoremap <silent><Space>iA :GitAdd<cr>
 nnoremap <silent><Space>ic :GitCommit<cr>
 
+" vimshell setting
+let g:vimshell_interactive_update_time = 10
+let g:vimshell_prompt = $USERNAME."% "
+
+" vimshell map
+nnoremap <silent> vs :VimShell<CR>
+nnoremap <silent> vsc :VimShellCreate<CR>
+nnoremap <silent> vp :VimShellPop<CR>

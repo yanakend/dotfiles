@@ -15,6 +15,7 @@
 !/.gitconfig
 !/.gitmodules
 
+/.vim/test.php
 /.vim/php_doc/*
 /.vim/backup/*
 /.vim/swap/*
