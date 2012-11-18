@@ -1,4 +1,20 @@
 "----------------------------------------
+" Get running OS
+function! GetRunningOS()
+	if has("win32")
+		return "win"
+	endif
+	if has("unix")
+		if system('uname')=~'Darwin'
+			return "mac"
+		else
+			return "linux"
+		endif
+	endif
+endfunction
+let os=GetRunningOS()
+
+"----------------------------------------
 " ユーザーランタイムパス設定
 "Windows, unixでのruntimepathの違いを吸収するためのもの。 
 "$MY_VIMRUNTIMEはユーザーランタイムディレクトリを示す。 
@@ -14,10 +30,10 @@ set nocompatible                    " viとの互換性を取らない
 syntax on
 set t_Co=256                        " 256色に
 " カラースキーム設定
-if has('win32')
+if os=="win"
     colorscheme user_color
 endif
-if has('unix')
+if os=="mac" || os=="linux"
     colorscheme desert
 endif
 
@@ -65,7 +81,9 @@ set diffopt=filler,vertical,foldcolumn:0
 
 "----------------------------------------
 " map
-nnoremap <silent> <C-[> :noh<CR>
+if os=="win" || os=="max"
+	nnoremap <silent> <C-[> :noh<CR>
+endif 
 nnoremap <silent> h zv<Left>
 nnoremap <silent> j gj
 nnoremap <silent> k gk
@@ -98,7 +116,7 @@ endfunction
 
 "inoremap <ESC> <ESC>:set iminsert=0<CR>  " ESCでIMEを確実にOFF
 "set imd
-if has('unix')
+if os=="mac" || os=="linux"
     nnoremap y "ay
     vnoremap y "ay
     nnoremap Y "ay$
@@ -116,7 +134,7 @@ if has('unix')
     "vnoremap <silent> <Space>p :r !pbpaste<CR>
     "nnoremap <Space>g :REGrep
 endif
-if has('win32')
+if os=="win"
     nnoremap y "+y
     vnoremap y "+y
     nnoremap Y "+y$
@@ -140,12 +158,12 @@ nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>vi :e ~/.vimrc<CR>
 nnoremap <silent><Space>r  :<C-u>Unite ref/phpmanual<CR>
-if has('win32')
+if os=="win"
     nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
     nnoremap <Space>tl :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log  /path:"%" /notempfile /closeonend<CR>
 endif
-if has('unix')
+if os=="mac" || os=="linux"
     nnoremap <Space>f  :e /Users/yanagikenji/Dropbox/free_memo.txt<CR>
 endif
 
@@ -188,7 +206,7 @@ autocmd FileType objc setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noex
 autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
 autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
 
-if has('unix')
+if os=="mac" || os=="linux"
     autocmd BufNewFile,BufRead *.html setlocal tabstop=2 shiftwidth=2
     autocmd BufNewFile,BufRead *.html.php setlocal tabstop=2 shiftwidth=2
     autocmd BufNewFile,BufRead *.css setlocal tabstop=2 shiftwidth=2
@@ -324,10 +342,10 @@ inoremap <expr><C-e> neocomplcache#cancel_popup()
 
 "----------------------------------------
 " ref.vim
-if has('unix')
+if os=="mac" || os=="linux"
     let g:ref_phpmanual_path = '/Users/yanagikenji/.vim/php_doc/php-chunked-xhtml/'
 endif
-if has('win32')
+if os=="win"
     let g:ref_phpmanual_path = 'C:\Users\yanagikenji\.vim\php_doc\php-chunked-xhtml\'
     let g:ref_phpmanual_encoding = 'Shift-JIS'
     let $PATH = $PATH . ';C:\Program Files\Lynx for Win32'
