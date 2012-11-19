@@ -312,11 +312,13 @@ let g:neocomplcache_max_list = 20
 " シンタックスをキャッシュするときの最小文字長
 let g:neocomplcache_min_syntax_length = 3
 " ディクショナリ定義
-"let g:neocomplcache_dictionary_filetype_lists = {
-"    \ 'default' : '',
-"    \ 'php' : $HOME . '/.vim/dict/php.dict',
-"    \ 'ctp' : $HOME . '/.vim/dict/php.dict'
-"    \ }
+if os=="win"
+	let g:neocomplcache_dictionary_filetype_lists = {
+		\ 'default' : '',
+		\ 'php' : $HOME . '/.vim/dict/php.dict',
+		\ 'ctp' : $HOME . '/.vim/dict/php.dict'
+		\ }
+endif
 if !exists('g:neocomplcache_keyword_patterns')
         let g:neocomplcache_keyword_patterns = {}
 endif
