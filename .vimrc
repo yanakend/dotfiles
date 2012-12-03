@@ -403,7 +403,7 @@ function! s:vimfiler_my_settings() " ESCキーを押すと終了する
 endfunction
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_safe_mode_by_default = 0
-call vimfiler#set_execute_file('plist,pch,vim,php,ctp,txt,jax,css,h,m,html,c,storyboard,strings,cpp,js,patch,sql,tpl,csv,log,pl,sh,ini,jmx,coffee,yml,cs,rb', 'vim')
+"call vimfiler#set_execute_file('plist,pch,vim,php,ctp,txt,jax,css,h,m,html,c,storyboard,strings,cpp,js,patch,sql,tpl,csv,log,pl,sh,ini,jmx,coffee,yml,cs,rb', 'vim')
 
 "----------------------------------------
 " git-vim.vim
