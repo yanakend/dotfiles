@@ -160,7 +160,7 @@ nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>vi :e ~/.vimrc<CR>
 nnoremap <silent><Space>r  :<C-u>Unite ref/phpmanual<CR>
 if os=="win"
-    nnoremap <Space>f  :e C:\dev\Dropbox\Dropbox\free_memo.txt<CR>
+    nnoremap <Space>f  :e D:\dev\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
     nnoremap <Space>tl :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log  /path:"%" /notempfile /closeonend<CR>
 endif
@@ -271,7 +271,7 @@ nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
 " Windowsからcygwin1.7以降のgrep.exeを使用する場合
 " UTF-8の一部文字列が検索不可なのを修正します。
 let MyGrep_cygwin17 = 1
-if has('win32')
+if os=="win"
     let mygrepprg = 'D:/dev/cygwin/bin/grep'
     let grepprg='D:/dev/cygwin/bin/grep\ -nH'
 endif
