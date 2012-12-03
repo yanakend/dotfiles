@@ -78,6 +78,7 @@ set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
 "set undofile
 "set undodir=~/.vim/undo
+set fileformats=unix,dos,mac
 
 "----------------------------------------
 " map
@@ -267,6 +268,13 @@ let g:qfixmemo_mapleader = '<Space>g'
 " QFixGrepの検索時にカーソル位置の単語を拾う/拾わない
 let MyGrep_DefaultSearchWord = 0
 nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
+" Windowsからcygwin1.7以降のgrep.exeを使用する場合
+" UTF-8の一部文字列が検索不可なのを修正します。
+let MyGrep_cygwin17 = 1
+if has('win32')
+    let mygrepprg = 'D:/dev/cygwin/bin/grep'
+    let grepprg='D:/dev/cygwin/bin/grep\ -nH'
+endif
 
 "----------------------------------------
 " netrw.vim
@@ -293,8 +301,10 @@ let savevers_max = 99           "
 
 "----------------------------------------
 " EnhancedCommentify.vim
-nnoremap <Space>/ :call EnhancedCommentify('', 'guess')<CR>
-vnoremap <Space>/ :call EnhancedCommentify('', 'guess')<CR>
+nnoremap <Space>/ :call EnhancedCommentify('yes', 'comment')<CR>
+vnoremap <Space>/ :call EnhancedCommentify('yes', 'comment')<CR>
+nnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
+vnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 
 "----------------------------------------
 " neocomplecache.vim
@@ -341,6 +351,18 @@ inoremap <expr><C-h> neocomplcache#smart_close_popup() . "\<C-h>"
 inoremap <expr><C-y> neocomplcache#close_popup()
 " 現在選択している候補をキャンセルし、ポップアップを閉じます
 inoremap <expr><C-e> neocomplcache#cancel_popup()
+" ディクショナリ定義
+let g:neocomplcache_dictionary_filetype_lists = {
+    \ 'default' : '',
+    \ 'php' : $HOME . '/.vim/dict/php.dict',
+    \ 'ctp' : $HOME . '/.vim/dict/php.dict'
+    \ }
+"補完するためのキーワードパターンを指定
+if !exists('g:neocomplcache_keyword_patterns')
+        let g:neocomplcache_keyword_patterns = {}
+endif
+"日本語を補完候補として取得しないようにする
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
 "----------------------------------------
 " ref.vim
@@ -399,6 +421,7 @@ function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   nunmap <buffer> j
   nunmap <buffer> k
   nunmap <buffer> N
+  nmap <buffer> i <Plug>(vimfiler_new_file)
   hi vimfilerCurrentDirectory gui=UNDERLINE guifg=#0000ff guibg=NONE
 endfunction
 let g:vimfiler_as_default_explorer = 1
