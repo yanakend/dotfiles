@@ -352,11 +352,13 @@ inoremap <expr><C-y> neocomplcache#close_popup()
 " 現在選択している候補をキャンセルし、ポップアップを閉じます
 inoremap <expr><C-e> neocomplcache#cancel_popup()
 " ディクショナリ定義
-let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default' : '',
-    \ 'php' : $HOME . '/.vim/dict/php.dict',
-    \ 'ctp' : $HOME . '/.vim/dict/php.dict'
-    \ }
+if os=="win"
+	let g:neocomplcache_dictionary_filetype_lists = {
+		\ 'default' : '',
+		\ 'php' : $HOME . '/.vim/dict/php.dict',
+		\ 'ctp' : $HOME . '/.vim/dict/php.dict'
+		\ }
+endif
 "補完するためのキーワードパターンを指定
 if !exists('g:neocomplcache_keyword_patterns')
         let g:neocomplcache_keyword_patterns = {}
