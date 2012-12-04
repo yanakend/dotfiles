@@ -5,7 +5,7 @@ function! GetRunningOS()
 		return "win"
 	endif
 	if has("unix")
-		if system('uname')=~'Darwin'
+		if has('gui_macvim')
 			return "mac"
 		else
 			return "linux"
@@ -30,12 +30,7 @@ set nocompatible                    " viとの互換性を取らない
 syntax on
 set t_Co=256                        " 256色に
 " カラースキーム設定
-if os=="win"
-    colorscheme user_color
-endif
-if os=="mac" || os=="linux"
-    colorscheme desert
-endif
+colorscheme desert
 
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
