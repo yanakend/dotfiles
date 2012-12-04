@@ -446,7 +446,7 @@ let g:vimshell_interactive_update_time = 10
 let g:vimshell_prompt = $USERNAME."% "
 " vimshell map
 nnoremap <silent> vs :VimShell<CR>
-nnoremap <silent> vsc :VimShellCreate<CR>
+"nnoremap <silent> vsc :VimShellCreate<CR>
 nnoremap <silent> vp :VimShellPop<CR>
 
 "----------------------------------------
@@ -605,5 +605,4 @@ let g:Powerline#Colorschemes#my#colorscheme = Pl#Colorscheme#Init([
   \ ])
 let g:Powerline_colorscheme='my'
 let g:Powerline_mode_n = 'NORMAL'
-
 
