@@ -447,7 +447,7 @@ nnoremap <silent> vp :VimShellPop<CR>
 
 "----------------------------------------
 " vim-powerline
-if os=="mac" || os=="linux"
+if os=="mac"
 	set guifont=Osaka-Powerline:h10
 endif
 let g:Powerline_symbols='fancy'
