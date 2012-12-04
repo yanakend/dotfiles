@@ -91,11 +91,12 @@ nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
 
 "sort
-"bufdo diffthis
 nnoremap <silent> n nzz
 nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
+
+"bufdo diffthis
 nnoremap <silent> <C-j> :call NextDiff()<CR>
 nnoremap <silent> <C-k> :call Prevdiff()<CR>
 nnoremap <silent> <C-h> dp
@@ -115,7 +116,6 @@ function! Prevdiff()
     endif
 endfunction
 
-"inoremap <ESC> <ESC>:set iminsert=0<CR>  " ESCでIMEを確実にOFF
 "set imd
 if os=="mac" || os=="linux"
     nnoremap y "ay
@@ -129,11 +129,6 @@ if os=="mac" || os=="linux"
     vnoremap x "ax
     inoremap <C-v> <C-R>a
     cnoremap <C-v> <C-R>a
-    "nnoremap <silent> <Space>y :.w !pbcopy<CR><CR>
-    "vnoremap <silent> <Space>y :w !pbcopy<CR><CR>
-    "nnoremap <silent> <Space>p :r !pbpaste<CR>
-    "vnoremap <silent> <Space>p :r !pbpaste<CR>
-    "nnoremap <Space>g :REGrep
 endif
 if os=="win"
     nnoremap y "+y
@@ -257,6 +252,9 @@ let g:quickrun_config["_"] = {
     \ "outputter" : "error",
 \ }
 
+nnoremap <silent> <Space>tp  :e $HOME/.vim/test.php<CR>
+nnoremap <silent> <Space>tj  :e $HOME/.vim/test.js<CR>
+
 "----------------------------------------
 " qfixhowm.vim
 let g:MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|logs[/\\]\|cached[/\\]\|compiled[/\\]\|[/\\]\.svn[/\\]\|[/\\]\.git[/\\]'
@@ -351,14 +349,6 @@ inoremap <expr><C-h> neocomplcache#smart_close_popup() . "\<C-h>"
 inoremap <expr><C-y> neocomplcache#close_popup()
 " 現在選択している候補をキャンセルし、ポップアップを閉じます
 inoremap <expr><C-e> neocomplcache#cancel_popup()
-" ディクショナリ定義
-if os=="win"
-	let g:neocomplcache_dictionary_filetype_lists = {
-		\ 'default' : '',
-		\ 'php' : $HOME . '/.vim/dict/php.dict',
-		\ 'ctp' : $HOME . '/.vim/dict/php.dict'
-		\ }
-endif
 "補完するためのキーワードパターンを指定
 if !exists('g:neocomplcache_keyword_patterns')
         let g:neocomplcache_keyword_patterns = {}
@@ -374,7 +364,7 @@ endif
 if os=="win"
     let g:ref_phpmanual_path = 'C:\Users\yanagikenji\.vim\php_doc\php-chunked-xhtml\'
     let g:ref_phpmanual_encoding = 'Shift-JIS'
-    let $PATH = $PATH . ';C:\Program Files\Lynx for Win32'
+    let $PATH = $PATH . ';C:\Program Files\lynx_w32'
 endif
 "let g:ref_phpmanual_cmd = 'w3m -dump %s'
 autocmd FileType ref-phpmanual call s:initialize_ref_viewer()
@@ -395,7 +385,7 @@ nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
 " バッファ一覧  -auto-resize
 nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright<CR>
 " ファイル一覧
-nnoremap <silent> <Space>uf :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright file<CR>
+"nnoremap <silent> <Space>uf :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright file<CR>
 " レジスタ一覧
 nnoremap <silent> <Space>ur :<C-u>Unite -buffer-name=register -direction=botright register<CR>
 " 最近使用したファイル一覧
@@ -404,6 +394,8 @@ nnoremap <silent> <Space>m  :<C-u>Unite file_mru -direction=botright<CR>
 nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright<CR>
 " 全部乗せ
 nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright buffer file_mru bookmark file<CR>
+"nnoremap <silent> fo :<C-u>Unite -buffer-name=outline outline -no-start-insert -auto-preview<CR>
+
 " unite.vim上でのキーマッピング
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
@@ -413,6 +405,10 @@ function! s:unite_my_settings()
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
   nmap <silent><buffer> <ESC> <Plug>(unite_exit)
 endfunction
+
+"----------------------------------------
+" unite-function.vim
+noremap <silent> <Space>uf :<C-u>Unite get_function -direction=botright<CR>
 
 "----------------------------------------
 " vim-filer.vim
