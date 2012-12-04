@@ -82,7 +82,7 @@ set fileformats=unix,dos,mac
 
 "----------------------------------------
 " map
-if os=="win" || os=="max"
+if os=="win" || os=="mac"
 	nnoremap <silent> <C-[> :noh<CR>
 endif 
 nnoremap <silent> h zv<Left>
