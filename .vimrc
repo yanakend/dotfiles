@@ -424,7 +424,7 @@ function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   nunmap <buffer> k
   nunmap <buffer> N
   nmap <buffer> i <Plug>(vimfiler_new_file)
-  hi vimfilerCurrentDirectory gui=UNDERLINE guifg=#0000ff guibg=NONE
+"  hi vimfilerCurrentDirectory gui=UNDERLINE guifg=#0000ff guibg=NONE
 endfunction
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_safe_mode_by_default = 0
