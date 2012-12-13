@@ -314,12 +314,15 @@ let g:neocomplcache_enable_camel_case_completion  =  1
 let g:neocomplcache_max_list = 20
 " シンタックスをキャッシュするときの最小文字長
 let g:neocomplcache_min_syntax_length = 3
+" スニペットファイルの配置場所
+let g:neocomplcache_snippets_dir = '~/.vim/snippets'
 " ディクショナリ定義
 if os=="win"
 	let g:neocomplcache_dictionary_filetype_lists = {
 		\ 'default' : '',
 		\ 'php' : $HOME . '/.vim/dict/php.dict',
-		\ 'ctp' : $HOME . '/.vim/dict/php.dict'
+		\ 'ctp' : $HOME . '/.vim/dict/php.dict',
+		\ 'tpl' : $HOME . '/.vim/dict/php.dict'
 		\ }
 endif
 if !exists('g:neocomplcache_keyword_patterns')
@@ -399,6 +402,10 @@ function! s:unite_my_settings()
   " ESCキーを押すと終了する
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
   nmap <silent><buffer> <ESC> <Plug>(unite_exit)
+  " N は検索として、i を新規作成にする
+  nnoremap <buffer> N p
+  nunmap <buffer> N
+  nmap <buffer> i <Plug>(unite_new_candidate)
 endfunction
 
 "----------------------------------------
@@ -413,8 +420,10 @@ function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   nmap <silent><buffer> <ESC> q
   nunmap <buffer> j
   nunmap <buffer> k
+  " N は検索として、i を新規作成にする
   nunmap <buffer> N
   nmap <buffer> i <Plug>(vimfiler_new_file)
+  " カレントディレクトリ名 色変更
 "  hi vimfilerCurrentDirectory gui=UNDERLINE guifg=#0000ff guibg=NONE
 endfunction
 let g:vimfiler_as_default_explorer = 1
