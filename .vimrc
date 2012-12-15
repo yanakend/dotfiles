@@ -79,11 +79,16 @@ set fileformats=unix,dos,mac
 " map
 if os=="win" || os=="mac"
 	nnoremap <silent> <C-[> :noh<CR>
+else
+	nnoremap <silent> <C-[><C-[> :noh<CR>
 endif 
 nnoremap <silent> h zv<Left>
 nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
+
+" *での検索時は次候補ではなくカーソル下結果から動かないように
+nnoremap <silent> * *N
 
 "sort
 nnoremap <silent> n nzz
@@ -160,7 +165,8 @@ endif
 
 "nnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
 "vnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
-vnoremap <silent> /  :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
+"vnoremap <silent> /  :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
+vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 nnoremap <C-g>    `.
 
 cnoremap <C-a>    <Home>
@@ -246,14 +252,13 @@ let g:quickrun_config["_"] = {
     \ "outputter/error/success" : "buffer",
     \ "outputter" : "error",
 \ }
-
 nnoremap <silent> <Space>tp  :e $HOME/.vim/test.php<CR>
 nnoremap <silent> <Space>tj  :e $HOME/.vim/test.js<CR>
 
 "----------------------------------------
 " qfixhowm.vim
 let g:MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|logs[/\\]\|cached[/\\]\|compiled[/\\]\|[/\\]\.svn[/\\]\|[/\\]\.git[/\\]'
-" 検索ディレクトリはカレントディレクトリを基点にする
+" 検索ディレクトリはカレントディレクトリを基点にしない
 let g:MyGrep_CurrentDirMode = 1
 let g:QFix_CloseOnJump = 1
 let g:QFix_HighSpeedPreview = 1
@@ -263,8 +268,8 @@ let MyGrep_DefaultSearchWord = 0
 nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
 " Windowsからcygwin1.7以降のgrep.exeを使用する場合
 " UTF-8の一部文字列が検索不可なのを修正します。
-let MyGrep_cygwin17 = 1
 if os=="win"
+	let MyGrep_cygwin17 = 1
     let mygrepprg = 'D:/dev/cygwin/bin/grep'
     let grepprg='D:/dev/cygwin/bin/grep\ -nH'
 endif
@@ -426,7 +431,9 @@ function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   " カレントディレクトリ名 色変更
 "  hi vimfilerCurrentDirectory gui=UNDERLINE guifg=#0000ff guibg=NONE
 endfunction
+" vimfilerをデフォルトのファイラにする
 let g:vimfiler_as_default_explorer = 1
+" セーフモード無効化
 let g:vimfiler_safe_mode_by_default = 0
 call vimfiler#set_execute_file('plist,pch,vim,php,ctp,txt,jax,css,h,m,html,c,storyboard,strings,cpp,js,patch,sql,tpl,csv,log,pl,sh,ini,jmx,coffee,yml,cs,rb', 'vim')
 
@@ -606,3 +613,116 @@ let g:Powerline#Colorschemes#my#colorscheme = Pl#Colorscheme#Init([
 let g:Powerline_colorscheme='my'
 let g:Powerline_mode_n = 'NORMAL'
 
+"setlocal spell
+" 最後に変更したテキストの選択
+"nnoremap gc `[v`]
+"vnoremap gc :<C-u>normal gc<Enter>
+"onoremap gc :<C-u>normal gc<Enter>
+"選択した文字列を置換
+"vnoremap /r "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
+"
+""s*でカーソル下のキーワードを置換
+"nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
+"smartword.vim
+"
+"------------------------------------
+" QfixHowm
+"------------------------------------
+"Howmコマンドキーマップ
+"let QFixHowm_Key = ' '
+""Howmコマンドの2ストローク目キーマップ
+"let QFixHowm_KeyB = ','
+""howmのファイルタイプ
+"let QFixHowm_FileType = 'qfix_memo'
+""メニュー画面のプレビューを常に表示
+"let QFixHowm_MenuPreview = 1
+"" メニュー画面の分割方法指定  垂直分割して左側
+"let QFixHowm_MenuCmd = 'vertical split'
+""メニュー画面の予定表示日数
+"let QFixHowm_ShowScheduleMenu = 20
+""メニュー画面の予定・TODO表示に使われる識別子
+"let QFixHowm_ListReminder_MenuExt = '[-@+!~.]'
+""メニュー画面で表示する最近のメモの数
+"let QFixHowm_MenuRecent = 50
+""メニュー画面で表示するランダムメモの数
+"let QFixHowm_RandomWalkColumns = 10
+"" 保存位置
+"let howm_dir             = '~/howm'
+
+""------------------------------------
+"" textmanip.vim
+""------------------------------------
+"vmap <M-j> <Plug>(Textmanip.move_selection_down)
+"vmap <M-h> <Plug>(Textmanip.move_selection_left)
+"vmap <M-k> <Plug>(Textmanip.move_selection_up)
+"vmap <M-l> <Plug>(Textmanip.move_selection_right)
+"" 選択したテキストの移動
+"nmap <M-d> <Plug>(Textmanip.duplicate_selection_n)
+"vmap <M-d> <Plug>(Textmanip.duplicate_selection_v)
+""------------------------------------
+"" fugitive
+""------------------------------------
+"nnoremap <Leader>gs :Gstatus<CR>
+"nnoremap <Leader>gl :Glog 
+"nnoremap <Leader>gd :Gdiff<CR>
+"nnoremap <Leader>gb :Gblame<CR>
+"nnoremap <Leader>ga :Gwrite<CR>
+
+""------------------------------------
+"" vim-poslist
+""------------------------------------
+"" nmap <C-o> <Plug>(poslist-prev-pos)
+"" nmap <C-i> <Plug>(poslist-next-pos)
+"nmap b <Plug>(poslist-prev-pos)
+"nmap B <Plug>(poslist-next-pos)
+""-------------------------------------------------------------------------------
+"" プラットホーム依存の特別な設定
+""-------------------------------------------------------------------------------
+"if has('mac')
+"  " Macではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
+"  set iskeyword=@,48-57,_,128-167,224-235
+"endif
+"" ========== yank設定 ==========
+""クリップボードをOSと連携
+"set clipboard=unnamed
+"" カーソル行をハイライト
+"" set cursorline
+"" カレントウィンドウにのみ罫線を引く
+"augroup cch
+"  autocmd! cch
+"  autocmd WinLeave * set nocursorline
+"  autocmd WinEnter,BufRead * set cursorline
+"augroup END
+"" 一定時間放置するとカーソル行ハイライト
+"augroup vimrc-auto-cursorline
+"  autocmd!
+"  autocmd CursorMoved,CursorMovedI * call s:auto_cursorline('CursorMoved')
+"  autocmd CursorHold,CursorHoldI * call s:auto_cursorline('CursorHold')
+"  autocmd WinEnter * call s:auto_cursorline('WinEnter')
+"  autocmd WinLeave * call s:auto_cursorline('WinLeave')
+"
+"  let s:cursorline_lock = 0
+"  function! s:auto_cursorline(event)
+"    if a:event ==# 'WinEnter'
+"      setlocal cursorline
+"      let s:cursorline_lock = 2
+"    elseif a:event ==# 'WinLeave'
+"      setlocal nocursorline
+"    elseif a:event ==# 'CursorMoved'
+"      if s:cursorline_lock
+"        if 1 < s:cursorline_lock
+"          let s:cursorline_lock = 1
+"        else
+"          setlocal nocursorline
+"          let s:cursorline_lock = 0
+"        endif
+"      endif
+"    elseif a:event ==# 'CursorHold'
+"      setlocal cursorline
+"      let s:cursorline_lock = 1
+"    endif
+"  endfunction
+"augroup END
+"" ％拡張のmatchhit.vimを利用
+":source $VIMRUNTIME/macros/matchit.vim
+"smoothPageScroll
