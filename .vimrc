@@ -74,6 +74,11 @@ set diffopt=filler,vertical,foldcolumn:0
 "set undofile
 "set undodir=~/.vim/undo
 set fileformats=unix,dos,mac
+if os=="mac"
+  " Macではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
+  set iskeyword=@,48-57,_,128-167,224-235
+  set macmeta
+endif
 
 "----------------------------------------
 " map
@@ -180,6 +185,17 @@ cnoremap <C-k>    <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR
 vnoremap <        <gv
 vnoremap >        >gv
 
+" カーソル行をハイライト
+set cursorline
+" カレントウィンドウにのみ罫線を引く
+augroup cch
+  autocmd! cch
+  autocmd WinLeave * set nocursorline
+  autocmd WinEnter,BufRead * set cursorline
+augroup END
+" ％拡張のmatchhit.vimを利用
+:source $VIMRUNTIME/macros/matchit.vim
+
 "ヤンクした文字列とカーソル位置の単語を置換する vim bible p123
 "cy カーソル位置移行の文字列とヤンクした単語を置換
 "ciyテキストオブジェクト的にカーソルが単語内のどこにあってもヤンクした文字列と置換
@@ -187,7 +203,6 @@ vnoremap >        >gv
 nnoremap <silent> cy ce<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 "vnoremap <silent> cy c<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 nnoremap <silent> ciy ciw<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
-
 "----------------------------------------
 " command
 command!                 Kwbd       let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn 
@@ -213,22 +228,36 @@ autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | se
 "----------------------------------------
 " function
 
-"----------------------------------------
-" 検索ワードをセットする。
-" 何か追加パラメータが設定されていたら、単語単位検索に。
-function! MySetSearch(cmd, ...)
-    let saved_reg = @"
-    if a:cmd != ''
-      silent exec 'normal! '.a:cmd
-    endif
-    let pattern = escape(@", '\\/.*$^~[]')
-    let pattern = substitute(pattern, '\n$', '', '')
-    if a:0 > 0
-      let pattern = '\<'.pattern.'\>'
-    endif
-    let @/ = pattern
-    let @" = saved_reg
-endfunction 
+"" 一定時間放置するとカーソル行ハイライト
+"augroup vimrc-auto-cursorline
+"  autocmd!
+"  autocmd CursorMoved,CursorMovedI * call s:auto_cursorline('CursorMoved')
+"  autocmd CursorHold,CursorHoldI * call s:auto_cursorline('CursorHold')
+"  autocmd WinEnter * call s:auto_cursorline('WinEnter')
+"  autocmd WinLeave * call s:auto_cursorline('WinLeave')
+"
+"  let s:cursorline_lock = 0
+"  function! s:auto_cursorline(event)
+"    if a:event ==# 'WinEnter'
+"      setlocal cursorline
+"      let s:cursorline_lock = 2
+"    elseif a:event ==# 'WinLeave'
+"      setlocal nocursorline
+"    elseif a:event ==# 'CursorMoved'
+"      if s:cursorline_lock
+"        if 1 < s:cursorline_lock
+"          let s:cursorline_lock = 1
+"        else
+"          setlocal nocursorline
+"          let s:cursorline_lock = 0
+"        endif
+"      endif
+"    elseif a:event ==# 'CursorHold'
+"      setlocal cursorline
+"      let s:cursorline_lock = 1
+"    endif
+"  endfunction
+"augroup END
 
 "----------------------------------------
 " pathogen.vim
@@ -438,16 +467,6 @@ let g:vimfiler_safe_mode_by_default = 0
 call vimfiler#set_execute_file('plist,pch,vim,php,ctp,txt,jax,css,h,m,html,c,storyboard,strings,cpp,js,patch,sql,tpl,csv,log,pl,sh,ini,jmx,coffee,yml,cs,rb', 'vim')
 
 "----------------------------------------
-" git-vim.vim
-nnoremap <silent><Space>id :GitDiff<cr>
-nnoremap <silent><Space>iD :GitDiff —cache<cr>
-nnoremap <silent><Space>is :GitStatus<cr>
-nnoremap <silent><Space>il :GitLog<cr>
-nnoremap <silent><Space>ia :GitAdd<cr>
-nnoremap <silent><Space>iA :GitAdd<cr>
-nnoremap <silent><Space>ic :GitCommit<cr>
-
-"----------------------------------------
 " vimshell setting
 let g:vimshell_interactive_update_time = 10
 let g:vimshell_prompt = $USERNAME."% "
@@ -613,52 +632,31 @@ let g:Powerline#Colorschemes#my#colorscheme = Pl#Colorscheme#Init([
 let g:Powerline_colorscheme='my'
 let g:Powerline_mode_n = 'NORMAL'
 
-"setlocal spell
-" 最後に変更したテキストの選択
-"nnoremap gc `[v`]
-"vnoremap gc :<C-u>normal gc<Enter>
-"onoremap gc :<C-u>normal gc<Enter>
-"選択した文字列を置換
-"vnoremap /r "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
-"
-""s*でカーソル下のキーワードを置換
+" 最後に変更した箇所に移動
+nnoremap U `[
+" 選択した文字列を置換
+vnoremap s "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
+"s*でカーソル下のキーワードを置換
 "nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
-"smartword.vim
-"
 "------------------------------------
-" QfixHowm
+" smartword.vim
 "------------------------------------
-"Howmコマンドキーマップ
-"let QFixHowm_Key = ' '
-""Howmコマンドの2ストローク目キーマップ
-"let QFixHowm_KeyB = ','
-""howmのファイルタイプ
-"let QFixHowm_FileType = 'qfix_memo'
-""メニュー画面のプレビューを常に表示
-"let QFixHowm_MenuPreview = 1
-"" メニュー画面の分割方法指定  垂直分割して左側
-"let QFixHowm_MenuCmd = 'vertical split'
-""メニュー画面の予定表示日数
-"let QFixHowm_ShowScheduleMenu = 20
-""メニュー画面の予定・TODO表示に使われる識別子
-"let QFixHowm_ListReminder_MenuExt = '[-@+!~.]'
-""メニュー画面で表示する最近のメモの数
-"let QFixHowm_MenuRecent = 50
-""メニュー画面で表示するランダムメモの数
-"let QFixHowm_RandomWalkColumns = 10
-"" 保存位置
-"let howm_dir             = '~/howm'
+map w  <Plug>(smartword-w)
+map b  <Plug>(smartword-b)
+map e  <Plug>(smartword-e)
+map ge <Plug>(smartword-ge)
 
-""------------------------------------
-"" textmanip.vim
-""------------------------------------
-"vmap <M-j> <Plug>(Textmanip.move_selection_down)
-"vmap <M-h> <Plug>(Textmanip.move_selection_left)
-"vmap <M-k> <Plug>(Textmanip.move_selection_up)
-"vmap <M-l> <Plug>(Textmanip.move_selection_right)
-"" 選択したテキストの移動
-"nmap <M-d> <Plug>(Textmanip.duplicate_selection_n)
-"vmap <M-d> <Plug>(Textmanip.duplicate_selection_v)
+"------------------------------------
+" textmanip.vim
+"------------------------------------
+vmap <M-j> <Plug>(Textmanip.move_selection_down)
+vmap <M-h> <Plug>(Textmanip.move_selection_left)
+vmap <M-k> <Plug>(Textmanip.move_selection_up)
+vmap <M-l> <Plug>(Textmanip.move_selection_right)
+" 選択したテキストの移動
+nmap <M-d> <Plug>(Textmanip.duplicate_selection_n)
+vmap <M-d> <Plug>(Textmanip.duplicate_selection_v)
+
 ""------------------------------------
 "" fugitive
 ""------------------------------------
@@ -668,61 +666,10 @@ let g:Powerline_mode_n = 'NORMAL'
 "nnoremap <Leader>gb :Gblame<CR>
 "nnoremap <Leader>ga :Gwrite<CR>
 
-""------------------------------------
-"" vim-poslist
-""------------------------------------
-"" nmap <C-o> <Plug>(poslist-prev-pos)
-"" nmap <C-i> <Plug>(poslist-next-pos)
-"nmap b <Plug>(poslist-prev-pos)
-"nmap B <Plug>(poslist-next-pos)
-""-------------------------------------------------------------------------------
-"" プラットホーム依存の特別な設定
-""-------------------------------------------------------------------------------
-"if has('mac')
-"  " Macではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
-"  set iskeyword=@,48-57,_,128-167,224-235
-"endif
-"" ========== yank設定 ==========
-""クリップボードをOSと連携
-"set clipboard=unnamed
-"" カーソル行をハイライト
-"" set cursorline
-"" カレントウィンドウにのみ罫線を引く
-"augroup cch
-"  autocmd! cch
-"  autocmd WinLeave * set nocursorline
-"  autocmd WinEnter,BufRead * set cursorline
-"augroup END
-"" 一定時間放置するとカーソル行ハイライト
-"augroup vimrc-auto-cursorline
-"  autocmd!
-"  autocmd CursorMoved,CursorMovedI * call s:auto_cursorline('CursorMoved')
-"  autocmd CursorHold,CursorHoldI * call s:auto_cursorline('CursorHold')
-"  autocmd WinEnter * call s:auto_cursorline('WinEnter')
-"  autocmd WinLeave * call s:auto_cursorline('WinLeave')
-"
-"  let s:cursorline_lock = 0
-"  function! s:auto_cursorline(event)
-"    if a:event ==# 'WinEnter'
-"      setlocal cursorline
-"      let s:cursorline_lock = 2
-"    elseif a:event ==# 'WinLeave'
-"      setlocal nocursorline
-"    elseif a:event ==# 'CursorMoved'
-"      if s:cursorline_lock
-"        if 1 < s:cursorline_lock
-"          let s:cursorline_lock = 1
-"        else
-"          setlocal nocursorline
-"          let s:cursorline_lock = 0
-"        endif
-"      endif
-"    elseif a:event ==# 'CursorHold'
-"      setlocal cursorline
-"      let s:cursorline_lock = 1
-"    endif
-"  endfunction
-"augroup END
-"" ％拡張のmatchhit.vimを利用
-":source $VIMRUNTIME/macros/matchit.vim
+"------------------------------------
+" vim-poslist
+"------------------------------------
+nmap <C-o> <Plug>(poslist-prev-pos)
+nmap <C-i> <Plug>(poslist-next-pos)
+
 "smoothPageScroll
