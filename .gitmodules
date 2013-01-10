@@ -61,9 +61,12 @@
 [submodule ".vim/bundle/vim-smartword"]
 	path = .vim/bundle/vim-smartword
 	url = git://github.com/kana/vim-smartword.git
+    ignore = untracked
 [submodule ".vim/bundle/vim-poslist"]
 	path = .vim/bundle/vim-poslist
 	url = git://github.com/thinca/vim-poslist.git
+    ignore = untracked
 [submodule ".vim/bundle/vim-textmanip"]
 	path = .vim/bundle/vim-textmanip
 	url = git://github.com/t9md/vim-textmanip.git
+    ignore = untracked
