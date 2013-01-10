@@ -64,3 +64,6 @@
 [submodule ".vim/bundle/vim-poslist"]
 	path = .vim/bundle/vim-poslist
 	url = git://github.com/thinca/vim-poslist.git
+[submodule ".vim/bundle/vim-textmanip"]
+	path = .vim/bundle/vim-textmanip
+	url = git://github.com/t9md/vim-textmanip.git

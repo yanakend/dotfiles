@@ -163,6 +163,7 @@ if os=="win"
     nnoremap <Space>f  :e D:\dev\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
     nnoremap <Space>tl :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log  /path:"%" /notempfile /closeonend<CR>
+    nnoremap <Space>tu :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:update /path:"%" /notempfile /closeonend<CR>
 endif
 if os=="mac" || os=="linux"
     nnoremap <Space>f  :e /Users/yanagikenji/Dropbox/free_memo.txt<CR>
@@ -203,6 +204,12 @@ augroup END
 nnoremap <silent> cy ce<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 "vnoremap <silent> cy c<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 nnoremap <silent> ciy ciw<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
+" 最後に変更した箇所に移動
+nnoremap U `[
+" 選択した文字列を置換
+vnoremap s "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
+"s*でカーソル下のキーワードを置換
+"nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
 "----------------------------------------
 " command
 command!                 Kwbd       let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn 
@@ -478,9 +485,9 @@ nnoremap <silent> vp :VimShellPop<CR>
 "----------------------------------------
 " vim-powerline
 if os=="mac"
-	set guifont=Osaka-Powerline:h10
+    set guifont=Osaka-Powerline:h10
 endif
-let g:Powerline_symbols='fancy'
+"let g:Powerline_symbols='fancy'
 call Pl#Hi#Allocate({
   \ 'black'          : 16,
   \ 'white'          : 231,
@@ -632,30 +639,25 @@ let g:Powerline#Colorschemes#my#colorscheme = Pl#Colorscheme#Init([
 let g:Powerline_colorscheme='my'
 let g:Powerline_mode_n = 'NORMAL'
 
-" 最後に変更した箇所に移動
-nnoremap U `[
-" 選択した文字列を置換
-vnoremap s "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
-"s*でカーソル下のキーワードを置換
-"nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
 "------------------------------------
 " smartword.vim
 "------------------------------------
-map w  <Plug>(smartword-w)
-map b  <Plug>(smartword-b)
-map e  <Plug>(smartword-e)
-map ge <Plug>(smartword-ge)
+"map w  <Plug>(smartword-w)
+"map b  <Plug>(smartword-b)
+"map e  <Plug>(smartword-e)
+"map ge <Plug>(smartword-ge)
 
 "------------------------------------
 " textmanip.vim
 "------------------------------------
-vmap <M-j> <Plug>(Textmanip.move_selection_down)
-vmap <M-h> <Plug>(Textmanip.move_selection_left)
-vmap <M-k> <Plug>(Textmanip.move_selection_up)
-vmap <M-l> <Plug>(Textmanip.move_selection_right)
 " 選択したテキストの移動
-nmap <M-d> <Plug>(Textmanip.duplicate_selection_n)
-vmap <M-d> <Plug>(Textmanip.duplicate_selection_v)
+vmap <M-j> <Plug>(textmanip-move-down) 
+vmap <M-k> <Plug>(textmanip-move-up) 
+vmap <M-h> <Plug>(textmanip-move-left) 
+vmap <M-l> <Plug>(textmanip-move-right)
+" 行の複製 
+vmap <M-d> <Plug>(textmanip-duplicate-down) 
+nmap <M-d> <Plug>(textmanip-duplicate-down)
 
 ""------------------------------------
 "" fugitive
@@ -665,11 +667,5 @@ vmap <M-d> <Plug>(Textmanip.duplicate_selection_v)
 "nnoremap <Leader>gd :Gdiff<CR>
 "nnoremap <Leader>gb :Gblame<CR>
 "nnoremap <Leader>ga :Gwrite<CR>
-
-"------------------------------------
-" vim-poslist
-"------------------------------------
-nmap <C-o> <Plug>(poslist-prev-pos)
-nmap <C-i> <Plug>(poslist-next-pos)
 
 "smoothPageScroll
