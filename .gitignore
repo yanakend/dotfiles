@@ -14,6 +14,7 @@
 !/.gitignore
 !/.gitconfig
 !/.gitmodules
+!/install.sh
 
 /.vim/test.*
 /.vim/php_doc/*
