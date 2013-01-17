@@ -9,7 +9,6 @@ endif
 " originalrepos on github
 "自動でリポジトリと同期するプラグイン
 NeoBundle 'git://github.com/Shougo/neocomplcache.git'
-NeoBundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
 NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
 NeoBundle 'git://github.com/Shougo/vimproc.git', {
 	\   'build': {
