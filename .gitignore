@@ -15,6 +15,7 @@
 !/.gitconfig
 !/.gitmodules
 !/install.sh
+!/install.bat
 
 /.vim/test.*
 /.vim/doc/*
