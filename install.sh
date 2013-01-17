@@ -3,8 +3,8 @@
 install_path=$HOME
 installer_path=`pwd`
 cd ${installer_path}
-git submodule init
-git submodule update
+#git submodule init
+#git submodule update
 
 install_file()
 {
@@ -18,7 +18,7 @@ install_file()
 	fi
 }
 
-dotfiles=( .bashrc .zshrc .vim .vimrc .gvimrc )
+dotfiles=( .bashrc_profile .bashrc .zshrc .vim .vimrc .gvimrc )
 
 for file in ${dotfiles[@]}
 do
