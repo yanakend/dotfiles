@@ -28,8 +28,9 @@ NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/vim-jp/vimdoc-ja.git'
 NeoBundle 'git://github.com/fuenor/qfixhowm.git'
 NeoBundle 'git://github.com/vim-scripts/EnhCommentify.vim.git'
+NeoBundle 'git://github.com/thinca/vim-ref.git'
 NeoBundle 'git://github.com/motemen/git-vim.git'
-NeoBundle 'git://github.com/Lokaltog/vim-powerline.git'
+NeoBundle 'git://github.com/Lokaltog/powerline.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
@@ -184,6 +185,7 @@ nnoremap ZZ <Nop>
 nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>vi :e ~/.vimrc<CR>
+nnoremap <silent><Space>r  :<C-u>Unite ref/phpmanual<CR>
 if os=="win"
     nnoremap <Space>f  :e D:\dev\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
@@ -377,10 +379,30 @@ endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
 "----------------------------------------
+" ref.vim
+if os=="mac" || os=="linux"
+    let g:ref_phpmanual_path = '/Users/yanagikenji/.vim/php_doc/php-chunked-xhtml/'
+endif
+if os=="win"
+    let g:ref_phpmanual_path = 'C:\Users\yanagikenji\.vim\php_doc\php-chunked-xhtml\'
+    let g:ref_phpmanual_encoding = 'Shift-JIS'
+    let $PATH = $PATH . ';C:\Program Files\lynx_w32'
+endif
+"let g:ref_phpmanual_cmd = 'w3m -dump %s'
+autocmd FileType ref-phpmanual call s:initialize_ref_viewer()
+function! s:initialize_ref_viewer()
+    nmap <silent><buffer> <ESC> :bd<CR>
+    nmap <silent><buffer> q     :bd<CR>
+    nmap <silent><buffer> <C-[> :bd<CR>
+    setlocal nonumber
+endfunction
+
+"----------------------------------------
 " unite.vim
 " 入力モードで開始する
 "let g:unite_enable_start_insert=0
 "let g:unite_source_file_mru_time_format
+nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
 " バッファ一覧  -auto-resize
 nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright<CR>
 " ファイル一覧
@@ -394,7 +416,6 @@ nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright<CR>
 " 全部乗せ
 nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright buffer file_mru bookmark file<CR>
 "nnoremap <silent> fo :<C-u>Unite -buffer-name=outline outline -no-start-insert -auto-preview<CR>
-"noremap <silent> <Space>uf :<C-u>Unite get_function -direction=botright<CR>
 
 " unite.vim上でのキーマッピング
 autocmd FileType unite call s:unite_my_settings()
@@ -409,6 +430,10 @@ function! s:unite_my_settings()
   nunmap <buffer> N
   nmap <buffer> i <Plug>(unite_new_candidate)
 endfunction
+
+"----------------------------------------
+" unite-function.vim
+noremap <silent> <Space>uf :<C-u>Unite get_function -direction=botright<CR>
 
 "----------------------------------------
 " vim-filer.vim

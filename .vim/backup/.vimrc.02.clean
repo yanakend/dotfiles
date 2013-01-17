@@ -28,8 +28,9 @@ NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/vim-jp/vimdoc-ja.git'
 NeoBundle 'git://github.com/fuenor/qfixhowm.git'
 NeoBundle 'git://github.com/vim-scripts/EnhCommentify.vim.git'
+NeoBundle 'git://github.com/thinca/vim-ref.git'
 NeoBundle 'git://github.com/motemen/git-vim.git'
-NeoBundle 'git://github.com/Lokaltog/vim-powerline.git'
+NeoBundle 'git://github.com/Lokaltog/powerline.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
@@ -184,6 +185,7 @@ nnoremap ZZ <Nop>
 nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>vi :e ~/.vimrc<CR>
+nnoremap <silent><Space>r  :<C-u>Unite ref/phpmanual<CR>
 if os=="win"
     nnoremap <Space>f  :e D:\dev\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
@@ -377,10 +379,30 @@ endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
 "----------------------------------------
+" ref.vim
+if os=="mac" || os=="linux"
+    let g:ref_phpmanual_path = '/Users/yanagikenji/.vim/php_doc/php-chunked-xhtml/'
+endif
+if os=="win"
+    let g:ref_phpmanual_path = 'C:\Users\yanagikenji\.vim\php_doc\php-chunked-xhtml\'
+    let g:ref_phpmanual_encoding = 'Shift-JIS'
+    let $PATH = $PATH . ';C:\Program Files\lynx_w32'
+endif
+"let g:ref_phpmanual_cmd = 'w3m -dump %s'
+autocmd FileType ref-phpmanual call s:initialize_ref_viewer()
+function! s:initialize_ref_viewer()
+    nmap <silent><buffer> <ESC> :bd<CR>
+    nmap <silent><buffer> q     :bd<CR>
+    nmap <silent><buffer> <C-[> :bd<CR>
+    setlocal nonumber
+endfunction
+
+"----------------------------------------
 " unite.vim
 " 入力モードで開始する
 "let g:unite_enable_start_insert=0
 "let g:unite_source_file_mru_time_format
+nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
 " バッファ一覧  -auto-resize
 nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright<CR>
 " ファイル一覧
@@ -394,7 +416,6 @@ nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright<CR>
 " 全部乗せ
 nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright buffer file_mru bookmark file<CR>
 "nnoremap <silent> fo :<C-u>Unite -buffer-name=outline outline -no-start-insert -auto-preview<CR>
-"noremap <silent> <Space>uf :<C-u>Unite get_function -direction=botright<CR>
 
 " unite.vim上でのキーマッピング
 autocmd FileType unite call s:unite_my_settings()
@@ -409,6 +430,10 @@ function! s:unite_my_settings()
   nunmap <buffer> N
   nmap <buffer> i <Plug>(unite_new_candidate)
 endfunction
+
+"----------------------------------------
+" unite-function.vim
+noremap <silent> <Space>uf :<C-u>Unite get_function -direction=botright<CR>
 
 "----------------------------------------
 " vim-filer.vim
@@ -442,155 +467,155 @@ nnoremap <silent> vp :VimShellPop<CR>
 
 "----------------------------------------
 " vim-powerline
-"if os=="mac"
-"	set guifont=Osaka-Powerline:h10
-"endif
-"let g:Powerline_symbols='fancy'
-"call Pl#Hi#Allocate({
-"  \ 'black'          : 16,
-"  \ 'white'          : 231,
-"  \
-"  \ 'darkestgreen'   : 22,
-"  \ 'darkgreen'      : 28,
-"  \
-"  \ 'darkestcyan'    : 21,
-"  \ 'mediumcyan'     : 117,
-"  \
-"  \ 'darkestblue'    : 24,
-"  \ 'darkblue'       : 31,
-"  \
-"  \ 'darkestred'     : 52,
-"  \ 'darkred'        : 88,
-"  \ 'mediumred'      : 124,
-"  \ 'brightred'      : 160,
-"  \ 'brightestred'   : 196,
-"  \
-"  \ 'darkestyellow'  : 59,
-"  \ 'darkyellow'     : 100,
-"  \ 'darkestpurple'  : 57,
-"  \ 'mediumpurple'   : 98,
-"  \ 'brightpurple'   : 189,
-"  \
-"  \ 'brightorange'   : 208,
-"  \ 'brightestorange': 214,
-"  \
-"  \ 'gray0'          : 233,
-"  \ 'gray1'          : 235,
-"  \ 'gray2'          : 236,
-"  \ 'gray3'          : 239,
-"  \ 'gray4'          : 240,
-"  \ 'gray5'          : 241,
-"  \ 'gray6'          : 244,
-"  \ 'gray7'          : 245,
-"  \ 'gray8'          : 247,
-"  \ 'gray9'          : 250,
-"  \ 'gray10'         : 252,
-"  \ })
-"let g:Powerline#Colorschemes#my#colorscheme = Pl#Colorscheme#Init([
-"  \ Pl#Hi#Segments(['SPLIT'], {
-"    \ 'n': ['white', 'gray2'],
-"    \ 'N': ['gray0', 'gray0'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['mode_indicator'], {
-"    \ 'i': ['darkestgreen', 'white', ['bold']],
-"    \ 'n': ['darkestcyan', 'white', ['bold']],
-"    \ 'v': ['darkestpurple', 'white', ['bold']],
-"    \ 'r': ['mediumred', 'white', ['bold']],
-"    \ 's': ['white', 'gray5', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['fileinfo', 'filename'], {
-"    \ 'i': ['white', 'darkestgreen', ['bold']],
-"    \ 'n': ['white', 'darkestcyan', ['bold']],
-"    \ 'v': ['white', 'darkestpurple', ['bold']],
-"    \ 'r': ['white', 'mediumred', ['bold']],
-"    \ 'N': ['gray0', 'gray2', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['branch', 'scrollpercent', 'raw', 'filesize'], {
-"    \ 'n': ['gray2', 'gray7'],
-"    \ 'N': ['gray0', 'gray2'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['fileinfo.filepath', 'status'], {
-"    \ 'n': ['gray10'],
-"    \ 'N': ['gray5'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['static_str'], {
-"    \ 'n': ['white', 'gray4'],
-"    \ 'N': ['gray1', 'gray1'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['fileinfo.flags'], {
-"    \ 'n': ['white'],
-"    \ 'N': ['gray4'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['currenttag', 'fileformat', 'fileencoding', 'pwd', 'filetype', 'rvm:string', 'rvm:statusline', 'virtualenv:statusline', 'charcode', 'currhigroup'], {
-"    \ 'n': ['gray9', 'gray4'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['lineinfo'], {
-"    \ 'n': ['gray2', 'gray10'],
-"    \ 'N': ['gray2', 'gray4'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['errors'], {
-"    \ 'n': ['white', 'gray2'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['lineinfo.line.tot'], {
-"    \ 'n': ['gray2'],
-"    \ 'N': ['gray2'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['paste_indicator', 'ws_marker'], {
-"    \ 'n': ['white', 'brightred', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['gundo:static_str.name', 'command_t:static_str.name'], {
-"    \ 'n': ['white', 'mediumred', ['bold']],
-"    \ 'N': ['brightred', 'darkestred', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['gundo:static_str.buffer', 'command_t:raw.line'], {
-"    \ 'n': ['white', 'darkred'],
-"    \ 'N': ['brightred', 'darkestred'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['gundo:SPLIT', 'command_t:SPLIT'], {
-"    \ 'n': ['white', 'darkred'],
-"    \ 'N': ['white', 'darkestred'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:focus', 'ctrlp:byfname'], {
-"    \ 'n': ['brightpurple', 'darkestpurple'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:prev', 'ctrlp:next', 'ctrlp:pwd'], {
-"    \ 'n': ['white', 'mediumpurple'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:item'], {
-"    \ 'n': ['darkestpurple', 'white', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:marked'], {
-"    \ 'n': ['brightestred', 'darkestpurple', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:count'], {
-"    \ 'n': ['darkestpurple', 'white'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:SPLIT'], {
-"    \ 'n': ['white', 'darkestpurple'],
-"    \ }),
-"  \ ])
-"let g:Powerline_colorscheme='my'
-"let g:Powerline_mode_n = 'NORMAL'
+if os=="mac"
+	set guifont=Osaka-Powerline:h10
+endif
+let g:Powerline_symbols='fancy'
+call Pl#Hi#Allocate({
+  \ 'black'          : 16,
+  \ 'white'          : 231,
+  \
+  \ 'darkestgreen'   : 22,
+  \ 'darkgreen'      : 28,
+  \
+  \ 'darkestcyan'    : 21,
+  \ 'mediumcyan'     : 117,
+  \
+  \ 'darkestblue'    : 24,
+  \ 'darkblue'       : 31,
+  \
+  \ 'darkestred'     : 52,
+  \ 'darkred'        : 88,
+  \ 'mediumred'      : 124,
+  \ 'brightred'      : 160,
+  \ 'brightestred'   : 196,
+  \
+  \ 'darkestyellow'  : 59,
+  \ 'darkyellow'     : 100,
+  \ 'darkestpurple'  : 57,
+  \ 'mediumpurple'   : 98,
+  \ 'brightpurple'   : 189,
+  \
+  \ 'brightorange'   : 208,
+  \ 'brightestorange': 214,
+  \
+  \ 'gray0'          : 233,
+  \ 'gray1'          : 235,
+  \ 'gray2'          : 236,
+  \ 'gray3'          : 239,
+  \ 'gray4'          : 240,
+  \ 'gray5'          : 241,
+  \ 'gray6'          : 244,
+  \ 'gray7'          : 245,
+  \ 'gray8'          : 247,
+  \ 'gray9'          : 250,
+  \ 'gray10'         : 252,
+  \ })
+let g:Powerline#Colorschemes#my#colorscheme = Pl#Colorscheme#Init([
+  \ Pl#Hi#Segments(['SPLIT'], {
+    \ 'n': ['white', 'gray2'],
+    \ 'N': ['gray0', 'gray0'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['mode_indicator'], {
+    \ 'i': ['darkestgreen', 'white', ['bold']],
+    \ 'n': ['darkestcyan', 'white', ['bold']],
+    \ 'v': ['darkestpurple', 'white', ['bold']],
+    \ 'r': ['mediumred', 'white', ['bold']],
+    \ 's': ['white', 'gray5', ['bold']],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['fileinfo', 'filename'], {
+    \ 'i': ['white', 'darkestgreen', ['bold']],
+    \ 'n': ['white', 'darkestcyan', ['bold']],
+    \ 'v': ['white', 'darkestpurple', ['bold']],
+    \ 'r': ['white', 'mediumred', ['bold']],
+    \ 'N': ['gray0', 'gray2', ['bold']],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['branch', 'scrollpercent', 'raw', 'filesize'], {
+    \ 'n': ['gray2', 'gray7'],
+    \ 'N': ['gray0', 'gray2'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['fileinfo.filepath', 'status'], {
+    \ 'n': ['gray10'],
+    \ 'N': ['gray5'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['static_str'], {
+    \ 'n': ['white', 'gray4'],
+    \ 'N': ['gray1', 'gray1'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['fileinfo.flags'], {
+    \ 'n': ['white'],
+    \ 'N': ['gray4'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['currenttag', 'fileformat', 'fileencoding', 'pwd', 'filetype', 'rvm:string', 'rvm:statusline', 'virtualenv:statusline', 'charcode', 'currhigroup'], {
+    \ 'n': ['gray9', 'gray4'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['lineinfo'], {
+    \ 'n': ['gray2', 'gray10'],
+    \ 'N': ['gray2', 'gray4'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['errors'], {
+    \ 'n': ['white', 'gray2'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['lineinfo.line.tot'], {
+    \ 'n': ['gray2'],
+    \ 'N': ['gray2'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['paste_indicator', 'ws_marker'], {
+    \ 'n': ['white', 'brightred', ['bold']],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['gundo:static_str.name', 'command_t:static_str.name'], {
+    \ 'n': ['white', 'mediumred', ['bold']],
+    \ 'N': ['brightred', 'darkestred', ['bold']],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['gundo:static_str.buffer', 'command_t:raw.line'], {
+    \ 'n': ['white', 'darkred'],
+    \ 'N': ['brightred', 'darkestred'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['gundo:SPLIT', 'command_t:SPLIT'], {
+    \ 'n': ['white', 'darkred'],
+    \ 'N': ['white', 'darkestred'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['ctrlp:focus', 'ctrlp:byfname'], {
+    \ 'n': ['brightpurple', 'darkestpurple'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['ctrlp:prev', 'ctrlp:next', 'ctrlp:pwd'], {
+    \ 'n': ['white', 'mediumpurple'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['ctrlp:item'], {
+    \ 'n': ['darkestpurple', 'white', ['bold']],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['ctrlp:marked'], {
+    \ 'n': ['brightestred', 'darkestpurple', ['bold']],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['ctrlp:count'], {
+    \ 'n': ['darkestpurple', 'white'],
+    \ }),
+  \
+  \ Pl#Hi#Segments(['ctrlp:SPLIT'], {
+    \ 'n': ['white', 'darkestpurple'],
+    \ }),
+  \ ])
+let g:Powerline_colorscheme='my'
+let g:Powerline_mode_n = 'NORMAL'
 
 "------------------------------------
 " textmanip.vim
