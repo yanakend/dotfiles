@@ -6,10 +6,13 @@ if has('win32')
     if has('kaoriya')
       set ambiwidth=auto
     endif
+	set visualbell t_vb= " エラーのときに、ビープ音を出さない
 endif
 if has('gui_macvim')
 	set transparency=1	" 透明度を指定
 	set antialias
+	set guioptions-=r
+	set guioptions-=R
     "set imdisable		" IMを無効化
-
+	set visualbell t_vb= " エラーのときに、ビープ音を出さない
 endif

@@ -1,3 +1,46 @@
+"--------------------------------------------------------------------------------
+" plugin
+filetype off
+if has('vim_starting')
+	set runtimepath+=~/.vim/bundle/neobundle.vim
+	call neobundle#rc(expand('~/.vim/bundle/'))
+endif
+
+" originalrepos on github
+"自動でリポジトリと同期するプラグイン
+NeoBundle 'git://github.com/Shougo/neocomplcache.git'
+NeoBundle 'git://github.com/Shougo/neocomplcache-snippets-complete.git'
+NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
+NeoBundle 'git://github.com/Shougo/vimproc.git', {
+	\   'build': {
+	\     'cygwin': 'make -f make_cygwin.mak',
+	\     'mac':    'make -f make_mac.mak',
+	\     'unix':   'make -f make_unix.mak',
+	\   },
+	\ }
+NeoBundle 'git://github.com/Shougo/unite.vim.git'
+NeoBundle 'git://github.com/Shougo/vimfiler.git'
+NeoBundle 'git://github.com/Shougo/vimshell.git'
+NeoBundle 'git://github.com/tpope/vim-surround.git'
+NeoBundle 'git://github.com/tpope/vim-repeat.git'
+NeoBundle 'git://github.com/ujihisa/vimshell-ssh.git'
+NeoBundle 'git://github.com/thinca/vim-quickrun.git'
+NeoBundle 'git://github.com/vim-jp/vimdoc-ja.git'
+NeoBundle 'git://github.com/fuenor/qfixhowm.git'
+NeoBundle 'git://github.com/vim-scripts/EnhCommentify.vim.git'
+NeoBundle 'git://github.com/thinca/vim-ref.git'
+NeoBundle 'git://github.com/motemen/git-vim.git'
+NeoBundle 'git://github.com/Lokaltog/vim-powerline.git'
+NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
+NeoBundle 'git://github.com/thinca/vim-quickrun.git'
+NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
+NeoBundle 'git://github.com/t9md/vim-textmanip.git'
+NeoBundle 'git://github.com/vim-scripts/savevers.vim.git'
+
+filetype plugin indent on     " required!
+filetype indent on
+syntax on
+
 "--------------------------------------
 " Get running OS
 function! GetRunningOS()
@@ -15,19 +58,8 @@ endfunction
 let os=GetRunningOS()
 
 "----------------------------------------
-" ユーザーランタイムパス設定
-"Windows, unixでのruntimepathの違いを吸収するためのもの。 
-"$MY_VIMRUNTIMEはユーザーランタイムディレクトリを示す。 
-":echo $MY_VIMRUNTIMEで実際のパスを確認できます。 
-if isdirectory($HOME . '/.vim') 
-  let $MY_VIMRUNTIME = $HOME.'/.vim'
-endif 
-set runtimepath+=$MY_VIMRUNTIME
-
-"----------------------------------------
 " settings
 set nocompatible                    " viとの互換性を取らない
-syntax on
 set t_Co=256                        " 256色に
 " カラースキーム設定
 colorscheme desert
@@ -35,7 +67,6 @@ colorscheme desert
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set guioptions=mr
-
 set nonumber                        " 行数表示
 set hlsearch                        " 索文字列を色づけ
 set ignorecase                      " 文字小文字を判別しない
@@ -61,7 +92,6 @@ set whichwrap=b,s,[,],<,>           " カーソルキーで行末／行頭の移
 set title                           " タイトルをウインドウ枠に表示する
 set virtualedit=block               "ブロック選択時にフリーカーソルモード
 set hidden                          "バッファを切替えてもundoの効力を失わない
-
 set backup
 set writebackup
 set backupdir=~/.vim/backup
@@ -71,8 +101,6 @@ set iminsert=0
 set formatoptions-=ro
 set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
-"set undofile
-"set undodir=~/.vim/undo
 set fileformats=unix,dos,mac
 if os=="mac"
   " Macではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
@@ -95,7 +123,7 @@ nnoremap <silent> l zv<Right>
 " *での検索時は次候補ではなくカーソル下結果から動かないように
 nnoremap <silent> * *N
 
-"sort
+"search
 nnoremap <silent> n nzz
 nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
@@ -154,7 +182,6 @@ if os=="win"
 endif
 
 nnoremap ZZ <Nop>
-nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>vi :e ~/.vimrc<CR>
@@ -163,17 +190,12 @@ if os=="win"
     nnoremap <Space>f  :e D:\dev\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
     nnoremap <Space>tl :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log  /path:"%" /notempfile /closeonend<CR>
-    nnoremap <Space>tu :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:update /path:"%" /notempfile /closeonend<CR>
 endif
 if os=="mac" || os=="linux"
     nnoremap <Space>f  :e /Users/yanagikenji/Dropbox/free_memo.txt<CR>
 endif
 
-"nnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
-"vnoremap <silent> <Space>co :ContinuousNumber <C-a><CR>
-"vnoremap <silent> /  :<C-u>call MySetSearch('""vgvy')<CR>:let &hlsearch=&hlsearch<CR>
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
-nnoremap <C-g>    `.
 
 cnoremap <C-a>    <Home>
 cnoremap <C-f>    <Right>
@@ -194,8 +216,6 @@ augroup cch
   autocmd WinLeave * set nocursorline
   autocmd WinEnter,BufRead * set cursorline
 augroup END
-" ％拡張のmatchhit.vimを利用
-:source $VIMRUNTIME/macros/matchit.vim
 
 "ヤンクした文字列とカーソル位置の単語を置換する vim bible p123
 "cy カーソル位置移行の文字列とヤンクした単語を置換
@@ -204,12 +224,14 @@ augroup END
 nnoremap <silent> cy ce<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 "vnoremap <silent> cy c<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 nnoremap <silent> ciy ciw<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
+
 " 最後に変更した箇所に移動
 nnoremap U `[
 " 選択した文字列を置換
 vnoremap s "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
 "s*でカーソル下のキーワードを置換
 "nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
+
 "----------------------------------------
 " command
 command!                 Kwbd       let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn 
@@ -232,47 +254,20 @@ if os=="mac" || os=="linux"
 endif
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
  
-"----------------------------------------
-" function
+"--------------------------------------------------------------------------------
+" netrw.vim
+"nnoremap <silent><Space>e :Exp<cr>
+"autocmd FileType netrw call s:retrw_my_settings()
+"function! s:retrw_my_settings() " ESCキーを押すと終了する
+"  nmap <silent><buffer> <C-[> <C-o>
+"  nmap <silent><buffer> <ESC> <C-o>
+"  nmap <silent><buffer> q     <C-o>
+"  nmap <silent><buffer> l     <cr>
+"  nmap <silent><buffer> h     -
+"endfunction
 
-"" 一定時間放置するとカーソル行ハイライト
-"augroup vimrc-auto-cursorline
-"  autocmd!
-"  autocmd CursorMoved,CursorMovedI * call s:auto_cursorline('CursorMoved')
-"  autocmd CursorHold,CursorHoldI * call s:auto_cursorline('CursorHold')
-"  autocmd WinEnter * call s:auto_cursorline('WinEnter')
-"  autocmd WinLeave * call s:auto_cursorline('WinLeave')
-"
-"  let s:cursorline_lock = 0
-"  function! s:auto_cursorline(event)
-"    if a:event ==# 'WinEnter'
-"      setlocal cursorline
-"      let s:cursorline_lock = 2
-"    elseif a:event ==# 'WinLeave'
-"      setlocal nocursorline
-"    elseif a:event ==# 'CursorMoved'
-"      if s:cursorline_lock
-"        if 1 < s:cursorline_lock
-"          let s:cursorline_lock = 1
-"        else
-"          setlocal nocursorline
-"          let s:cursorline_lock = 0
-"        endif
-"      endif
-"    elseif a:event ==# 'CursorHold'
-"      setlocal cursorline
-"      let s:cursorline_lock = 1
-"    endif
-"  endfunction
-"augroup END
-
-"----------------------------------------
-" pathogen.vim
-filetype off 
-call pathogen#runtime_append_all_bundles() 
-call pathogen#helptags() 
-set helpfile=$VIMRUNTIME/doc/help.txt 
-filetype plugin on
+" ％拡張のmatchhit.vimを利用
+source $VIMRUNTIME/macros/matchit.vim
 
 "----------------------------------------
 " quickrun.vim
@@ -309,18 +304,6 @@ if os=="win"
     let mygrepprg = 'D:/dev/cygwin/bin/grep'
     let grepprg='D:/dev/cygwin/bin/grep\ -nH'
 endif
-
-"----------------------------------------
-" netrw.vim
-"nnoremap <silent><Space>e :Exp<cr>
-"autocmd FileType netrw call s:retrw_my_settings()
-"function! s:retrw_my_settings() " ESCキーを押すと終了する
-"  nmap <silent><buffer> <C-[> <C-o>
-"  nmap <silent><buffer> <ESC> <C-o>
-"  nmap <silent><buffer> q     <C-o>
-"  nmap <silent><buffer> l     <cr>
-"  nmap <silent><buffer> h     -
-"endfunction
 
 "----------------------------------------
 " savevers.vim
@@ -390,7 +373,7 @@ inoremap <expr><C-y> neocomplcache#close_popup()
 inoremap <expr><C-e> neocomplcache#cancel_popup()
 "補完するためのキーワードパターンを指定
 if !exists('g:neocomplcache_keyword_patterns')
-        let g:neocomplcache_keyword_patterns = {}
+    let g:neocomplcache_keyword_patterns = {}
 endif
 "日本語を補完候補として取得しないようにする
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
@@ -417,9 +400,8 @@ endfunction
 "----------------------------------------
 " unite.vim
 " 入力モードで開始する
-"let g:unite_enable_start_insert=1
+"let g:unite_enable_start_insert=0
 "let g:unite_source_file_mru_time_format
-let g:vimfiler_as_default_explorer = 1
 nnoremap <silent> <Space>r  :<C-u>Unite ref/phpmanual<CR>
 " バッファ一覧  -auto-resize
 nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright<CR>
@@ -472,6 +454,7 @@ let g:vimfiler_as_default_explorer = 1
 " セーフモード無効化
 let g:vimfiler_safe_mode_by_default = 0
 call vimfiler#set_execute_file('plist,pch,vim,php,ctp,txt,jax,css,h,m,html,c,storyboard,strings,cpp,js,patch,sql,tpl,csv,log,pl,sh,ini,jmx,coffee,yml,cs,rb', 'vim')
+nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 
 "----------------------------------------
 " vimshell setting
@@ -485,9 +468,9 @@ nnoremap <silent> vp :VimShellPop<CR>
 "----------------------------------------
 " vim-powerline
 if os=="mac"
-    set guifont=Osaka-Powerline:h10
+	set guifont=Osaka-Powerline:h10
 endif
-"let g:Powerline_symbols='fancy'
+let g:Powerline_symbols='fancy'
 call Pl#Hi#Allocate({
   \ 'black'          : 16,
   \ 'white'          : 231,
@@ -528,11 +511,6 @@ call Pl#Hi#Allocate({
   \ 'gray9'          : 250,
   \ 'gray10'         : 252,
   \ })
-" 'n': normal mode
-" 'i': insert mode
-" 'v': visual mode
-" 'r': replace mode
-" 'N': not active
 let g:Powerline#Colorschemes#my#colorscheme = Pl#Colorscheme#Init([
   \ Pl#Hi#Segments(['SPLIT'], {
     \ 'n': ['white', 'gray2'],
@@ -640,32 +618,28 @@ let g:Powerline_colorscheme='my'
 let g:Powerline_mode_n = 'NORMAL'
 
 "------------------------------------
-" smartword.vim
-"------------------------------------
-"map w  <Plug>(smartword-w)
-"map b  <Plug>(smartword-b)
-"map e  <Plug>(smartword-e)
-"map ge <Plug>(smartword-ge)
-
-"------------------------------------
 " textmanip.vim
+if os=="win"
+	vmap <M-j> <Plug>(Textmanip.move_selection_down)
+	vmap <M-h> <Plug>(Textmanip.move_selection_left)
+	vmap <M-k> <Plug>(Textmanip.move_selection_up)
+	vmap <M-l> <Plug>(Textmanip.move_selection_right)
+	" 選択したテキストの移動
+	nmap <M-d> <Plug>(Textmanip.duplicate_selection_n)
+	vmap <M-d> <Plug>(Textmanip.duplicate_selection_v)
+endif
+
+function EnhCommentifyCallback(ft)
+	if a:ft == 'objc'
+		let b:ECcommentOpen = '//'
+		let b:ECcommentClose = ''
+	endif
+endfunction
+let g:EnhCommentifyCallbackExists = 'Yes'
+
 "------------------------------------
-" 選択したテキストの移動
-vmap <M-j> <Plug>(textmanip-move-down) 
-vmap <M-k> <Plug>(textmanip-move-up) 
-vmap <M-h> <Plug>(textmanip-move-left) 
-vmap <M-l> <Plug>(textmanip-move-right)
-" 行の複製 
-vmap <M-d> <Plug>(textmanip-duplicate-down) 
-nmap <M-d> <Plug>(textmanip-duplicate-down)
+" vimdoc-ja.git
+helptags ~/.vim/doc
+set helplang=ja,en
 
-""------------------------------------
-"" fugitive
-""------------------------------------
-"nnoremap <Leader>gs :Gstatus<CR>
-"nnoremap <Leader>gl :Glog 
-"nnoremap <Leader>gd :Gdiff<CR>
-"nnoremap <Leader>gb :Gblame<CR>
-"nnoremap <Leader>ga :Gwrite<CR>
-
-"smoothPageScroll
+silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
