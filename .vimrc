@@ -10,6 +10,9 @@ endif
 "自動でリポジトリと同期するプラグイン
 NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
+NeoBundle 'git://github.com/Shougo/neosnippet.git'
+NeoBundle 'git://github.com/honza/snipmate-snippets.git'
+NeoBundle 'git://github.com/garbas/vim-snipmate.git'
 NeoBundle 'git://github.com/Shougo/vimproc.git', {
 	\   'build': {
 	\     'cygwin': 'make -f make_cygwin.mak',
@@ -30,10 +33,15 @@ NeoBundle 'git://github.com/vim-scripts/EnhCommentify.vim.git'
 NeoBundle 'git://github.com/motemen/git-vim.git'
 NeoBundle 'git://github.com/Lokaltog/vim-powerline.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
-NeoBundle 'git://github.com/thinca/vim-quickrun.git'
-NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
-NeoBundle 'git://github.com/t9md/vim-textmanip.git'
 NeoBundle 'git://github.com/vim-scripts/savevers.vim.git'
+NeoBundle 'git://github.com/nanotech/jellybeans.vim'
+" 色々な入力補助
+NeoBundle "kana/vim-smartinput.git"
+NeoBundle 'acustodioo/vim-enter-indent.git'
+" 前回の操作を.で繰り返す
+NeoBundle 'git://github.com/tpope/vim-repeat.git'
+" %の拡張
+NeoBundle "tmhedberg/matchit.git"
 
 filetype plugin indent on     " required!
 filetype indent on
@@ -84,7 +92,6 @@ set laststatus=2                    " ステータスラインを常に表示
 set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l\|%c\|%L>
 set autoindent
 set cindent
-"set shellslash                      " Windowsでディレクトリパスの区切り文字表示に / を使えるようにする
 set ambiwidth=double                " □や○の文字があってもカーソル位置がずれないようにする
 set whichwrap=b,s,[,],<,>           " カーソルキーで行末／行頭の移動可能に設定
 set title                           " タイトルをウインドウ枠に表示する
@@ -100,6 +107,9 @@ set formatoptions-=ro
 set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
 set fileformats=unix,dos,mac
+set textwidth=0
+" Don't redraw while macro executing.
+set lazyredraw
 if os=="mac"
   " Macではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
@@ -202,17 +212,30 @@ cnoremap <C-w>    <Home>\<<End>\><Left><Left>
 cnoremap <C-c>    <End>\C
 cnoremap <C-k>    <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
 
-vnoremap <        <gv
-vnoremap >        >gv
+" Use <C-Space>.
+map <C-Space>  <C-@>
+cmap <C-Space>  <C-@>
 
-" カーソル行をハイライト
-set cursorline
-" カレントウィンドウにのみ罫線を引く
-augroup cch
-  autocmd! cch
-  autocmd WinLeave * set nocursorline
-  autocmd WinEnter,BufRead * set cursorline
-augroup END
+" Visual mode keymappings: "{{{
+" <TAB>: indent.
+xnoremap <TAB>  >
+" <S-TAB>: unindent.
+xnoremap <S-TAB>  <
+
+" Indent
+nnoremap > >>
+nnoremap < <<
+xnoremap > >gv
+xnoremap < <gv
+
+" Insert mode keymappings: "{{{
+" <C-t>: insert tab.
+inoremap <C-t>  <C-v><TAB>
+" <C-d>: delete char.
+inoremap <C-d>  <Del>
+" <C-a>: move to head.
+inoremap <silent><C-a>  <C-o>^
+"}}}
 
 "ヤンクした文字列とカーソル位置の単語を置換する vim bible p123
 "cy カーソル位置移行の文字列とヤンクした単語を置換
@@ -222,34 +245,26 @@ nnoremap <silent> cy ce<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 "vnoremap <silent> cy c<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 nnoremap <silent> ciy ciw<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 
-" 最後に変更した箇所に移動
-nnoremap U `[
 " 選択した文字列を置換
 vnoremap s "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
 "s*でカーソル下のキーワードを置換
 "nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
 
+" Like gv, but select the last changed text.
+nnoremap gc  `[v`]
+" Auto escape / and ? in search command.
+cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
+
 "----------------------------------------
 " command
 command!                 Kwbd       let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn 
-command!                 Cp932      edit ++enc=cp932
-command!                 Eucjp      edit ++enc=euc-jp
-command!                 Iso2022jp  edit ++enc=iso-2022-jp
-command!                 UTF8       edit ++enc=utf-8
-command!                 Jis        Iso2022jp
-command!                 Sjis       Cp932
-command! -count -nargs=1 ContinuousNumber let c = col('.')|for n in range(1, <count>?<count>-line('.'):1)|exec 'normal! j' . n . <q-args>|call cursor('.', c)|endfor
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
-autocmd FileType objc setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
-autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
-autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal noexpandtab
-
-if os=="mac" || os=="linux"
-    autocmd BufNewFile,BufRead *.html setlocal tabstop=2 shiftwidth=2
-    autocmd BufNewFile,BufRead *.html.php setlocal tabstop=2 shiftwidth=2
-    autocmd BufNewFile,BufRead *.css setlocal tabstop=2 shiftwidth=2
-endif
-autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
+autocmd FileType objc setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
+autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
+autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
+autocmd FileType html setlocal tabstop=2 shiftwidth=2
+autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
+autocmd FileType css setlocal tabstop=2 shiftwidth=2
  
 "--------------------------------------------------------------------------------
 " netrw.vim
@@ -262,9 +277,6 @@ autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | se
 "  nmap <silent><buffer> l     <cr>
 "  nmap <silent><buffer> h     -
 "endfunction
-
-" ％拡張のmatchhit.vimを利用
-source $VIMRUNTIME/macros/matchit.vim
 
 "----------------------------------------
 " quickrun.vim
@@ -282,6 +294,7 @@ let g:quickrun_config["_"] = {
 \ }
 nnoremap <silent> <Space>tp  :e $HOME/.vim/test.php<CR>
 nnoremap <silent> <Space>tj  :e $HOME/.vim/test.js<CR>
+nnoremap <silent> <Space>ch  :!open -a Google\ Chrome<CR>
 
 "----------------------------------------
 " qfixhowm.vim
@@ -320,60 +333,93 @@ vnoremap <Space>/ :call EnhancedCommentify('yes', 'comment')<CR>
 nnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 vnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 
-"----------------------------------------
-" neocomplecache.vim
-" 補完ウィンドウの設定
-set completeopt=menuone
-" 起動時に有効化
+"-------------------------------------------------------------------
+" setting neocomplcache
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplcache.
 let g:neocomplcache_enable_at_startup = 1
-" 大文字が入力されるまで大文字小文字の区別を無視する
+" Use smartcase.
 let g:neocomplcache_enable_smart_case = 1
-" _(アンダースコア)区切りの補完を有効化
+" Use camel case completion.
+let g:neocomplcache_enable_camel_case_completion = 1
+" Use underbar completion.
 let g:neocomplcache_enable_underbar_completion = 1
-let g:neocomplcache_enable_camel_case_completion  =  1
-" ポップアップメニューで表示される候補の数
-let g:neocomplcache_max_list = 20
-" シンタックスをキャッシュするときの最小文字長
+" Set minimum syntax keyword length.
 let g:neocomplcache_min_syntax_length = 3
-" スニペットファイルの配置場所
-let g:neocomplcache_snippets_dir = '~/.vim/snippets'
-" ディクショナリ定義
-if os=="win"
-	let g:neocomplcache_dictionary_filetype_lists = {
-		\ 'default' : '',
-		\ 'php' : $HOME . '/.vim/dict/php.dict',
-		\ 'ctp' : $HOME . '/.vim/dict/php.dict',
-		\ 'tpl' : $HOME . '/.vim/dict/php.dict'
-		\ }
-endif
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+" let g:neosnippet#snippets_directory='~/dotfiles/snippets'
+let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets'
+
+" Define dictionary.
+let g:neocomplcache_dictionary_filetype_lists = {
+      \ 'default' : '',
+      \ 'vimshell' : $HOME.'/.vimshell_hist',
+      \ 'php'     : $HOME . '/dotfiles/dict/php.dict',
+      \ 'tpl'     : $HOME . '/dotfiles/dict/php.dict',
+      \ 'ctp'     : $HOME . '/dotfiles/dict/php.dict',
+      \ }
+
+" Define keyword.
 if !exists('g:neocomplcache_keyword_patterns')
-        let g:neocomplcache_keyword_patterns = {}
+  let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-" スニペットを展開する。スニペットが関係しないところでは行末まで削除
-imap <expr><C-k> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : "\<C-o>D"
-smap <expr><C-k> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : "\<C-o>D"
-" 前回行われた補完をキャンセルします
-inoremap <expr><C-g> neocomplcache#undo_completion()
-" 補完候補のなかから、共通する部分を補完します
-inoremap <expr><C-l> neocomplcache#complete_common_string()
-" 改行で補完ウィンドウを閉じる
-inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
-"tabで補完候補の選択を行う
-inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<TAB>"
-inoremap <expr><S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
-" <C-h>や<BS>を押したときに確実にポップアップを削除します
-inoremap <expr><C-h> neocomplcache#smart_close_popup() . "\<C-h>"
-" 現在選択している候補を確定します
-inoremap <expr><C-y> neocomplcache#close_popup()
-" 現在選択している候補をキャンセルし、ポップアップを閉じます
-inoremap <expr><C-e> neocomplcache#cancel_popup()
-"補完するためのキーワードパターンを指定
-if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <expr><CR>  neocomplcache#close_popup() . "\<CR>"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" rubyの設定
+" if !exists('g:neocomplcache_omni_functions')
+"   let g:neocomplcache_omni_functions = {}
+" endif
+" let g:neocomplcache_omni_functions.ruby = 'RSenseCompleteFunction'
+
+" Enable heavy omni completion.
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
 endif
-"日本語を補完候補として取得しないようにする
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+" let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
+"autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
+let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+" let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#jumpable() ?  "\<Plug>(neosnippet_expand_or_jump)" : "\<C-n>""
+smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
 
 "----------------------------------------
 " unite.vim
@@ -439,170 +485,8 @@ nnoremap <silent> vs :VimShell<CR>
 "nnoremap <silent> vsc :VimShellCreate<CR>
 nnoremap <silent> vp :VimShellPop<CR>
 
-"----------------------------------------
-" vim-powerline
-"if os=="mac"
-"	set guifont=Osaka-Powerline:h10
-"endif
-"let g:Powerline_symbols='fancy'
-"call Pl#Hi#Allocate({
-"  \ 'black'          : 16,
-"  \ 'white'          : 231,
-"  \
-"  \ 'darkestgreen'   : 22,
-"  \ 'darkgreen'      : 28,
-"  \
-"  \ 'darkestcyan'    : 21,
-"  \ 'mediumcyan'     : 117,
-"  \
-"  \ 'darkestblue'    : 24,
-"  \ 'darkblue'       : 31,
-"  \
-"  \ 'darkestred'     : 52,
-"  \ 'darkred'        : 88,
-"  \ 'mediumred'      : 124,
-"  \ 'brightred'      : 160,
-"  \ 'brightestred'   : 196,
-"  \
-"  \ 'darkestyellow'  : 59,
-"  \ 'darkyellow'     : 100,
-"  \ 'darkestpurple'  : 57,
-"  \ 'mediumpurple'   : 98,
-"  \ 'brightpurple'   : 189,
-"  \
-"  \ 'brightorange'   : 208,
-"  \ 'brightestorange': 214,
-"  \
-"  \ 'gray0'          : 233,
-"  \ 'gray1'          : 235,
-"  \ 'gray2'          : 236,
-"  \ 'gray3'          : 239,
-"  \ 'gray4'          : 240,
-"  \ 'gray5'          : 241,
-"  \ 'gray6'          : 244,
-"  \ 'gray7'          : 245,
-"  \ 'gray8'          : 247,
-"  \ 'gray9'          : 250,
-"  \ 'gray10'         : 252,
-"  \ })
-"let g:Powerline#Colorschemes#my#colorscheme = Pl#Colorscheme#Init([
-"  \ Pl#Hi#Segments(['SPLIT'], {
-"    \ 'n': ['white', 'gray2'],
-"    \ 'N': ['gray0', 'gray0'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['mode_indicator'], {
-"    \ 'i': ['darkestgreen', 'white', ['bold']],
-"    \ 'n': ['darkestcyan', 'white', ['bold']],
-"    \ 'v': ['darkestpurple', 'white', ['bold']],
-"    \ 'r': ['mediumred', 'white', ['bold']],
-"    \ 's': ['white', 'gray5', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['fileinfo', 'filename'], {
-"    \ 'i': ['white', 'darkestgreen', ['bold']],
-"    \ 'n': ['white', 'darkestcyan', ['bold']],
-"    \ 'v': ['white', 'darkestpurple', ['bold']],
-"    \ 'r': ['white', 'mediumred', ['bold']],
-"    \ 'N': ['gray0', 'gray2', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['branch', 'scrollpercent', 'raw', 'filesize'], {
-"    \ 'n': ['gray2', 'gray7'],
-"    \ 'N': ['gray0', 'gray2'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['fileinfo.filepath', 'status'], {
-"    \ 'n': ['gray10'],
-"    \ 'N': ['gray5'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['static_str'], {
-"    \ 'n': ['white', 'gray4'],
-"    \ 'N': ['gray1', 'gray1'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['fileinfo.flags'], {
-"    \ 'n': ['white'],
-"    \ 'N': ['gray4'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['currenttag', 'fileformat', 'fileencoding', 'pwd', 'filetype', 'rvm:string', 'rvm:statusline', 'virtualenv:statusline', 'charcode', 'currhigroup'], {
-"    \ 'n': ['gray9', 'gray4'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['lineinfo'], {
-"    \ 'n': ['gray2', 'gray10'],
-"    \ 'N': ['gray2', 'gray4'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['errors'], {
-"    \ 'n': ['white', 'gray2'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['lineinfo.line.tot'], {
-"    \ 'n': ['gray2'],
-"    \ 'N': ['gray2'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['paste_indicator', 'ws_marker'], {
-"    \ 'n': ['white', 'brightred', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['gundo:static_str.name', 'command_t:static_str.name'], {
-"    \ 'n': ['white', 'mediumred', ['bold']],
-"    \ 'N': ['brightred', 'darkestred', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['gundo:static_str.buffer', 'command_t:raw.line'], {
-"    \ 'n': ['white', 'darkred'],
-"    \ 'N': ['brightred', 'darkestred'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['gundo:SPLIT', 'command_t:SPLIT'], {
-"    \ 'n': ['white', 'darkred'],
-"    \ 'N': ['white', 'darkestred'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:focus', 'ctrlp:byfname'], {
-"    \ 'n': ['brightpurple', 'darkestpurple'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:prev', 'ctrlp:next', 'ctrlp:pwd'], {
-"    \ 'n': ['white', 'mediumpurple'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:item'], {
-"    \ 'n': ['darkestpurple', 'white', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:marked'], {
-"    \ 'n': ['brightestred', 'darkestpurple', ['bold']],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:count'], {
-"    \ 'n': ['darkestpurple', 'white'],
-"    \ }),
-"  \
-"  \ Pl#Hi#Segments(['ctrlp:SPLIT'], {
-"    \ 'n': ['white', 'darkestpurple'],
-"    \ }),
-"  \ ])
-"let g:Powerline_colorscheme='my'
-"let g:Powerline_mode_n = 'NORMAL'
-
 "------------------------------------
-" textmanip.vim
-if os=="win"
-	vmap <M-j> <Plug>(Textmanip.move_selection_down)
-	vmap <M-h> <Plug>(Textmanip.move_selection_left)
-	vmap <M-k> <Plug>(Textmanip.move_selection_up)
-	vmap <M-l> <Plug>(Textmanip.move_selection_right)
-	" 選択したテキストの移動
-	nmap <M-d> <Plug>(Textmanip.duplicate_selection_n)
-	vmap <M-d> <Plug>(Textmanip.duplicate_selection_v)
-endif
-
+" EnhCommentify.vim
 function EnhCommentifyCallback(ft)
 	if a:ft == 'objc'
 		let b:ECcommentOpen = '//'
@@ -616,4 +500,30 @@ let g:EnhCommentifyCallbackExists = 'Yes'
 helptags ~/.vim/doc
 set helplang=ja,en
 
-silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
+" Improved increment.
+nmap <C-a> <SID>(increment)
+nmap <C-x> <SID>(decrement)
+nnoremap <silent> <SID>(increment)    :AddNumbers 1<CR>
+nnoremap <silent> <SID>(decrement)   :AddNumbers -1<CR>
+command! -range -nargs=1 AddNumbers
+      \ call s:add_numbers((<line2>-<line1>+1) * eval(<args>))
+function! s:add_numbers(num)
+  let prev_line = getline('.')[: col('.')-1]
+  let next_line = getline('.')[col('.') :]
+  let prev_num = matchstr(prev_line, '\d\+$')
+  if prev_num != ''
+    let next_num = matchstr(next_line, '^\d\+')
+    let new_line = prev_line[: -len(prev_num)-1] .
+          \ printf('%0'.len(prev_num).'d',
+          \    max([0, prev_num . next_num + a:num])) . next_line[len(next_num):]
+  else
+    let new_line = prev_line . substitute(next_line, '\d\+',
+          \ "\\=printf('%0'.len(submatch(0)).'d',
+          \         max([0, submatch(0) + a:num]))", '')
+  endif
+
+  if getline('.') !=# new_line
+    call setline('.', new_line)
+  endif
+endfunction
+"}}}

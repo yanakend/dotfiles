@@ -9,10 +9,12 @@ if has('win32')
 	set visualbell t_vb= " エラーのときに、ビープ音を出さない
 endif
 if has('gui_macvim')
-	set transparency=1	" 透明度を指定
+    set guifont=Osaka-Mono:h13
+	set transparency=5	" 透明度を指定
 	set antialias
 	set guioptions-=r
 	set guioptions-=R
-    "set imdisable		" IMを無効化
 	set visualbell t_vb= " エラーのときに、ビープ音を出さない
 endif
+
+set cmdheight=1                     " コマンドラインの高さ(GUI使用時)
