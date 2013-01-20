@@ -227,6 +227,7 @@ nnoremap > >>
 nnoremap < <<
 xnoremap > >gv
 xnoremap < <gv
+vnoremap <C-t>  >gv
 
 " Insert mode keymappings: "{{{
 " <C-t>: insert tab.
