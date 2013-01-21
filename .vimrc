@@ -31,7 +31,6 @@ NeoBundle 'git://github.com/vim-jp/vimdoc-ja.git'
 NeoBundle 'git://github.com/fuenor/qfixhowm.git'
 NeoBundle 'git://github.com/vim-scripts/EnhCommentify.vim.git'
 NeoBundle 'git://github.com/motemen/git-vim.git'
-NeoBundle 'git://github.com/Lokaltog/vim-powerline.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 NeoBundle 'git://github.com/vim-scripts/savevers.vim.git'
 NeoBundle 'git://github.com/nanotech/jellybeans.vim'
@@ -43,9 +42,12 @@ NeoBundle 'git://github.com/tpope/vim-repeat.git'
 " %の拡張
 NeoBundle "tmhedberg/matchit.git"
 
-filetype plugin indent on     " required!
-filetype indent on
-syntax on
+" 手動管理
+NeoBundle 'vim-powerline', {'type' : 'nosync', 'base' : '~/.vim/bundle_manual'}
+
+"filetype plugin indent on     " required!
+"filetype indent on
+
 
 "--------------------------------------
 " Get running OS
@@ -115,6 +117,7 @@ if os=="mac"
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
 endif
+syntax on
 
 "----------------------------------------
 " map
@@ -192,7 +195,7 @@ endif
 nnoremap ZZ <Nop>
 nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
-nnoremap <silent><Space>vi :e ~/.vimrc<CR>
+nnoremap <silent><Space>vi :e ~/dotfiles/.vimrc<CR>
 if os=="win"
     nnoremap <Space>f  :e D:\dev\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
@@ -295,7 +298,6 @@ let g:quickrun_config["_"] = {
 \ }
 nnoremap <silent> <Space>tp  :e $HOME/.vim/test.php<CR>
 nnoremap <silent> <Space>tj  :e $HOME/.vim/test.js<CR>
-nnoremap <silent> <Space>ch  :!open -a Google\ Chrome<CR>
 
 "----------------------------------------
 " qfixhowm.vim
@@ -335,7 +337,7 @@ nnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 vnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 
 "-------------------------------------------------------------------
-" setting neocomplcache
+" neocomplcache.git
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplcache.
@@ -351,7 +353,7 @@ let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
 " let g:neosnippet#snippets_directory='~/dotfiles/snippets'
-let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets'
+let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets, ~/dotfiles/snippets'
 
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
@@ -391,12 +393,7 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 " autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" rubyの設定
-" if !exists('g:neocomplcache_omni_functions')
-"   let g:neocomplcache_omni_functions = {}
-" endif
-" let g:neocomplcache_omni_functions.ruby = 'RSenseCompleteFunction'
+autocmd FileType php setlocal omnifunc=phpcomplete#Complete
 
 " Enable heavy omni completion.
 if !exists('g:neocomplcache_omni_patterns')
@@ -500,6 +497,10 @@ let g:EnhCommentifyCallbackExists = 'Yes'
 " vimdoc-ja.git
 helptags ~/.vim/doc
 set helplang=ja,en
+
+"------------------------------------
+" vim-repeat
+silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 
 " Improved increment.
 nmap <C-a> <SID>(increment)
