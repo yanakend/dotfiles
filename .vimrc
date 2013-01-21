@@ -11,8 +11,9 @@ endif
 NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
 NeoBundle 'git://github.com/Shougo/neosnippet.git'
-NeoBundle 'git://github.com/honza/snipmate-snippets.git'
-NeoBundle 'git://github.com/garbas/vim-snipmate.git'
+"NeoBundle 'git://github.com/honza/snipmate-snippets.git'
+"NeoBundle 'MarcWeber/vim-addon-mw-utils'
+"NeoBundle 'git://github.com/garbas/vim-snipmate.git'
 NeoBundle 'git://github.com/Shougo/vimproc.git', {
 	\   'build': {
 	\     'cygwin': 'make -f make_cygwin.mak',
@@ -354,6 +355,7 @@ let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
 " let g:neosnippet#snippets_directory='~/dotfiles/snippets'
 let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets, ~/dotfiles/snippets'
+let g:snippets_dir = $HOME.'/.vim/snippets'
 
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
