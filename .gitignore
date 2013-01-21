@@ -18,7 +18,3 @@
 !/install.bat
 
 /.vim/test.*
-/.vim/doc/*
-/.vim/php_doc/*
-/.vim/backup/*
-/.vim/swap/*
