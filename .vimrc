@@ -35,6 +35,7 @@ NeoBundle 'git://github.com/motemen/git-vim.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 NeoBundle 'git://github.com/vim-scripts/savevers.vim.git'
 NeoBundle 'git://github.com/nanotech/jellybeans.vim'
+NeoBundle 'git://github.com/Lokaltog/vim-powerline.git', 'develop'
 " 色々な入力補助
 NeoBundle "kana/vim-smartinput.git"
 NeoBundle 'acustodioo/vim-enter-indent.git'
@@ -42,9 +43,6 @@ NeoBundle 'acustodioo/vim-enter-indent.git'
 NeoBundle 'git://github.com/tpope/vim-repeat.git'
 " %の拡張
 NeoBundle "tmhedberg/matchit.git"
-
-" 手動管理
-NeoBundle 'vim-powerline', {'type' : 'nosync', 'base' : '~/.vim/bundle_manual'}
 
 "filetype plugin indent on     " required!
 "filetype indent on
