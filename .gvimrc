@@ -7,6 +7,10 @@ if has('win32')
       set ambiwidth=auto
     endif
 	set visualbell t_vb= " エラーのときに、ビープ音を出さない
+    if &diff
+		au GUIEnter * simalt ~x zR
+		set nofoldenable
+    endif
 endif
 if has('gui_macvim')
     set guifont=Osaka-Mono:h13

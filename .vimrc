@@ -139,11 +139,13 @@ nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 
-"bufdo diffthis
+"windo diffthis
+"diffoff!
+"diff diff更新
 nnoremap <silent> <C-j> :call NextDiff()<CR>
 nnoremap <silent> <C-k> :call Prevdiff()<CR>
-nnoremap <silent> <C-h> dp
-nnoremap <silent> <C-l> do
+nnoremap <silent> <C-l> dp
+nnoremap <silent> <C-h> do
 function! NextDiff()
     if &diff
         silent normal! ]c
