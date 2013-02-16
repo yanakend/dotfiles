@@ -490,6 +490,10 @@ function EnhCommentifyCallback(ft)
 		let b:ECcommentOpen = '//'
 		let b:ECcommentClose = ''
 	endif
+	if a:ft == 'objcpp'
+		let b:ECcommentOpen = '//'
+		let b:ECcommentClose = ''
+	endif
 endfunction
 let g:EnhCommentifyCallbackExists = 'Yes'
 
