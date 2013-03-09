@@ -15,4 +15,9 @@
 !/install.sh
 !/install.bat
 
+/.vim/bundle/*
 /.vim/test.*
+/.vim/doc/*
+/.vim/php_doc/*
+/.vim/swap/*
+/.vim/backup/*

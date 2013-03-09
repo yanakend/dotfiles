@@ -8,12 +8,7 @@ endif
 
 " originalrepos on github
 "自動でリポジトリと同期するプラグイン
-NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
-NeoBundle 'git://github.com/Shougo/neosnippet.git'
-"NeoBundle 'git://github.com/honza/snipmate-snippets.git'
-"NeoBundle 'MarcWeber/vim-addon-mw-utils'
-"NeoBundle 'git://github.com/garbas/vim-snipmate.git'
 NeoBundle 'git://github.com/Shougo/vimproc.git', {
 	\   'build': {
 	\     'cygwin': 'make -f make_cygwin.mak',
@@ -21,32 +16,27 @@ NeoBundle 'git://github.com/Shougo/vimproc.git', {
 	\     'unix':   'make -f make_unix.mak',
 	\   },
 	\ }
+NeoBundle 'git://github.com/Shougo/neocomplcache.git'
+NeoBundle 'git://github.com/Shougo/neosnippet.git'
 NeoBundle 'git://github.com/Shougo/unite.vim.git'
 NeoBundle 'git://github.com/Shougo/vimfiler.git'
 NeoBundle 'git://github.com/Shougo/vimshell.git'
-NeoBundle 'git://github.com/tpope/vim-surround.git'
-NeoBundle 'git://github.com/tpope/vim-repeat.git'
 NeoBundle 'git://github.com/ujihisa/vimshell-ssh.git'
 NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/vim-jp/vimdoc-ja.git'
 NeoBundle 'git://github.com/fuenor/qfixhowm.git'
 NeoBundle 'git://github.com/vim-scripts/EnhCommentify.vim.git'
 NeoBundle 'git://github.com/motemen/git-vim.git'
-NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 NeoBundle 'git://github.com/vim-scripts/savevers.vim.git'
-NeoBundle 'git://github.com/nanotech/jellybeans.vim'
 NeoBundle 'git://github.com/Lokaltog/vim-powerline.git', 'develop'
+" カラースキーム設定
+NeoBundle 'git://github.com/nanotech/jellybeans.vim'
 " 色々な入力補助
-NeoBundle "kana/vim-smartinput.git"
-NeoBundle 'acustodioo/vim-enter-indent.git'
-" 前回の操作を.で繰り返す
-NeoBundle 'git://github.com/tpope/vim-repeat.git'
+NeoBundle 'git://github.com/acustodioo/vim-enter-indent.git'
 " %の拡張
-NeoBundle "tmhedberg/matchit.git"
-
-"filetype plugin indent on     " required!
-"filetype indent on
-
+NeoBundle "git://github.com/tmhedberg/matchit.git"
+" 単語を囲う
+NeoBundle 'git://github.com/tpope/vim-surround.git'
 
 "--------------------------------------
 " Get running OS
@@ -295,6 +285,7 @@ let g:quickrun_config["_"] = {
     \ "outputter/error/success" : "buffer",
     \ "outputter" : "error",
 \ }
+nnoremap <silent> <Space>tr  :e $HOME/.vim/test.rb<CR>
 nnoremap <silent> <Space>tp  :e $HOME/.vim/test.php<CR>
 nnoremap <silent> <Space>tj  :e $HOME/.vim/test.js<CR>
 
@@ -335,10 +326,8 @@ vnoremap <Space>/ :call EnhancedCommentify('yes', 'comment')<CR>
 nnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 vnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 
-"-------------------------------------------------------------------
+""-------------------------------------------------------------------
 " neocomplcache.git
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
 " Use neocomplcache.
 let g:neocomplcache_enable_at_startup = 1
 " Use smartcase.
@@ -351,10 +340,6 @@ let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
-" let g:neosnippet#snippets_directory='~/dotfiles/snippets'
-let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets, ~/dotfiles/snippets'
-let g:snippets_dir = $HOME.'/.vim/snippets'
-
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
       \ 'default' : '',
@@ -366,64 +351,60 @@ let g:neocomplcache_dictionary_filetype_lists = {
 
 " Define keyword.
 if !exists('g:neocomplcache_keyword_patterns')
-  let g:neocomplcache_keyword_patterns = {}
+	let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <expr><CR>  neocomplcache#close_popup() . "\<CR>"
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
+"スニペットのディレクトリ
+if !exists("g:neosnippet#snippets_directory")
+    let g:neosnippet#snippets_directory=""
+endif
+"let g:neosnippet#snippets_directory=$HOME.'/snippets'
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplcache_enable_auto_select = 1
+"let g:neocomplcache_disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<TAB>"
+"inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-" autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php setlocal omnifunc=phpcomplete#Complete
+autocmd FileType php setlocal omnifunc=phpcomplete#CompleteTags
 
 " Enable heavy omni completion.
 if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
+	let g:neocomplcache_omni_patterns = {}
 endif
-" let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 "autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
-" let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+"<TAB>でスニペット補完
+if g:neocomplcache_enable_at_startup
+	" 2013/01/19 19:20最新のREADMEのものを反映
+	" Plugin key-mappings.
+	imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+	smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#jumpable() ?  "\<Plug>(neosnippet_expand_or_jump)" : "\<C-n>""
-smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+	" SuperTab like snippets behavior.
+	imap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+	smap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
+	" For snippet_complete marker.
+	if has('conceal')
+		set conceallevel=2 concealcursor=i
+	endif
 endif
+
 
 "----------------------------------------
 " unite.vim
 " 入力モードで開始する
-"let g:unite_enable_start_insert=0
-"let g:unite_source_file_mru_time_format
 " バッファ一覧  -auto-resize
 nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright<CR>
 " ファイル一覧
@@ -436,7 +417,6 @@ nnoremap <silent> <Space>m  :<C-u>Unite file_mru -direction=botright<CR>
 nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright<CR>
 " 全部乗せ
 nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright buffer file_mru bookmark file<CR>
-"nnoremap <silent> fo :<C-u>Unite -buffer-name=outline outline -no-start-insert -auto-preview<CR>
 "noremap <silent> <Space>uf :<C-u>Unite get_function -direction=botright<CR>
 
 " unite.vim上でのキーマッピング
@@ -533,3 +513,4 @@ function! s:add_numbers(num)
   endif
 endfunction
 "}}}
+
