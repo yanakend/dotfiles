@@ -1,6 +1,6 @@
 git clone git://github.com/Shougo/neobundle.vim.git %CD%\.vim\bundle\neobundle.vim
 
-
+ 
 mklink %USERPROFILE%\.bashrc %CD%\.bashrc
 mklink %USERPROFILE%\.bashrc_profile %CD%\.bashrc_profile
 mklink %USERPROFILE%\.zshrc %CD%\.zshrc
