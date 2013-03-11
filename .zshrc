@@ -113,7 +113,7 @@ alias df="df -h"
 alias su="su -l"
 case "${OSTYPE}" in
 darwin*)
-  alias rm='rmtrash'
+  #alias rm='rmtrash'
   ;;
 esac
 alias ctags='/Applications/MacVim.app/Contents/MacOS/ctags "$@"'
@@ -209,3 +209,4 @@ export PATH=/opt/local/bin:/opt/local/sbin/:$PATH
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$PATH:/usr/local/mysql/bin
 export MANPATH=/opt/local/man:$MANPATH
+

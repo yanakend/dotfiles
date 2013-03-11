@@ -13,12 +13,13 @@ if has('win32')
     endif
 endif
 if has('gui_macvim')
-    set guifont=Osaka-Mono:h13
+    set guifont=Osaka-Mono:h14
 	set transparency=5	" 透明度を指定
 	set antialias
 	set guioptions-=r
 	set guioptions-=R
 	set visualbell t_vb= " エラーのときに、ビープ音を出さない
+	set noimdisableactivate
 endif
 
 set cmdheight=1                     " コマンドラインの高さ(GUI使用時)
