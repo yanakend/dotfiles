@@ -120,18 +120,17 @@ nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
 
-" *での検索時は次候補ではなくカーソル下結果から動かないように
-nnoremap <silent> * *N
 
-"search
+" search
+" *での検索時は次候補ではなくカーソル下結果から動かないように
 nnoremap <silent> n nzz
 nnoremap <silent> N Nzz
-nnoremap <silent> * *zz
-nnoremap <silent> # #zz
+nnoremap <silent> * *N
+nnoremap <silent> # #N
 
-"windo diffthis
-"diffoff!
-"diff diff更新
+" windo diffthis
+" diffoff!
+" diff diff更新
 nnoremap <silent> <C-j> :call NextDiff()<CR>
 nnoremap <silent> <C-k> :call Prevdiff()<CR>
 nnoremap <silent> <C-l> dp
@@ -151,7 +150,7 @@ function! Prevdiff()
     endif
 endfunction
 
-"set imd
+" set imd
 if os=="mac" || os=="linux"
     nnoremap y "ay
     vnoremap y "ay
@@ -299,6 +298,10 @@ let g:MyGrep_CurrentDirMode = 1
 let g:QFix_CloseOnJump = 1
 let g:QFix_HighSpeedPreview = 1
 let g:qfixmemo_mapleader = '<Space>g'
+let QFix_PreviewHeight = 40
+let g:MyGrep_FilePattern = '*.\<php\>'
+let g:MyGrep_RecursiveMode = 1
+
 " QFixGrepの検索時にカーソル位置の単語を拾う/拾わない
 let MyGrep_DefaultSearchWord = 0
 nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
