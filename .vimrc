@@ -187,12 +187,8 @@ nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>vi :e ~/dotfiles/.vimrc<CR>
 if os=="win"
-    nnoremap <Space>f  :e D:\dev\Dropbox\free_memo.txt<CR>
     nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
     nnoremap <Space>tl :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log  /path:"%" /notempfile /closeonend<CR>
-endif
-if os=="mac" || os=="linux"
-    nnoremap <Space>f  :e /Users/yanagikenji/Dropbox/free_memo.txt<CR>
 endif
 
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
