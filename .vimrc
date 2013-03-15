@@ -299,8 +299,15 @@ let g:QFix_CloseOnJump = 1
 let g:QFix_HighSpeedPreview = 1
 let g:qfixmemo_mapleader = '<Space>g'
 let QFix_PreviewHeight = 40
-let g:MyGrep_FilePattern = '*.\<php\>'
+let g:MyGrep_FilePattern = '*'
 let g:MyGrep_RecursiveMode = 1
+" メモファイルの保存先
+if os=="win"
+	let qfixmemo_dir = 'D:\dev\Dropbox\qfixmemo'
+endif
+if os=="mac" || os=="linux"
+	let qfixmemo_dir = '/Users/yanagikenji/Dropbox/qfixmemo'
+endif
 
 " QFixGrepの検索時にカーソル位置の単語を拾う/拾わない
 let MyGrep_DefaultSearchWord = 0
