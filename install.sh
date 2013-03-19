@@ -6,6 +6,8 @@ cd ${installer_path}
 #git submodule init
 #git submodule update
 
+git clone git://github.com/Shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim
+
 install_file()
 {
 	local _target=$1
@@ -24,3 +26,5 @@ for file in ${dotfiles[@]}
 do
 	install_file "${installer_path}/${file}" "${install_path}/${file}"
 done
+
+cp -r ~/.vim/bundle/vimdoc-ja/doc/* ~/.vim/doc

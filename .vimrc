@@ -302,7 +302,7 @@ if os=="win"
 	let qfixmemo_dir = 'D:\dev\Dropbox\qfixmemo'
 endif
 if os=="mac" || os=="linux"
-	let qfixmemo_dir = '/Users/yanagikenji/Dropbox/qfixmemo'
+	let qfixmemo_dir = '~/Dropbox/qfixmemo'
 endif
 
 " QFixGrepの検索時にカーソル位置の単語を拾う/拾わない
