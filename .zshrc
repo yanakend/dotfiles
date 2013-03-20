@@ -206,7 +206,8 @@ fi
 ## 
 export SVN_SSH="ssh svnuser@49.212.86.49 -p 10022 -i /Users/yanagikenji/.ssh/sakura/id_rsa_svnuser.ppk"
 export PATH=/opt/local/bin:/opt/local/sbin/:$PATH
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/sbin:$PATH
 export PATH=$PATH:/usr/local/mysql/bin
 export MANPATH=/opt/local/man:$MANPATH
 
