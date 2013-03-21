@@ -38,6 +38,8 @@ NeoBundle "git://github.com/tmhedberg/matchit.git"
 " 単語を囲う
 NeoBundle 'git://github.com/tpope/vim-surround.git'
 
+NeoBundle 'git://github.com/Rip-Rip/clang_complete.git'
+NeoBundle 'git://github.com/tokorom/clang_complete-getopts-ios.git'
 "--------------------------------------
 " Get running OS
 function! GetRunningOS()
@@ -409,6 +411,20 @@ if g:neocomplcache_enable_at_startup
 	endif
 endif
 
+if !exists('g:neocomplcache_force_omni_patterns')
+  let g:neocomplcache_force_omni_patterns = {}
+endif
+let g:neocomplcache_force_overwrite_completefunc = 1
+let g:neocomplcache_force_omni_patterns.c =
+  \ '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplcache_force_omni_patterns.cpp =
+  \ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+let g:neocomplcache_force_omni_patterns.objc =
+  \ '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplcache_force_omni_patterns.objcpp =
+  \ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+let g:clang_complete_auto = 0
+let g:clang_auto_select = 0
 
 "----------------------------------------
 " unite.vim
