@@ -78,5 +78,6 @@ alias rm="rm -rf"
 alias cp="cp -i"
 alias mv="mv -i"
 alias emacs="emacs -nw"
+alias LESS="less -IM -x 4"
 
 export EDITOR=/usr/bin/vi 

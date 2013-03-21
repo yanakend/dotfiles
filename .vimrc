@@ -107,6 +107,7 @@ if os=="mac"
   set macmeta
 endif
 syntax on
+set backupskip=/tmp/*,/private/tmp/*
 
 "----------------------------------------
 " map
@@ -119,7 +120,6 @@ nnoremap <silent> h zv<Left>
 nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
-
 
 " search
 " *での検索時は次候補ではなくカーソル下結果から動かないように
