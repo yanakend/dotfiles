@@ -40,6 +40,8 @@ NeoBundle 'git://github.com/tpope/vim-surround.git'
 
 NeoBundle 'git://github.com/Rip-Rip/clang_complete.git'
 NeoBundle 'git://github.com/tokorom/clang_complete-getopts-ios.git'
+NeoBundle 'git://github.com/vim-scripts/gtags.vim.git'
+
 "--------------------------------------
 " Get running OS
 function! GetRunningOS()
@@ -538,3 +540,20 @@ function! s:add_numbers(num)
 endfunction
 "}}}
 
+
+"------------------------------------
+" gtags
+" 検索結果Windowを閉じる
+nnoremap <C-q> :ccl<CR>
+" Grep 準備
+nnoremap <C-g> :Gtags -g
+" このファイルの関数一覧                                                                                                                                                
+nnoremap <C-l> :Gtags -f %<CR>
+" カーソル以下の定義元を探す
+nnoremap <C-j> :Gtags <C-r><C-w><CR>
+" カーソル以下の使用箇所を探す
+nnoremap <C-k> :Gtags -r <C-r><C-w><CR>
+" 次の検索結果
+nnoremap <C-n> :cn<CR>
+" 前の検索結果
+nnoremap <C-p> :cp<CR>
