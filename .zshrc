@@ -89,9 +89,9 @@ autoload -U compinit
 compinit
 
 ## GNU grepがあったら優先して使う。
-if type ggrep > /dev/null 2>&1; then
-    alias grep=ggrep
-fi
+#if type ggrep > /dev/null 2>&1; then
+#    alias grep=ggrep
+#fi
 ## デフォルトオプションの設定
 export GREP_OPTIONS
 ### バイナリファイルにはマッチさせない。
@@ -119,3 +119,16 @@ export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 export PATH=$PATH:/usr/local/mysql/bin
 export MANPATH=/opt/local/man:$MANPATH
+
+
+#=============================
+# source auto-fu.zsh
+#=============================
+if [ -f ~/dotfiles/.zsh/auto-fu.zsh/auto-fu.zsh ]; then
+    source ~/dotfiles/.zsh/auto-fu.zsh/auto-fu.zsh
+    function zle-line-init () {
+        auto-fu-init
+    }
+    zle -N zle-line-init
+    zstyle ':completion:*' completer _oldlist _complete
+fi

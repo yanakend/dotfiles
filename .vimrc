@@ -349,6 +349,8 @@ let g:neocomplcache_enable_underbar_completion = 1
 " Set minimum syntax keyword length.
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+" これをしないと候補選択時に Scratch ウィンドウが開いてしまう 
+set completeopt=menuone
 
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
@@ -423,6 +425,8 @@ let g:neocomplcache_force_omni_patterns.objc =
   \ '[^.[:digit:] *\t]\%(\.\|->\)'
 let g:neocomplcache_force_omni_patterns.objcpp =
   \ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+" libclang.so を置いたディレクトリを指定
+let g:neocomplcache_clang_library_path = '/usr/bin/clang'
 let g:clang_complete_auto = 0
 let g:clang_auto_select = 0
 
@@ -468,14 +472,13 @@ function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   " N は検索として、i を新規作成にする
   nunmap <buffer> N
   nmap <buffer> i <Plug>(vimfiler_new_file)
-  " カレントディレクトリ名 色変更
-"  hi vimfilerCurrentDirectory gui=UNDERLINE guifg=#0000ff guibg=NONE
 endfunction
 " vimfilerをデフォルトのファイラにする
 let g:vimfiler_as_default_explorer = 1
 " セーフモード無効化
 let g:vimfiler_safe_mode_by_default = 0
-call vimfiler#set_execute_file('plist,pch,vim,php,ctp,txt,jax,css,h,m,html,c,storyboard,strings,cpp,js,patch,sql,tpl,csv,log,pl,sh,ini,jmx,coffee,yml,cs,rb', 'vim')
+" デフォルトでvim開く
+call vimfiler#set_execute_file('_', 'vim')
 nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 
 "----------------------------------------
