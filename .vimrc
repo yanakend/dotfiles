@@ -112,6 +112,7 @@ if os=="mac"
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
+set shortmess+=A " 警告を無効にする
 
 "----------------------------------------
 " map
