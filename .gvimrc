@@ -1,7 +1,7 @@
 set guioptions-=T               " メニューバー非表示
 colorscheme desert
 if has('win32')
-    set guifont=meiryoke_Gothic:h10:cSHIFTJIS       "Windows用
+    set guifont=meiryoke_Gothic:h10:cSHIFTJIS       " Windows用
     " 一部のUCS文字の幅を自動計測して決める
     if has('kaoriya')
       set ambiwidth=auto
@@ -13,7 +13,7 @@ if has('win32')
     endif
 endif
 if has('gui_macvim')
-    set guifont=Osaka-Mono:h14
+    set guifont=Ricty-Regular:h14
 	set transparency=5	" 透明度を指定
 	set antialias
 	set guioptions-=r
@@ -23,3 +23,4 @@ if has('gui_macvim')
 endif
 
 set cmdheight=1                     " コマンドラインの高さ(GUI使用時)
+hi SpecialKey guibg=NONE guifg=Gray40

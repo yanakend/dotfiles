@@ -10,11 +10,11 @@ endif
 "自動でリポジトリと同期するプラグイン
 NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
 NeoBundle 'git://github.com/Shougo/vimproc.git', {
-	\   'build': {
-	\     'cygwin': 'make -f make_cygwin.mak',
-	\     'mac':    'make -f make_mac.mak',
-	\     'unix':   'make -f make_unix.mak',
-	\   },
+	\	'build': {
+	\	  'cygwin': 'make -f make_cygwin.mak',
+	\	  'mac':	'make -f make_mac.mak',
+	\	  'unix':	'make -f make_unix.mak',
+	\	},
 	\ }
 NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/Shougo/neosnippet.git'
@@ -29,6 +29,7 @@ NeoBundle 'git://github.com/vim-scripts/EnhCommentify.vim.git'
 NeoBundle 'git://github.com/motemen/git-vim.git'
 NeoBundle 'git://github.com/vim-scripts/savevers.vim.git'
 NeoBundle 'git://github.com/Lokaltog/vim-powerline.git', 'develop'
+NeoBundle 'git://github.com/vim-scripts/sudo.vim.git'
 " カラースキーム設定
 NeoBundle 'git://github.com/nanotech/jellybeans.vim'
 " 色々な入力補助
@@ -38,6 +39,7 @@ NeoBundle "git://github.com/tmhedberg/matchit.git"
 " 単語を囲う
 NeoBundle 'git://github.com/tpope/vim-surround.git'
 
+NeoBundle 'git://github.com/tpope/vim-fugitive.git'
 NeoBundle 'git://github.com/Rip-Rip/clang_complete.git'
 NeoBundle 'git://github.com/tokorom/clang_complete-getopts-ios.git'
 NeoBundle 'git://github.com/vim-scripts/gtags.vim.git'
@@ -60,38 +62,38 @@ let os=GetRunningOS()
 
 "----------------------------------------
 " settings
-set nocompatible                    " viとの互換性を取らない
-set t_Co=256                        " 256色に
+set nocompatible					" viとの互換性を取らない
+set t_Co=256						" 256色に
 " カラースキーム設定
 colorscheme desert
 
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set guioptions=mr
-set nonumber                        " 行数表示
-set hlsearch                        " 索文字列を色づけ
-set ignorecase                      " 文字小文字を判別しない
-set incsearch                       " インクリメンタルサーチ
-set nowrapscan                      " 検索をファイルの末尾まで検索したら、ファイルの先頭へループする
-set noterse                         " ファイルの端まで検索してしまったときのメッセージが表示しない
-set smartcase                       " でも大文字小文字が混ざって入力されたら区別する
-set tabstop=4                       " 4タブ
-set shiftwidth=4                    " 4タブ
-set noexpandtab                       " タブを空白に
-set nowrap                          " 折り返さない
-set cmdheight=1                     " コマンドラインの高さ(GUI使用時)
+set nonumber						" 行数表示
+set hlsearch						" 索文字列を色づけ
+set ignorecase						" 文字小文字を判別しない
+set incsearch						" インクリメンタルサーチ
+set nowrapscan						" 検索をファイルの末尾まで検索したら、ファイルの先頭へループする
+set noterse							" ファイルの端まで検索してしまったときのメッセージが表示しない
+set smartcase						" でも大文字小文字が混ざって入力されたら区別する
+set tabstop=4						" 4タブ
+set shiftwidth=4					" 4タブ
+set noexpandtab						  " タブを空白に
+set nowrap							" 折り返さない
+set cmdheight=1						" コマンドラインの高さ(GUI使用時)
 set ignorecase
 set smartcase
-set showcmd                         " 入力中のコマンドをステータスに表示する
-set laststatus=2                    " ステータスラインを常に表示
+set showcmd							" 入力中のコマンドをステータスに表示する
+set laststatus=2					" ステータスラインを常に表示
 set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l\|%c\|%L>
 set autoindent
 set cindent
-set ambiwidth=double                " □や○の文字があってもカーソル位置がずれないようにする
-set whichwrap=b,s,[,],<,>           " カーソルキーで行末／行頭の移動可能に設定
-set title                           " タイトルをウインドウ枠に表示する
-set virtualedit=block               "ブロック選択時にフリーカーソルモード
-set hidden                          "バッファを切替えてもundoの効力を失わない
+set ambiwidth=double				" □や○の文字があってもカーソル位置がずれないようにする
+set whichwrap=b,s,[,],<,>			" カーソルキーで行末／行頭の移動可能に設定
+set title							" タイトルをウインドウ枠に表示する
+set virtualedit=block				"ブロック選択時にフリーカーソルモード
+set hidden							"バッファを切替えてもundoの効力を失わない
 set backup
 set writebackup
 set backupdir=~/.vim/backup
@@ -103,6 +105,8 @@ set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
 set fileformats=unix,dos,mac
 set textwidth=0
+set nofoldenable
+
 " Don't redraw while macro executing.
 set lazyredraw
 if os=="mac"
@@ -120,7 +124,7 @@ if os=="win" || os=="mac"
 	nnoremap <silent> <C-[> :noh<CR>
 else
 	nnoremap <silent> <C-[><C-[> :noh<CR>
-endif 
+endif
 nnoremap <silent> h zv<Left>
 nnoremap <silent> j gj
 nnoremap <silent> k gk
@@ -136,6 +140,11 @@ nnoremap <silent> # #N
 " windo diffthis
 " diffoff!
 " diff diff更新
+nnoremap <silent> <Up> [c
+nnoremap <silent> <Down> ]c
+nnoremap <silent> <Left> dp
+nnoremap <silent> <Right> do
+
 nnoremap <silent> <C-j> :call NextDiff()<CR>
 nnoremap <silent> <C-k> :call Prevdiff()<CR>
 nnoremap <silent> <C-l> dp
@@ -157,34 +166,33 @@ endfunction
 
 " set imd
 if os=="mac" || os=="linux"
-    nnoremap y "ay
-    vnoremap y "ay
-    nnoremap Y "ay$
-    vnoremap Y "ay$
-    nnoremap p "agp
-    vnoremap p "agp
-    nnoremap P "agP
-    vnoremap P "agP
-    vnoremap x "ax
-    inoremap <C-v> <C-R>a
-    cnoremap <C-v> <C-R>a
+	nnoremap y "ay
+	vnoremap y "ay
+	nnoremap Y "ay$
+	vnoremap Y "ay$
+	nnoremap p "agp
+	vnoremap p "agp
+	nnoremap P "agP
+	vnoremap P "agP
+	vnoremap x "ax
+	inoremap <C-v> <C-R>a
+	cnoremap <C-v> <C-R>a
 endif
 if os=="win"
-    nnoremap y "+y
-    vnoremap y "+y
-    nnoremap Y "+y$
-    vnoremap Y "+y$
-    nnoremap p "+gp
-    vnoremap p "+gp
-    nnoremap P "+gP
-    vnoremap P "+gP
-    nnoremap x "_x
-    vnoremap x "+x
-    nnoremap X "_X
-    vnoremap X "+X
-    inoremap <C-v> <C-R>+
-    cnoremap <C-v> <C-R>+
-    nnoremap <Space>g :silent !"C:\Program Files\Yokka\NoEditor\Grep.exe.lnk"<CR>
+	nnoremap y "+y
+	vnoremap y "+y
+	nnoremap Y "+y$
+	vnoremap Y "+y$
+	nnoremap p "+gp
+	vnoremap p "+gp
+	nnoremap P "+gP
+	vnoremap P "+gP
+	nnoremap x "_x
+	vnoremap x "+x
+	nnoremap X "_X
+	vnoremap X "+X
+	inoremap <C-v> <C-R>+
+	cnoremap <C-v> <C-R>+
 endif
 
 nnoremap ZZ <Nop>
@@ -192,27 +200,27 @@ nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>vi :e ~/dotfiles/.vimrc<CR>
 if os=="win"
-    nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
-    nnoremap <Space>tl :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log  /path:"%" /notempfile /closeonend<CR>
+	nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
+	nnoremap <Space>tl :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log  /path:"%" /notempfile /closeonend<CR>
 endif
 
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
-cnoremap <C-a>    <Home>
-cnoremap <C-f>    <Right>
-cnoremap <C-b>    <Left>
-cnoremap <C-d>    <Delete>
-cnoremap <C-w>    <Home>\<<End>\><Left><Left>
-cnoremap <C-c>    <End>\C
-cnoremap <C-k>    <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
+cnoremap <C-a>	  <Home>
+cnoremap <C-f>	  <Right>
+cnoremap <C-b>	  <Left>
+cnoremap <C-d>	  <Delete>
+cnoremap <C-w>	  <Home>\<<End>\><Left><Left>
+cnoremap <C-c>	  <End>\C
+cnoremap <C-k>	  <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
 
 " Use <C-Space>.
 map <C-Space>  <C-@>
-cmap <C-Space>  <C-@>
+cmap <C-Space>	<C-@>
 
 " Visual mode keymappings: "{{{
 " <TAB>: indent.
-xnoremap <TAB>  >
+xnoremap <TAB>	>
 " <S-TAB>: unindent.
 xnoremap <S-TAB>  <
 
@@ -221,15 +229,15 @@ nnoremap > >>
 nnoremap < <<
 xnoremap > >gv
 xnoremap < <gv
-vnoremap <C-t>  >gv
+vnoremap <C-t>	>gv
 
 " Insert mode keymappings: "{{{
 " <C-t>: insert tab.
-inoremap <C-t>  <C-v><TAB>
+inoremap <C-t>	<C-v><TAB>
 " <C-d>: delete char.
-inoremap <C-d>  <Del>
+inoremap <C-d>	<Del>
 " <C-a>: move to head.
-inoremap <silent><C-a>  <C-o>^
+inoremap <silent><C-a>	<C-o>^
 "}}}
 
 "ヤンクした文字列とカーソル位置の単語を置換する vim bible p123
@@ -252,7 +260,7 @@ cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
 
 "----------------------------------------
 " command
-command!                 Kwbd       let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn 
+command!				 Kwbd		let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 autocmd FileType objc setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
 autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
@@ -260,7 +268,7 @@ autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2 | setloca
 autocmd FileType html setlocal tabstop=2 shiftwidth=2
 autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
 autocmd FileType css setlocal tabstop=2 shiftwidth=2
- 
+
 "--------------------------------------------------------------------------------
 " netrw.vim
 "nnoremap <silent><Space>e :Exp<cr>
@@ -268,9 +276,9 @@ autocmd FileType css setlocal tabstop=2 shiftwidth=2
 "function! s:retrw_my_settings() " ESCキーを押すと終了する
 "  nmap <silent><buffer> <C-[> <C-o>
 "  nmap <silent><buffer> <ESC> <C-o>
-"  nmap <silent><buffer> q     <C-o>
-"  nmap <silent><buffer> l     <cr>
-"  nmap <silent><buffer> h     -
+"  nmap <silent><buffer> q	   <C-o>
+"  nmap <silent><buffer> l	   <cr>
+"  nmap <silent><buffer> h	   -
 "endfunction
 
 "----------------------------------------
@@ -278,14 +286,14 @@ autocmd FileType css setlocal tabstop=2 shiftwidth=2
 "let g:quickrun_no_default_key_mappings = 0
 "silent! nnoremap <Space>r <Plug>(quickrun)
 if !exists("g:quickrun_config")
-    let g:quickrun_config={}
+	let g:quickrun_config={}
 endif
 let g:quickrun_config["_"] = {
-    \ "runner/vimproc/updatetime" : 80,
-    \ "outputter/buffer/split" : ":rightbelow 8sp",
-    \ "outputter/error/error" : "quickfix",
-    \ "outputter/error/success" : "buffer",
-    \ "outputter" : "error",
+	\ "runner/vimproc/updatetime" : 80,
+	\ "outputter/buffer/split" : ":rightbelow 8sp",
+	\ "outputter/error/error" : "quickfix",
+	\ "outputter/error/success" : "buffer",
+	\ "outputter" : "error",
 \ }
 nnoremap <silent> <Space>tr  :e $HOME/.vim/test.rb<CR>
 nnoremap <silent> <Space>tp  :e $HOME/.vim/test.php<CR>
@@ -317,17 +325,17 @@ nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
 " UTF-8の一部文字列が検索不可なのを修正します。
 if os=="win"
 	let MyGrep_cygwin17 = 1
-    let mygrepprg = 'D:/dev/cygwin/bin/grep'
-    let grepprg='D:/dev/cygwin/bin/grep\ -nH'
+	let mygrepprg = 'D:/dev/cygwin/bin/grep'
+	let grepprg='D:/dev/cygwin/bin/grep\ -nH'
 endif
 
 "----------------------------------------
 " savevers.vim
-set patchmode=.clean            " バックアップファイルの設定savevers.vimのためにパッチモードにします
-let savevers_types = "*"        " カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
-let savevers_dirs = &backupdir  " バックアップファイルが書き込まれるディレクトリです
-let versdiff_no_resize=1        " バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
-let savevers_max = 99           " 
+set patchmode=.clean			" バックアップファイルの設定savevers.vimのためにパッチモードにします
+let savevers_types = "*"		" カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
+let savevers_dirs = &backupdir	" バックアップファイルが書き込まれるディレクトリです
+let versdiff_no_resize=1		" バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
+let savevers_max = 99			"
 ":VersDiff -
 ":VersDiff +
 ":VersDiff -c
@@ -352,17 +360,17 @@ let g:neocomplcache_enable_underbar_completion = 1
 " Set minimum syntax keyword length.
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-" これをしないと候補選択時に Scratch ウィンドウが開いてしまう 
+" これをしないと候補選択時に Scratch ウィンドウが開いてしまう
 set completeopt=menuone
 
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
-      \ 'default' : '',
-      \ 'vimshell' : $HOME.'/.vimshell_hist',
-      \ 'php'     : $HOME . '/dotfiles/dict/php.dict',
-      \ 'tpl'     : $HOME . '/dotfiles/dict/php.dict',
-      \ 'ctp'     : $HOME . '/dotfiles/dict/php.dict',
-      \ }
+	  \ 'default' : '',
+	  \ 'vimshell' : $HOME.'/.vimshell_hist',
+	  \ 'php'	  : $HOME . '/dotfiles/dict/php.dict',
+	  \ 'tpl'	  : $HOME . '/dotfiles/dict/php.dict',
+	  \ 'ctp'	  : $HOME . '/dotfiles/dict/php.dict',
+	  \ }
 
 " Define keyword.
 if !exists('g:neocomplcache_keyword_patterns')
@@ -373,7 +381,7 @@ let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
 "スニペットのディレクトリ
 if !exists("g:neosnippet#snippets_directory")
-    let g:neosnippet#snippets_directory=""
+	let g:neosnippet#snippets_directory=""
 endif
 "let g:neosnippet#snippets_directory=$HOME.'/snippets'
 
@@ -403,8 +411,8 @@ let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 if g:neocomplcache_enable_at_startup
 	" 2013/01/19 19:20最新のREADMEのものを反映
 	" Plugin key-mappings.
-	imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-	smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+	imap <C-k>	   <Plug>(neosnippet_expand_or_jump)
+	smap <C-k>	   <Plug>(neosnippet_expand_or_jump)
 
 	" SuperTab like snippets behavior.
 	imap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
@@ -436,14 +444,14 @@ let g:clang_auto_select = 0
 "----------------------------------------
 " unite.vim
 " 入力モードで開始する
-" バッファ一覧  -auto-resize
-nnoremap <silent> <Space>b  :<C-u>Unite buffer -horizontal -direction=botright<CR>
+" バッファ一覧	-auto-resize
+nnoremap <silent> <Space>b	:<C-u>Unite buffer -horizontal -direction=botright<CR>
 " ファイル一覧
 "nnoremap <silent> <Space>uf :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright file<CR>
 " レジスタ一覧
 nnoremap <silent> <Space>ur :<C-u>Unite -buffer-name=register -direction=botright register<CR>
 " 最近使用したファイル一覧
-nnoremap <silent> <Space>m  :<C-u>Unite file_mru -direction=botright<CR>
+nnoremap <silent> <Space>m	:<C-u>Unite file_mru -direction=botright<CR>
 " 常用セット
 nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright<CR>
 " 全部乗せ
@@ -466,6 +474,14 @@ endfunction
 
 "----------------------------------------
 " vim-filer.vim
+" K ディレクトリ作成
+" i ファイル作成
+" I 特定ディレクトリへジャンプ
+" r リネーム
+" dd 削除
+" Cc コピー
+" Cp 貼り付け
+" <C-J> 履歴
 autocmd FileType vimfiler call s:vimfiler_my_settings()
 function! s:vimfiler_my_settings() " ESCキーを押すと終了する
   nmap <silent><buffer> <C-[> q
@@ -489,13 +505,13 @@ nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 let g:vimshell_interactive_update_time = 10
 let g:vimshell_prompt = $USERNAME."% "
 " vimshell map
-nnoremap <silent> vs :VimShell<CR>
+nnoremap <silent> <Space>vs :VimShell<CR>
 "nnoremap <silent> vsc :VimShellCreate<CR>
-nnoremap <silent> vp :VimShellPop<CR>
+"nnoremap <silent> vp :VimShellPop<CR>
 
 "------------------------------------
 " EnhCommentify.vim
-function EnhCommentifyCallback(ft)
+function! EnhCommentifyCallback(ft)
 	if a:ft == 'objc'
 		let b:ECcommentOpen = '//'
 		let b:ECcommentClose = ''
@@ -519,45 +535,65 @@ silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 " Improved increment.
 nmap <C-a> <SID>(increment)
 nmap <C-x> <SID>(decrement)
-nnoremap <silent> <SID>(increment)    :AddNumbers 1<CR>
-nnoremap <silent> <SID>(decrement)   :AddNumbers -1<CR>
+nnoremap <silent> <SID>(increment)	  :AddNumbers 1<CR>
+nnoremap <silent> <SID>(decrement)	 :AddNumbers -1<CR>
 command! -range -nargs=1 AddNumbers
-      \ call s:add_numbers((<line2>-<line1>+1) * eval(<args>))
+	  \ call s:add_numbers((<line2>-<line1>+1) * eval(<args>))
 function! s:add_numbers(num)
   let prev_line = getline('.')[: col('.')-1]
   let next_line = getline('.')[col('.') :]
   let prev_num = matchstr(prev_line, '\d\+$')
   if prev_num != ''
-    let next_num = matchstr(next_line, '^\d\+')
-    let new_line = prev_line[: -len(prev_num)-1] .
-          \ printf('%0'.len(prev_num).'d',
-          \    max([0, prev_num . next_num + a:num])) . next_line[len(next_num):]
+	let next_num = matchstr(next_line, '^\d\+')
+	let new_line = prev_line[: -len(prev_num)-1] .
+		  \ printf('%0'.len(prev_num).'d',
+		  \    max([0, prev_num . next_num + a:num])) . next_line[len(next_num):]
   else
-    let new_line = prev_line . substitute(next_line, '\d\+',
-          \ "\\=printf('%0'.len(submatch(0)).'d',
-          \         max([0, submatch(0) + a:num]))", '')
+	let new_line = prev_line . substitute(next_line, '\d\+',
+		  \ "\\=printf('%0'.len(submatch(0)).'d',
+		  \			max([0, submatch(0) + a:num]))", '')
   endif
 
   if getline('.') !=# new_line
-    call setline('.', new_line)
+	call setline('.', new_line)
   endif
 endfunction
-"}}}
-
 
 "------------------------------------
 " gtags
+let Gtags_No_Auto_Jump = 1
+let Gtags_Auto_Update = 1
+" カーソル以下の定義元を探す
+nnoremap <Space>tj :Gtags <C-r><C-w><CR>
+" カーソル以下の使用箇所を探す
+nnoremap <Space>tr :Gtags -r <C-r><C-w><CR>
+" Grep 準備
+nnoremap <Space>tg :Gtags -g
+" このファイルの関数一覧
+nnoremap <Space>tf :Gtags -f %<CR>
 " 検索結果Windowを閉じる
 nnoremap <C-q> :ccl<CR>
-" Grep 準備
-nnoremap <C-g> :Gtags -g
-" このファイルの関数一覧                                                                                                                                                
-nnoremap <C-l> :Gtags -f %<CR>
-" カーソル以下の定義元を探す
-nnoremap <C-j> :Gtags <C-r><C-w><CR>
-" カーソル以下の使用箇所を探す
-nnoremap <C-k> :Gtags -r <C-r><C-w><CR>
 " 次の検索結果
 nnoremap <C-n> :cn<CR>
 " 前の検索結果
 nnoremap <C-p> :cp<CR>
+
+"------------------------------------
+" 空白→タブ変換
+set list
+set listchars=tab:.\ 
+function! s:CleanSpace()
+  let cursor = getpos(".")
+  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
+  call setpos(".", cursor)
+  unlet cursor
+endfunction
+autocmd BufWritePre *.php call <SID>CleanSpace()
+
+"------------------------------------
+" vim-fugitive
+nnoremap <silent> <Space>gb :Gblame<CR>
+nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
+nnoremap <silent> <Space>gr :Gread<CR>
+nnoremap <silent> <Space>gc :diffoff!<CR>
+nnoremap <silent> <Space>gs :Gstatus<CR>
