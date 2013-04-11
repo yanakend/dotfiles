@@ -43,6 +43,7 @@ NeoBundle 'git://github.com/tpope/vim-fugitive.git'
 NeoBundle 'git://github.com/Rip-Rip/clang_complete.git'
 NeoBundle 'git://github.com/tokorom/clang_complete-getopts-ios.git'
 NeoBundle 'git://github.com/vim-scripts/gtags.vim.git'
+NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 
 "--------------------------------------
 " Get running OS
@@ -520,6 +521,11 @@ function! EnhCommentifyCallback(ft)
 		let b:ECcommentOpen = '//'
 		let b:ECcommentClose = ''
 	endif
+	if a:ft == 'smarty'
+		let b:ECcommentOpen = '\{* '
+		let b:ECcommentMiddle = ''
+		let b:ECcommentClose = ' *\}'
+	endif
 endfunction
 let g:EnhCommentifyCallbackExists = 'Yes'
 
@@ -564,11 +570,11 @@ endfunction
 let Gtags_No_Auto_Jump = 1
 let Gtags_Auto_Update = 1
 " カーソル以下の定義元を探す
-nnoremap <Space>tj :Gtags <C-r><C-w><CR>
+nnoremap <Space>td :Gtags <C-r><C-w><CR>
 " カーソル以下の使用箇所を探す
 nnoremap <Space>tr :Gtags -r <C-r><C-w><CR>
 " Grep 準備
-nnoremap <Space>tg :Gtags -g
+nnoremap <Space>tg :Gtags -g 
 " このファイルの関数一覧
 nnoremap <Space>tf :Gtags -f %<CR>
 " 検索結果Windowを閉じる
