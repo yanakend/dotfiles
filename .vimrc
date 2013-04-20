@@ -308,7 +308,7 @@ let g:MyGrep_CurrentDirMode = 1
 let g:QFix_CloseOnJump = 1
 let g:QFix_HighSpeedPreview = 1
 let g:qfixmemo_mapleader = '<Space>g'
-let QFix_PreviewHeight = 40
+let QFix_PreviewHeight = 20
 let g:MyGrep_FilePattern = '*'
 let g:MyGrep_RecursiveMode = 1
 " メモファイルの保存先

@@ -7,6 +7,8 @@ cd ${installer_path}
 #git submodule update
 
 git clone git://github.com/Shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim
+git clone git://github.com/vim-jp/vimdoc-ja.git ~/.vim/bundle/vimdoc-ja
+
 
 install_file()
 {

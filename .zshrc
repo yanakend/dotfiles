@@ -9,8 +9,10 @@ PATH="$PATH":/usr/local/bin
 # 補完
 autoload -U compinit
 compinit
+
 # ビープ音を消す
 setopt nolistbeep 
+setopt no_beep
  
 # ミスコマンドの訂正
 setopt correct
@@ -25,16 +27,11 @@ PROMPT="%/%% "
 PROMPT2="%_%% "
 SPROMPT="%r is correct? [n,y,a,e]: "
 
-# 複数行入力時のプロンプト
-# PROMPT2="%/%% "
 # 入力ミス確認用プロンプト
 SPROMPT=$'correct: %R -&gt; %r ? [n,y,a,e]: '
  
 # ^Dでログアウトしないようにする
 setopt ignore_eof
- 
-# ビープ音なし
-setopt no_beep
  
 # 補完の時に大文字小文字を区別しない
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
@@ -83,15 +80,6 @@ alias LESS="less -IM -x 4"
 alias where="command -v"
 alias j="jobs -l"
 
-## Completion configuration
-#
-autoload -U compinit
-compinit
-
-## GNU grepがあったら優先して使う。
-#if type ggrep > /dev/null 2>&1; then
-#    alias grep=ggrep
-#fi
 ## デフォルトオプションの設定
 export GREP_OPTIONS
 ### バイナリファイルにはマッチさせない。
@@ -113,13 +101,11 @@ if grep --help | grep -q -- --color; then
 fi
 
 export EDITOR=/usr/bin/vi 
-export SVN_SSH="ssh svnuser@49.212.86.49 -p 10022 -i /Users/yanagikenji/.ssh/sakura/id_rsa_svnuser.ppk"
 export PATH=/opt/local/bin:/opt/local/sbin/:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
-export PATH=$PATH:/usr/local/mysql/bin
-export MANPATH=/opt/local/man:$MANPATH
 
+export MANPATH=/opt/local/man:$MANPATH
 
 #=============================
 # source auto-fu.zsh
@@ -132,3 +118,6 @@ if [ -f ~/dotfiles/.zsh/auto-fu.zsh/auto-fu.zsh ]; then
     zle -N zle-line-init
     zstyle ':completion:*' completer _oldlist _complete
 fi
+
+# .zshrcローカル設定ファイル読み込み
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
