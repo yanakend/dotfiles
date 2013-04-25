@@ -98,7 +98,7 @@ GREP_OPTIONS="--exclude-dir=.libs $GREP_OPTIONS"
 GREP_OPTIONS="--color=auto $GREP_OPTIONS"
 
 export EDITOR=/usr/bin/vi 
-export PATH=/opt/local/bin:/opt/local/sbin/:$PATH
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 
