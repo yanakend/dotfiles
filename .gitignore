@@ -12,6 +12,7 @@
 !/.gitignore
 !/.gitconfig
 !/.gitmodules
+!/.tmux.conf
 !/install.sh
 !/install.bat
 

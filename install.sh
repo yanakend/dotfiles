@@ -11,7 +11,7 @@ install_file()
 	local _target=$1
 	local _linkname=$2
 	if [ -e "${_linkname}" ]; then
-		mv -f "${_linkname}" "${_linkname}.org"
+		rm "${_linkname}"
 	fi
 	ln -s "${_target}" "${_linkname}"
 	echo "linking ${_linkname}"
