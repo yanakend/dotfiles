@@ -588,13 +588,13 @@ nnoremap <C-p> :cp<CR>
 " 空白→タブ変換
 set list
 set listchars=tab:.\ 
-function! s:CleanSpace()
-  let cursor = getpos(".")
-  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
-  call setpos(".", cursor)
-  unlet cursor
-endfunction
-autocmd BufWritePre *.php call <SID>CleanSpace()
+"function! s:CleanSpace()
+"  let cursor = getpos(".")
+"  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
+"  call setpos(".", cursor)
+"  unlet cursor
+"endfunction
+"autocmd BufWritePre *.php call <SID>CleanSpace()
 
 "------------------------------------
 " vim-fugitive
