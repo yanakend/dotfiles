@@ -91,8 +91,6 @@ GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
 ## 管理用ディレクトリを無視する。
 GREP_OPTIONS="--exclude-dir=.svn $GREP_OPTIONS"
 GREP_OPTIONS="--exclude-dir=.git $GREP_OPTIONS"
-GREP_OPTIONS="--exclude-dir=.deps $GREP_OPTIONS"
-GREP_OPTIONS="--exclude-dir=.libs $GREP_OPTIONS"
 
 ### 可能なら色を付ける。
 GREP_OPTIONS="--color=auto $GREP_OPTIONS"
