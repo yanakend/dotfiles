@@ -112,14 +112,3 @@ fi
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 
-# tmux ssh 時に新規ウィンドウを作る
-ssh_tmux() {
-    ssh_cmd="ssh $@"
-    tmux new-window -n "$*" "$ssh_cmd"
-}
-if [ $TERM = "screen" ] ; then
-    tmux lsw
-    if [ $? -eq 0 ] ; then
-        alias ssh=ssh_tmux
-    fi
-fi
