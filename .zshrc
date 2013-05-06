@@ -3,9 +3,6 @@
 export GNUTERM=aqua
 export DISPLAY=0.0
  
-PATH="$PATH":/Users/$USER/.bin
-PATH="$PATH":/usr/local/bin
- 
 # 補完
 autoload -U compinit
 compinit
@@ -79,27 +76,24 @@ alias emacs="emacs -nw"
 alias LESS="less -IM -x 4"
 alias where="command -v"
 alias j="jobs -l"
+alias cronedit="crontab -e"
 
-## デフォルトオプションの設定
-export GREP_OPTIONS
 ### バイナリファイルにはマッチさせない。
-GREP_OPTIONS="--binary-files=without-match"
-### grep対象としてディレクトリを指定したらディレクトリ内を再帰的にgrepする。
-#GREP_OPTIONS="--directories=recurse $GREP_OPTIONS"
+export GREP_OPTIONS="--binary-files=without-match"
+## 可能なら色を付ける。
+export GREP_OPTIONS="--color=auto $GREP_OPTIONS"
 ### 拡張子が.tmpのファイルは無視する。
-GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
+export GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
 ## 管理用ディレクトリを無視する。
-GREP_OPTIONS="--exclude-dir=\.svn $GREP_OPTIONS"
-GREP_OPTIONS="--exclude-dir=\.git $GREP_OPTIONS"
-
-### 可能なら色を付ける。
-GREP_OPTIONS="--color=auto $GREP_OPTIONS"
+if grep --help | grep -q -- --exclude-dir; then
+    export GREP_OPTIONS="--exclude-dir=\*.svn $GREP_OPTIONS"
+    export GREP_OPTIONS="--exclude-dir=\*.git $GREP_OPTIONS"
+fi
 
 export EDITOR=/usr/bin/vi 
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
-
 export MANPATH=/opt/local/man:$MANPATH
 
 #=============================
