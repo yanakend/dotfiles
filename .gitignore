@@ -15,6 +15,7 @@
 !/.tmux.conf
 !/install.sh
 !/install.bat
+!/.zsh
 
 /.vim/bundle/*
 /.vim/test.*
