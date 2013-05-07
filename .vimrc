@@ -44,6 +44,8 @@ NeoBundle 'git://github.com/Rip-Rip/clang_complete.git'
 NeoBundle 'git://github.com/tokorom/clang_complete-getopts-ios.git'
 NeoBundle 'git://github.com/vim-scripts/gtags.vim.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
+NeoBundle 'git://github.com/scrooloose/syntastic.git'
+NeoBundle 'git://github.com/kien/ctrlp.vim.git'
 
 "--------------------------------------
 " Get running OS
