@@ -298,6 +298,7 @@ let g:quickrun_config["_"] = {
 	\ "outputter/error/success" : "buffer",
 	\ "outputter" : "error",
 \ }
+let $JS_CMD='node'
 nnoremap <silent> <Space>tr  :e $HOME/.vim/test.rb<CR>
 nnoremap <silent> <Space>tp  :e $HOME/.vim/test.php<CR>
 nnoremap <silent> <Space>tj  :e $HOME/.vim/test.js<CR>

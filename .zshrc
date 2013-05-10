@@ -1,5 +1,5 @@
 #!/bin/zsh
- 
+  
 export GNUTERM=aqua
 export DISPLAY=0.0
  
@@ -84,11 +84,6 @@ export GREP_OPTIONS="--binary-files=without-match"
 export GREP_OPTIONS="--color=auto $GREP_OPTIONS"
 ### 拡張子が.tmpのファイルは無視する。
 export GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
-## 管理用ディレクトリを無視する。
-if grep --help | grep -q -- --exclude-dir; then
-    export GREP_OPTIONS="--exclude-dir=\*.svn $GREP_OPTIONS"
-    export GREP_OPTIONS="--exclude-dir=\*.git $GREP_OPTIONS"
-fi
 
 export EDITOR=/usr/bin/vi 
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
