@@ -116,6 +116,7 @@ if os=="mac"
   " Macではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
+
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
