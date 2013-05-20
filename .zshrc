@@ -86,10 +86,9 @@ export GREP_OPTIONS="--color=auto $GREP_OPTIONS"
 export GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
 
 export EDITOR=/usr/bin/vi 
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+export PATH=~/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
-export MANPATH=/opt/local/man:$MANPATH
 
 #=============================
 # source auto-fu.zsh
