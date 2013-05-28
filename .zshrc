@@ -90,19 +90,15 @@ export PATH=~/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 
-#=============================
-# source auto-fu.zsh
-#=============================
-if [ -f ~/dotfiles/.zsh/auto-fu.zsh/auto-fu.zsh ]; then
-    source ~/dotfiles/.zsh/auto-fu.zsh/auto-fu.zsh
-    function zle-line-init () {
-        auto-fu-init
-    }
-    zle -N zle-line-init
-    zstyle ':completion:*' completer _oldlist _complete
-fi
+myps ()
+{
+    ps -awwwxo "pid ppid %cpu %mem user stat start time command" | egrep "[P]PID|\b$1"
+}
 
 # .zshrcローカル設定ファイル読み込み
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
-
+# ログイン時にtmux 起動
+if [ $SHLVL = 1 ]; then
+  tmux attach || tmux
+fi
