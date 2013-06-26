@@ -1,4 +1,61 @@
 [user]
-	name = yanaken
-#	email = kanegongongon@hotmail.co.jp
-	email = yanagikenji@yanagi-mba.local
+	name = 
+	email = 
+[core]
+    excludesfile = /Users/cp0008/.gitignore_global
+[difftool "sourcetree"]
+	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+	trustExitCode = true
+[alias]
+	graph = log --graph --date-order -C -M --pretty=format:\"<%h> %ad [%an] %Cgreen%d%Creset %s\" --all --date=short
+[color]
+	ui = true
+[diff]
+	tool = diffmerge
+[difftool "diffmerge"]
+	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
+[merge]
+	tool = diffmerge
+[mergetool "diffmerge"]
+	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
+	trustExitCode = true
+[alias]
+    br = branch
+    ci = commit
+    cia = commit -a
+    co = checkout
+    d = diff
+    h = help
+    graph = log --graph --date-order -C -M --pretty=format:\"<%h> %ad [%an] %Cgreen%d%Creset %s\" --all --date=short
+    pl = pull
+    pr = pull --rebase
+    ps = push
+    s = status
+    st = status
+    ss = stash
+
+[core]
+    autocrlf = false
+    editor = vim
+    excludesfile = ~/.gitignore
+    #pager = vimcat
+    #pager = vimpager
+    pager = less -R
+    #pager = less.sh
+    quotepath = false
+
+[color]
+    branch = auto
+    diff = auto
+    grep = auto
+    interactive = auto
+    pager = true
+    showbranch = auto
+    status = auto
+    ui = auto
+
+[help]
+    autocorrect = 10
