@@ -17,7 +17,7 @@ install_file()
 	echo "linking ${_linkname}"
 }
 
-dotfiles=( .tmux.conf .bashrc .zshrc .vim .vimrc .gvimrc )
+dotfiles=( .tmux.conf .bashrc .zshrc .vim .vimrc .gvimrc .gitconfig )
 
 for file in ${dotfiles[@]}
 do
