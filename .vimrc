@@ -46,6 +46,7 @@ NeoBundle 'git://github.com/vim-scripts/gtags.vim.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 NeoBundle 'git://github.com/scrooloose/syntastic.git'
 NeoBundle 'git://github.com/kien/ctrlp.vim.git'
+NeoBundle 'git://github.com/vim-scripts/Align.git'
 
 "--------------------------------------
 " Get running OS
@@ -390,13 +391,6 @@ if !exists("g:neosnippet#snippets_directory")
 endif
 "let g:neosnippet#snippets_directory=$HOME.'/snippets'
 
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplcache_enable_auto_select = 1
-"let g:neocomplcache_disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<TAB>"
-"inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
-
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -607,3 +601,50 @@ nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gc :diffoff!<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
+
+"------------------------------------
+" JDoc
+" Auto JDoc Commands
+autocmd FileType javascript nnoremap <silent> <Space>c :call JsJDoc()<CR>
+autocmd FileType php nnoremap <silent> <Space>c :call PhpJDoc()<CR>
+
+" Insert JDoc Comment
+" param summary: Summary of the function
+" param args: list of arguments' name
+function! AddJDocComment(summary, args)
+    let c = indent(".") / &tabstop
+    let top = a:firstline - 1 
+    let l = a:firstline - 1 
+    let s = ''
+    while len(s) < (c) 
+    let s = s . "\t"
+    endwhile
+       
+    call append(l, s . '/**')
+    let l+=1
+    call append(l, s . ' * ' . a:summary)
+    let l+=1
+       
+    for arg in a:args
+        call append(l, s . ' * @param mixed ' . matchstr(arg, '[^$].*') . ' ')
+        let l+=1
+    endfor
+
+    "call append(l, s . ' * @return ')
+    let l+=1
+    call append(l, s . ' */')
+
+    call cursor(top+2, 80) 
+endfunction
+
+" Insert JDoc Comment in Js source code
+function! JsJDoc()
+    let args = split(matchstr(getline('.'), 'function(\zs.*\ze)'),' *, *')
+    call AddJDocComment('', args)
+endfunction
+
+" Insert JDoc Comment in PHP source code
+function! PhpJDoc()
+    let args = split(matchstr(getline('.'), 'function [^(]*(\zs.*\ze)'),' *, *')
+    call AddJDocComment('', args)
+endfunction
