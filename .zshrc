@@ -66,6 +66,7 @@ setopt rmstar_wait
 export LSCOLORS=ExFxCxDxBxEGEDABAGACAD
  
 # エイリアス
+alias vi="vim"
 alias ls="ls -FG"
 alias ll="ls -lhaG"
 alias la="ls -aGv"
@@ -102,3 +103,4 @@ myps ()
 if [ $SHLVL = 1 ]; then
   tmux attach || tmux
 fi
+

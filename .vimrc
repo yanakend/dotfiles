@@ -504,9 +504,11 @@ nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 let g:vimshell_interactive_update_time = 10
 let g:vimshell_prompt = $USERNAME."% "
 " vimshell map
-nnoremap <silent> <Space>vs :VimShell<CR>
-"nnoremap <silent> vsc :VimShellCreate<CR>
-"nnoremap <silent> vp :VimShellPop<CR>
+nnoremap <silent> <Space>s :VimShellCurrentDir<CR>
+autocmd FileType vimshell call vimshell#hook#add('chpwd', 'my_chpwd', 'g:my_chpwd')
+function! g:my_chpwd(args, context)
+	call vimshell#execute('ls')
+endfunction
 
 "------------------------------------
 " EnhCommentify.vim

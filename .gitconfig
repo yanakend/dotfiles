@@ -39,7 +39,7 @@
 
 [core]
     autocrlf = false
-    editor = vim
+    editor = /usr/bin/vim
     excludesfile = ~/.gitignore
     #pager = vimcat
     #pager = vimpager
