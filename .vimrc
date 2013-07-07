@@ -16,37 +16,27 @@ NeoBundle 'git://github.com/Shougo/vimproc.git', {
 	\	  'unix':	'make -f make_unix.mak',
 	\	},
 	\ }
-NeoBundle 'git://github.com/Shougo/neocomplcache.git'
-NeoBundle 'git://github.com/Shougo/neosnippet.git'
 NeoBundle 'git://github.com/Shougo/unite.vim.git'
 NeoBundle 'git://github.com/Shougo/vimfiler.git'
 NeoBundle 'git://github.com/Shougo/vimshell.git'
-NeoBundle 'git://github.com/ujihisa/vimshell-ssh.git'
 NeoBundle 'git://github.com/thinca/vim-quickrun.git'
 NeoBundle 'git://github.com/vim-jp/vimdoc-ja.git'
 NeoBundle 'git://github.com/fuenor/qfixhowm.git'
 NeoBundle 'git://github.com/vim-scripts/EnhCommentify.vim.git'
-NeoBundle 'git://github.com/motemen/git-vim.git'
 NeoBundle 'git://github.com/vim-scripts/savevers.vim.git'
 NeoBundle 'git://github.com/Lokaltog/vim-powerline.git', 'develop'
 NeoBundle 'git://github.com/vim-scripts/sudo.vim.git'
-" カラースキーム設定
-NeoBundle 'git://github.com/nanotech/jellybeans.vim'
-" 色々な入力補助
 NeoBundle 'git://github.com/acustodioo/vim-enter-indent.git'
-" %の拡張
 NeoBundle "git://github.com/tmhedberg/matchit.git"
-" 単語を囲う
-"NeoBundle 'git://github.com/tpope/vim-surround.git'
-
 NeoBundle 'git://github.com/tpope/vim-fugitive.git'
-NeoBundle 'git://github.com/Rip-Rip/clang_complete.git'
-NeoBundle 'git://github.com/tokorom/clang_complete-getopts-ios.git'
 NeoBundle 'git://github.com/vim-scripts/gtags.vim.git'
 NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 NeoBundle 'git://github.com/scrooloose/syntastic.git'
-NeoBundle 'git://github.com/kien/ctrlp.vim.git'
 NeoBundle 'git://github.com/vim-scripts/Align.git'
+NeoBundle 'git://github.com/kien/ctrlp.vim.git'
+NeoBundle 'git://github.com/othree/eregex.vim.git'
+NeoBundle 'git://github.com/Shougo/neocomplcache.git'
+"NeoBundle 'git://github.com/Shougo/neosnippet.git'
 
 "--------------------------------------
 " Get running OS
@@ -209,8 +199,6 @@ cnoremap <C-k>	  <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
 cnoremap <C-w>	  <Home>\<<End>\><Left><Left>
 cnoremap <C-c>	  <End>\C
 
-" 誤爆してうざいので
-
 " <TAB>: indent.
 vnoremap <TAB>	>
 " <S-TAB>: unindent.
@@ -221,15 +209,10 @@ nnoremap > >>
 nnoremap < <<
 vnoremap > >gv
 vnoremap < <gv
-
-" Insert mode keymappings: "{{{
-" <C-t>: insert tab.
-inoremap <C-t>	<C-v><TAB>
+			
+" Insert mode keymappings:
 " <C-d>: delete char.
 inoremap <C-d>	<Del>
-" <C-a>: move to head.
-inoremap <silent><C-a>	<C-o>^
-"}}}
 
 "ヤンクした文字列とカーソル位置の単語を置換する vim bible p123
 "cy カーソル位置移行の文字列とヤンクした単語を置換
@@ -319,14 +302,14 @@ endif
 
 "----------------------------------------
 " savevers.vim
+":VersDiff -
+":VersDiff +
+":VersDiff -c
 set patchmode=.clean			" バックアップファイルの設定savevers.vimのためにパッチモードにします
 let savevers_types = "*"		" カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
 let savevers_dirs = &backupdir	" バックアップファイルが書き込まれるディレクトリです
 let versdiff_no_resize=1		" バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
 let savevers_max = 99			"
-":VersDiff -
-":VersDiff +
-":VersDiff -c
 
 "----------------------------------------
 " EnhancedCommentify.vim
@@ -337,90 +320,69 @@ vnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 
 ""-------------------------------------------------------------------
 " neocomplcache.git
-" Use neocomplcache.
+" neocomplcacheを起動時に有効化する
 let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
+" 'smartcase'と同様に、大文字が入力されるまで大文字小文字の区別を無視する
 let g:neocomplcache_enable_smart_case = 1
-" Use camel case completion.
-let g:neocomplcache_enable_camel_case_completion = 1
-" Use underbar completion.
+" _区切りの補完を有効化
 let g:neocomplcache_enable_underbar_completion = 1
-" Set minimum syntax keyword length.
+" シンタックスをキャッシュするときの最小文字長を3
 let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 " これをしないと候補選択時に Scratch ウィンドウが開いてしまう
 set completeopt=menuone
 
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
-	  \ 'default' : '',
-	  \ 'vimshell' : $HOME.'/.vimshell_hist',
-	  \ 'php'	  : $HOME . '/dotfiles/dict/php.dict',
-	  \ 'tpl'	  : $HOME . '/dotfiles/dict/php.dict',
-	  \ 'ctp'	  : $HOME . '/dotfiles/dict/php.dict',
-	  \ }
+      \ 'default' : '',
+      \ 'vimshell': $HOME.'/.vimshell_hist',
+      \ 'php'	  : $HOME . '/dotfiles/.vim/dict/php.dict',
+      \ 'tpl'	  : $HOME . '/dotfiles/.vim/dict/php.dict',
+      \ 'ctp'	  : $HOME . '/dotfiles/.vim/dict/php.dict',
+      \ }
 
 " Define keyword.
 if !exists('g:neocomplcache_keyword_patterns')
-	let g:neocomplcache_keyword_patterns = {}
+    let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+" smartyはhtmlと同じに
+let g:neocomplcache_keyword_patterns['smarty'] = '</\?\%([[:alnum:]_:-]\+\s*\)\?\%(/\?>\)\?\|&amp;\h\%(\w*;\)\?\|\h[[:alnum:]_-]*="\%([^"]*"\?\)\?\|\h[[:alnum:]_:-]*'
 
-
-"スニペットのディレクトリ
-if !exists("g:neosnippet#snippets_directory")
-	let g:neosnippet#snippets_directory=""
+" 関数を補完するための区切り文字パターン
+if !exists('g:neocomplcache_delimiter_patterns')
+  let g:neocomplcache_delimiter_patterns = {}
 endif
-"let g:neosnippet#snippets_directory=$HOME.'/snippets'
+let g:neocomplcache_delimiter_patterns['php'] = ['->', '::', '\']
 
-" Enable omni completion.
+if !exists('g:neocomplcache_next_keyword_patterns')
+  let g:neocomplcache_next_keyword_patterns = {}
+endif
+" smartyはhtmlと同じに
+let g:neocomplcache_next_keyword_patterns['smarty'] = '[[:alnum:]_:-]*>\|[^"]*"'
+
+" オムニ補完
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php setlocal omnifunc=phpcomplete#CompleteTags
+autocmd FileType smarty setlocal omnifunc=htmlcomplete#CompleteTags
+"autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 
-" Enable heavy omni completion.
-if !exists('g:neocomplcache_omni_patterns')
-	let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-"autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-
-"<TAB>でスニペット補完
-if g:neocomplcache_enable_at_startup
-	" 2013/01/19 19:20最新のREADMEのものを反映
-	" Plugin key-mappings.
-	imap <C-k>	   <Plug>(neosnippet_expand_or_jump)
-	smap <C-k>	   <Plug>(neosnippet_expand_or_jump)
-
-	" SuperTab like snippets behavior.
-	imap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-	smap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-	" For snippet_complete marker.
-	if has('conceal')
-		set conceallevel=2 concealcursor=i
-	endif
-endif
-
-if !exists('g:neocomplcache_force_omni_patterns')
-  let g:neocomplcache_force_omni_patterns = {}
-endif
-let g:neocomplcache_force_overwrite_completefunc = 1
-let g:neocomplcache_force_omni_patterns.c =
-  \ '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_force_omni_patterns.cpp =
-  \ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-let g:neocomplcache_force_omni_patterns.objc =
-  \ '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_force_omni_patterns.objcpp =
-  \ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-" libclang.so を置いたディレクトリを指定
-let g:neocomplcache_clang_library_path = '/usr/bin/clang'
-let g:clang_complete_auto = 0
-let g:clang_auto_select = 0
+" 改行で補完ウィンドウを閉じる
+inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
+" tabで補完候補の選択を行う
+inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<TAB>"
+inoremap <expr><S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
+" C-h, BSで補完ウィンドウを確実に閉じる
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<BS>"
+" C-yで補完候補の確定
+inoremap <expr><C-y> neocomplcache#close_popup()
+" C-eで補完のキャンセルし、ウィンドウを閉じる。ポップアップが開いていないときはEndキー
+inoremap <expr><C-e> pumvisible() ? neocomplcache#cancel_popup() : "\<End>"
+" C-gで補完を元に戻す
+inoremap <expr><C-g> neocomplcache#undo_completion()
+" vim標準のキーワード補完を置き換える
+inoremap <expr><C-n> neocomplcache#manual_keyword_complete()
 
 "----------------------------------------
 " unite.vim
@@ -447,10 +409,6 @@ function! s:unite_my_settings()
   " ESCキーを押すと終了する
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
   nmap <silent><buffer> <ESC> <Plug>(unite_exit)
-  " N は検索として、i を新規作成にする
-  nnoremap <buffer> N p
-  nunmap <buffer> N
-  nmap <buffer> i <Plug>(unite_new_candidate)
 endfunction
 
 "----------------------------------------
@@ -581,6 +539,16 @@ nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gc :diffoff!<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
 nnoremap <silent> <Space>gh :Gdiff HEAD~~<CR>zR<C-W>hgg]c
+
+"------------------------------------
+" ctrlp.vim
+let g:ctrlp_clear_cache_on_exit = 0   " 終了時キャッシュをクリアしない
+let g:ctrlp_mruf_max            = 500 " MRUの最大記録数
+
+"------------------------------------
+" eregex.vim
+let g:eregex_default_enable = 0
+nnoremap <Leader>/ :M/
 
 "------------------------------------
 " JDoc
