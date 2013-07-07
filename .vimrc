@@ -37,7 +37,7 @@ NeoBundle 'git://github.com/acustodioo/vim-enter-indent.git'
 " %の拡張
 NeoBundle "git://github.com/tmhedberg/matchit.git"
 " 単語を囲う
-NeoBundle 'git://github.com/tpope/vim-surround.git'
+"NeoBundle 'git://github.com/tpope/vim-surround.git'
 
 NeoBundle 'git://github.com/tpope/vim-fugitive.git'
 NeoBundle 'git://github.com/Rip-Rip/clang_complete.git'
@@ -56,7 +56,7 @@ function! GetRunningOS()
 	endif
 	if has("unix")
 		if has('gui_macvim')
-			return "mac"
+			return "macvim"
 		else
 			return "linux"
 		endif
@@ -113,11 +113,10 @@ set nofoldenable
 
 " Don't redraw while macro executing.
 set lazyredraw
-if os=="mac"
-  " Macではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
+if os=="macvim"
+  " macvimではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
@@ -125,7 +124,7 @@ set shortmess+=A " 警告を無効にする
 
 "----------------------------------------
 " map
-if os=="win" || os=="mac"
+if os=="win" || os=="macvim"
 	nnoremap <silent> <C-[> :noh<CR>
 else
 	nnoremap <silent> <C-[><C-[> :noh<CR>
@@ -170,7 +169,7 @@ function! Prevdiff()
 endfunction
 
 " set imd
-if os=="mac" || os=="linux"
+if os=="linux"
 	nnoremap y "ay
 	vnoremap y "ay
 	nnoremap Y "ay$
@@ -182,8 +181,7 @@ if os=="mac" || os=="linux"
 	vnoremap x "ax
 	inoremap <C-v> <C-R>a
 	cnoremap <C-v> <C-R>a
-endif
-if os=="win"
+else
 	nnoremap y "+y
 	vnoremap y "+y
 	nnoremap Y "+y$
@@ -192,22 +190,14 @@ if os=="win"
 	vnoremap p "+gp
 	nnoremap P "+gP
 	vnoremap P "+gP
-	nnoremap x "_x
 	vnoremap x "+x
-	nnoremap X "_X
-	vnoremap X "+X
 	inoremap <C-v> <C-R>+
 	cnoremap <C-v> <C-R>+
 endif
 
 nnoremap ZZ <Nop>
-nnoremap <silent><Space>d  :Kwbd<CR>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>vi :e ~/dotfiles/.vimrc<CR>
-if os=="win"
-	nnoremap <Space>td :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:diff /path:"%" /notempfile /closeonend<CR>
-	nnoremap <Space>tl :!start "C:\Program files\TortoiseSVN\bin\TortoiseProc.exe" /command:log  /path:"%" /notempfile /closeonend<CR>
-endif
 
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
@@ -215,26 +205,22 @@ cnoremap <C-a>	  <Home>
 cnoremap <C-f>	  <Right>
 cnoremap <C-b>	  <Left>
 cnoremap <C-d>	  <Delete>
+cnoremap <C-k>	  <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
 cnoremap <C-w>	  <Home>\<<End>\><Left><Left>
 cnoremap <C-c>	  <End>\C
-cnoremap <C-k>	  <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
 
-" Use <C-Space>.
-map <C-Space>  <C-@>
-cmap <C-Space>	<C-@>
+" 誤爆してうざいので
 
-" Visual mode keymappings: "{{{
 " <TAB>: indent.
-xnoremap <TAB>	>
+vnoremap <TAB>	>
 " <S-TAB>: unindent.
-xnoremap <S-TAB>  <
+vnoremap <S-TAB>  <
 
 " Indent
 nnoremap > >>
 nnoremap < <<
-xnoremap > >gv
-xnoremap < <gv
-vnoremap <C-t>	>gv
+vnoremap > >gv
+vnoremap < <gv
 
 " Insert mode keymappings: "{{{
 " <C-t>: insert tab.
@@ -250,13 +236,10 @@ inoremap <silent><C-a>	<C-o>^
 "ciyテキストオブジェクト的にカーソルが単語内のどこにあってもヤンクした文字列と置換
 "必要ならn.で繰り返し実行
 nnoremap <silent> cy ce<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
-"vnoremap <silent> cy c<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 nnoremap <silent> ciy ciw<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
 
 " 選択した文字列を置換
 vnoremap s "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
-"s*でカーソル下のキーワードを置換
-"nnoremap <expr> s* ':%substitute/\<' . expand('<cword>') . '\>/'
 
 " Like gv, but select the last changed text.
 nnoremap gc  `[v`]
@@ -265,7 +248,6 @@ cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
 
 "----------------------------------------
 " command
-command!				 Kwbd		let kwbd_bn= bufnr("%")|enew|exe "bd ".kwbd_bn|unlet kwbd_bn
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 autocmd FileType objc setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
 autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
@@ -320,7 +302,7 @@ let g:MyGrep_RecursiveMode = 1
 if os=="win"
 	let qfixmemo_dir = 'D:\dev\Dropbox\qfixmemo'
 endif
-if os=="mac" || os=="linux"
+if os=="macvim" || os=="linux"
 	let qfixmemo_dir = '~/Dropbox/qfixmemo'
 endif
 
@@ -475,14 +457,15 @@ endfunction
 " vim-filer.vim
 " K ディレクトリ作成
 " i ファイル作成
-" I 特定ディレクトリへジャンプ
+" I 特定ディレクトリへ異動
 " r リネーム
 " dd 削除
 " Cc コピー
 " Cp 貼り付け
 " <C-J> 履歴
 autocmd FileType vimfiler call s:vimfiler_my_settings()
-function! s:vimfiler_my_settings() " ESCキーを押すと終了する
+function! s:vimfiler_my_settings()
+  " ESCキーを押すと終了する
   nmap <silent><buffer> <C-[> q
   nmap <silent><buffer> <ESC> q
   nunmap <buffer> j
@@ -535,16 +518,12 @@ helptags ~/.vim/doc
 set helplang=ja,en
 
 "------------------------------------
-" vim-repeat
-silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
-
 " Improved increment.
 nmap <C-a> <SID>(increment)
 nmap <C-x> <SID>(decrement)
-nnoremap <silent> <SID>(increment)	  :AddNumbers 1<CR>
+nnoremap <silent> <SID>(increment)	 :AddNumbers 1<CR>
 nnoremap <silent> <SID>(decrement)	 :AddNumbers -1<CR>
-command! -range -nargs=1 AddNumbers
-	  \ call s:add_numbers((<line2>-<line1>+1) * eval(<args>))
+command! -range -nargs=1 AddNumbers call s:add_numbers((<line2>-<line1>+1) * eval(<args>))
 function! s:add_numbers(num)
   let prev_line = getline('.')[: col('.')-1]
   let next_line = getline('.')[col('.') :]
@@ -555,9 +534,7 @@ function! s:add_numbers(num)
 		  \ printf('%0'.len(prev_num).'d',
 		  \    max([0, prev_num . next_num + a:num])) . next_line[len(next_num):]
   else
-	let new_line = prev_line . substitute(next_line, '\d\+',
-		  \ "\\=printf('%0'.len(submatch(0)).'d',
-		  \			max([0, submatch(0) + a:num]))", '')
+	let new_line = prev_line . substitute(next_line, '\d\+', "\\=printf('%0'.len(submatch(0)).'d', max([0, submatch(0) + a:num]))", '')
   endif
 
   if getline('.') !=# new_line
@@ -603,6 +580,7 @@ nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gc :diffoff!<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
+nnoremap <silent> <Space>gh :Gdiff HEAD~~<CR>zR<C-W>hgg]c
 
 "------------------------------------
 " JDoc
@@ -614,29 +592,38 @@ autocmd FileType php nnoremap <silent> <Space>c :call PhpJDoc()<CR>
 " param summary: Summary of the function
 " param args: list of arguments' name
 function! AddJDocComment(summary, args)
-    let c = indent(".") / &tabstop
-    let top = a:firstline - 1 
-    let l = a:firstline - 1 
-    let s = ''
-    while len(s) < (c) 
-    let s = s . "\t"
-    endwhile
-       
-    call append(l, s . '/**')
-    let l+=1
-    call append(l, s . ' * ' . a:summary)
-    let l+=1
-       
-    for arg in a:args
-        call append(l, s . ' * @param mixed ' . matchstr(arg, '[^$].*') . ' ')
-        let l+=1
-    endfor
+	let c = indent(".") / &tabstop
+	let top = a:firstline - 1 
+	let l = a:firstline - 1 
+	let s = ''
+	while len(s) < (c) 
+		let s = s . "\t"
+	endwhile
 
-    "call append(l, s . ' * @return ')
-    let l+=1
-    call append(l, s . ' */')
+	call append(l, s . '/**')
+	let l+=1
+	call append(l, s . ' * ' . a:summary)
+	let l+=1
+	call append(l, s . ' * ' . a:summary)
+	let l+=1
 
-    call cursor(top+2, 80) 
+	for arg in a:args
+		let arg_name = matchstr(arg, '.*')
+		call append(l, s . ' * @param  array ' . arg_name . ' ')
+		let l+=1
+		if arg_name == '$params'
+			call append(l, s . ' * @param  id    ' . arg_name . '.user_id ユーザーID')
+			let l+=1
+		endif
+	endfor
+
+	call append(l, s . ' * @return void ' . a:summary)
+	let l+=1
+
+	call append(l, s . ' */')
+
+	call cursor(top+2, 80) 
+	call feedkeys('A', 'n')
 endfunction
 
 " Insert JDoc Comment in Js source code
@@ -644,9 +631,17 @@ function! JsJDoc()
     let args = split(matchstr(getline('.'), 'function(\zs.*\ze)'),' *, *')
     call AddJDocComment('', args)
 endfunction
-
 " Insert JDoc Comment in PHP source code
 function! PhpJDoc()
     let args = split(matchstr(getline('.'), 'function [^(]*(\zs.*\ze)'),' *, *')
     call AddJDocComment('', args)
 endfunction
+
+function! PhpVal()
+	let input = substitute(@+,'.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*',"'\7' => '\3',",'')
+	let pos = getpos(".")
+	execute ":normal O" . input
+	call setpos('.', pos)
+endfunction
+
+nnoremap <silent> <Space>v m"Pm'"mv'm:s/.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*/'\7' => '\3',/<CR>gv:Align =><CR><CR>gv=:noh<CR>

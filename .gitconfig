@@ -33,9 +33,13 @@
     pl = pull
     pr = pull --rebase
     ps = push
-    s = status
     st = status
     ss = stash
+    slog = log --no-merges --date=short --pretty='format:%C(yellow)%h %C(green)%cd %C(cyan)%an%C(red)%d %C(reset)%s'
+    vslog = log --no-merges --date=short --pretty='format:%h %cd %an%d %s'
+    reset-head = reset --soft
+    reset-index = reset --mixed
+    reset-work = reset --hard
 
 [core]
     autocrlf = false
