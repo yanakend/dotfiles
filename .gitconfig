@@ -1,6 +1,6 @@
 [user]
-	name = 
-	email = 
+	name = yanagi_kenji
+	email = yanagi_kenji@griphone.co.jp
 [core]
     excludesfile = /Users/cp0008/.gitignore_global
 [difftool "sourcetree"]
@@ -63,3 +63,5 @@
 
 [help]
     autocorrect = 10
+[push]
+	default = current

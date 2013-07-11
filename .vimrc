@@ -7,7 +7,7 @@ if has('vim_starting')
 endif
 
 " originalrepos on github
-"自動でリポジトリと同期するプラグイン
+" 自動でリポジトリと同期するプラグイン
 NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
 NeoBundle 'git://github.com/Shougo/vimproc.git', {
 	\	'build': {
@@ -213,6 +213,8 @@ vnoremap < <gv
 " Insert mode keymappings:
 " <C-d>: delete char.
 inoremap <C-d>	<Del>
+" <C-t>: insert tab.
+inoremap <C-t>  <C-v><TAB>
 
 "ヤンクした文字列とカーソル位置の単語を置換する vim bible p123
 "cy カーソル位置移行の文字列とヤンクした単語を置換
@@ -237,6 +239,7 @@ autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal ex
 autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
 autocmd FileType html setlocal tabstop=2 shiftwidth=2
 autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
+autocmd FileType tpl setlocal tabstop=2 shiftwidth=2
 autocmd FileType css setlocal tabstop=2 shiftwidth=2
 
 "--------------------------------------------------------------------------------
@@ -536,8 +539,8 @@ set listchars=tab:.\
 nnoremap <silent> <Space>gb :Gblame<CR>
 nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gr :Gread<CR>
-nnoremap <silent> <Space>gc :diffoff!<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
+
 nnoremap <silent> <Space>gh :Gdiff HEAD~~<CR>zR<C-W>hgg]c
 
 "------------------------------------
@@ -605,11 +608,19 @@ function! PhpJDoc()
     call AddJDocComment('', args)
 endfunction
 
-function! PhpVal()
-	let input = substitute(@+,'.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*',"'\7' => '\3',",'')
-	let pos = getpos(".")
-	execute ":normal O" . input
-	call setpos('.', pos)
+function! ValidatePhp()
+	echo 'a'
 endfunction
 
-nnoremap <silent> <Space>v m"Pm'"mv'm:s/.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*/'\7' => '\3',/<CR>gv:Align =><CR><CR>gv=:noh<CR>
+function! Yml2Array()
+	let input = substitute(@+,'.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*',"'\7' => '\3',",'')
+	
+endfunction
+
+" 
+"
+"
+nnoremap <silent> <Space>cv m"Pm''"v'':s/.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*/'\7' => '\3',/<CR>gv:Align =><CR><CR>gv=:noh<CR>
+vnoremap <silent> <Space>cc :s/\(\w\+\)[ ]*:[ '"]*\(\w\+\)['"]*/'\1' => \2,/<CR>==:noh<CR>
+
+
