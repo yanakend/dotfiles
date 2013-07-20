@@ -256,8 +256,6 @@ autocmd FileType css setlocal tabstop=2 shiftwidth=2
 
 "----------------------------------------
 " quickrun.vim
-"let g:quickrun_no_default_key_mappings = 0
-"silent! nnoremap <Space>r <Plug>(quickrun)
 if !exists("g:quickrun_config")
 	let g:quickrun_config={}
 endif
@@ -269,9 +267,9 @@ let g:quickrun_config["_"] = {
 	\ "outputter" : "error",
 \ }
 let $JS_CMD='node'
-nnoremap <silent> <Space>tr  :e $HOME/.vim/test.rb<CR>
-nnoremap <silent> <Space>tp  :e $HOME/.vim/test.php<CR>
-nnoremap <silent> <Space>tj  :e $HOME/.vim/test.js<CR>
+function! Open(ft)
+	execute "e $HOME/.vim/test.".a:ft
+endfunction
 
 "----------------------------------------
 " qfixhowm.vim
@@ -305,9 +303,7 @@ endif
 
 "----------------------------------------
 " savevers.vim
-":VersDiff -
-":VersDiff +
-":VersDiff -c
+":VersDiff - :VersDiff + :VersDiff -c
 set patchmode=.clean			" バックアップファイルの設定savevers.vimのためにパッチモードにします
 let savevers_types = "*"		" カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
 let savevers_dirs = &backupdir	" バックアップファイルが書き込まれるディレクトリです
@@ -392,18 +388,10 @@ inoremap <expr><C-n> neocomplcache#manual_keyword_complete()
 " 入力モードで開始する
 " バッファ一覧	-auto-resize
 nnoremap <silent> <Space>b	:<C-u>Unite buffer -horizontal -direction=botright<CR>
-" ファイル一覧
-"nnoremap <silent> <Space>uf :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright file<CR>
-" レジスタ一覧
-nnoremap <silent> <Space>ur :<C-u>Unite -buffer-name=register -direction=botright register<CR>
 " 最近使用したファイル一覧
 nnoremap <silent> <Space>m	:<C-u>Unite file_mru -direction=botright<CR>
-" 常用セット
-nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright<CR>
-" 全部乗せ
-nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright buffer file_mru bookmark file<CR>
-"noremap <silent> <Space>uf :<C-u>Unite get_function -direction=botright<CR>
-
+" 関数一覧
+nnoremap <silent> <Space>f :<C-u>Unite get_function -direction=botright<CR>
 " unite.vim上でのキーマッピング
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
@@ -412,6 +400,7 @@ function! s:unite_my_settings()
   " ESCキーを押すと終了する
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
   nmap <silent><buffer> <ESC> <Plug>(unite_exit)
+  nunmap <silent><buffer> N
 endfunction
 
 "----------------------------------------
@@ -442,17 +431,6 @@ let g:vimfiler_safe_mode_by_default = 0
 " デフォルトでvim開く
 call vimfiler#set_execute_file('_', 'vim')
 nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
-
-"----------------------------------------
-" vimshell setting
-let g:vimshell_interactive_update_time = 10
-let g:vimshell_prompt = $USERNAME."% "
-" vimshell map
-nnoremap <silent> <Space>s :VimShellCurrentDir<CR>
-autocmd FileType vimshell call vimshell#hook#add('chpwd', 'my_chpwd', 'g:my_chpwd')
-function! g:my_chpwd(args, context)
-	call vimshell#execute('ls')
-endfunction
 
 "------------------------------------
 " EnhCommentify.vim
@@ -526,12 +504,12 @@ nnoremap <C-p> :cp<CR>
 " 空白→タブ変換
 set list
 set listchars=tab:.\ 
-"function! s:CleanSpace()
-"  let cursor = getpos(".")
-"  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
-"  call setpos(".", cursor)
-"  unlet cursor
-"endfunction
+function! s:CleanSpace()
+  let cursor = getpos(".")
+  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
+  call setpos(".", cursor)
+  unlet cursor
+endfunction
 "autocmd BufWritePre *.php call <SID>CleanSpace()
 
 "------------------------------------
