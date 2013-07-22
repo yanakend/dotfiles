@@ -9,8 +9,6 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 	trustExitCode = true
-[alias]
-	graph = log --graph --date-order -C -M --pretty=format:\"<%h> %ad [%an] %Cgreen%d%Creset %s\" --all --date=short
 [color]
 	ui = true
 [diff]
@@ -29,14 +27,13 @@
     co = checkout
     d = diff
     h = help
-    graph = log --graph --date-order -C -M --pretty=format:\"<%h> %ad [%an] %Cgreen%d%Creset %s\" --all --date=short
+    graph = log --graph --date-order -C -M --pretty=format:\"%h [%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --all --date=short
     pl = pull
     pr = pull --rebase
     ps = push
-    st = status
-    ss = stash
-    slog = log --no-merges --date=short --pretty='format:%C(yellow)%h %C(green)%cd %C(cyan)%an%C(red)%d %C(reset)%s'
-    vslog = log --no-merges --date=short --pretty='format:%h %cd %an%d %s'
+    st = status -sb
+    slog = log --no-merges --date=iso --pretty='format:%h %C(green)[%cd] %C(yellow)%an %C(cyan reverse)%d%C(reset)%s'
+    ncslog = log  -n 10 --no-merges --date=iso --pretty='format:%h [%cd] %an %d%s'
     reset-head = reset --soft
     reset-index = reset --mixed
     reset-work = reset --hard
@@ -60,8 +57,11 @@
     showbranch = auto
     status = auto
     ui = auto
+	current = yellow reverse
 
 [help]
     autocorrect = 10
+[push]
+	default = current
 [push]
 	default = current

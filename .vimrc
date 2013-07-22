@@ -27,15 +27,15 @@ NeoBundle 'git://github.com/vim-scripts/savevers.vim.git'
 NeoBundle 'git://github.com/Lokaltog/vim-powerline.git', 'develop'
 NeoBundle 'git://github.com/vim-scripts/sudo.vim.git'
 NeoBundle 'git://github.com/acustodioo/vim-enter-indent.git'
-NeoBundle "git://github.com/tmhedberg/matchit.git"
 NeoBundle 'git://github.com/tpope/vim-fugitive.git'
 NeoBundle 'git://github.com/vim-scripts/gtags.vim.git'
-NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 NeoBundle 'git://github.com/scrooloose/syntastic.git'
 NeoBundle 'git://github.com/vim-scripts/Align.git'
-NeoBundle 'git://github.com/kien/ctrlp.vim.git'
 NeoBundle 'git://github.com/othree/eregex.vim.git'
 NeoBundle 'git://github.com/Shougo/neocomplcache.git'
+"NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
+"NeoBundle 'git://github.com/tmhedberg/matchit.git'
+"NeoBundle 'git://github.com/kien/ctrlp.vim.git'
 "NeoBundle 'git://github.com/Shougo/neosnippet.git'
 
 "--------------------------------------
@@ -100,6 +100,7 @@ set diffopt=filler,vertical,foldcolumn:0
 set fileformats=unix,dos,mac
 set textwidth=0
 set nofoldenable
+"let php_folding=1
 
 " Don't redraw while macro executing.
 set lazyredraw
@@ -239,7 +240,7 @@ autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal ex
 autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
 autocmd FileType html setlocal tabstop=2 shiftwidth=2
 autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
-autocmd FileType tpl setlocal tabstop=2 shiftwidth=2
+autocmd FileType smarty setlocal tabstop=2 shiftwidth=2
 autocmd FileType css setlocal tabstop=2 shiftwidth=2
 
 "--------------------------------------------------------------------------------
@@ -402,7 +403,7 @@ nnoremap <silent> <Space>m	:<C-u>Unite file_mru -direction=botright<CR>
 nnoremap <silent> <Space>uu :<C-u>Unite buffer file_mru -direction=botright<CR>
 " 全部乗せ
 nnoremap <silent> <Space>ua :<C-u>UniteWithBufferDir -buffer-name=files -direction=botright buffer file_mru bookmark file<CR>
-"noremap <silent> <Space>uf :<C-u>Unite get_function -direction=botright<CR>
+noremap <silent> <Space>uf :<C-u>Unite get_function -direction=botright<CR>
 
 " unite.vim上でのキーマッピング
 autocmd FileType unite call s:unite_my_settings()
@@ -445,14 +446,14 @@ nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 
 "----------------------------------------
 " vimshell setting
-let g:vimshell_interactive_update_time = 10
-let g:vimshell_prompt = $USERNAME."% "
-" vimshell map
-nnoremap <silent> <Space>s :VimShellCurrentDir<CR>
-autocmd FileType vimshell call vimshell#hook#add('chpwd', 'my_chpwd', 'g:my_chpwd')
-function! g:my_chpwd(args, context)
-	call vimshell#execute('ls')
-endfunction
+"let g:vimshell_interactive_update_time = 10
+"let g:vimshell_prompt = $USERNAME."% "
+"" vimshell map
+"nnoremap <silent> <Space>s :VimShellCurrentDir<CR>
+"autocmd FileType vimshell call vimshell#hook#add('chpwd', 'my_chpwd', 'g:my_chpwd')
+"function! g:my_chpwd(args, context)
+"    call vimshell#execute('ls')
+"endfunction
 
 "------------------------------------
 " EnhCommentify.vim
@@ -538,20 +539,19 @@ set listchars=tab:.\
 " vim-fugitive
 nnoremap <silent> <Space>gb :Gblame<CR>
 nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
+nnoremap <silent> <Space>gh :Gdiff ~1<CR>zR<C-W>hgg]c
+nnoremap <silent> <Space>gl :!git ncslog <C-R>%<CR>
 nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
 
-nnoremap <silent> <Space>gh :Gdiff HEAD~~<CR>zR<C-W>hgg]c
-
 "------------------------------------
 " ctrlp.vim
-let g:ctrlp_clear_cache_on_exit = 0   " 終了時キャッシュをクリアしない
-let g:ctrlp_mruf_max            = 500 " MRUの最大記録数
+"let g:ctrlp_clear_cache_on_exit = 0   " 終了時キャッシュをクリアしない
+"let g:ctrlp_mruf_max            = 500 " MRUの最大記録数
 
 "------------------------------------
-" eregex.vim
+" eregex.vim :M/ で起動
 let g:eregex_default_enable = 0
-nnoremap <Leader>/ :M/
 
 "------------------------------------
 " JDoc
@@ -602,25 +602,25 @@ function! JsJDoc()
     let args = split(matchstr(getline('.'), 'function(\zs.*\ze)'),' *, *')
     call AddJDocComment('', args)
 endfunction
+
 " Insert JDoc Comment in PHP source code
 function! PhpJDoc()
     let args = split(matchstr(getline('.'), 'function [^(]*(\zs.*\ze)'),' *, *')
     call AddJDocComment('', args)
 endfunction
 
-function! ValidatePhp()
-	echo 'a'
+" コメントからバリデートへ置換
+function! Com2Val()
+	let line = substitute(getline('.'), '.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*', "'".'\7'."'"." => "."'".'\3'."',", '')
+	call setline('.', line)
 endfunction
 
+" ymlから配列形式へ置換
 function! Yml2Array()
-	let input = substitute(@+,'.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*',"'\7' => '\3',",'')
-	
+	let line = substitute(getline('.'), '\([0-9A-Za-z_-]\+\)[ ]*:[ '."'".'"]*\([0-9A-Za-z_-]\+\)['."'".'"]*', "'".'\1'."'"." => "."'".'\2'."',", '')
+	call setline('.', line)
 endfunction
 
-" 
-"
-"
-nnoremap <silent> <Space>cv m"Pm''"v'':s/.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*/'\7' => '\3',/<CR>gv:Align =><CR><CR>gv=:noh<CR>
-vnoremap <silent> <Space>cc :s/\(\w\+\)[ ]*:[ '"]*\(\w\+\)['"]*/'\1' => \2,/<CR>==:noh<CR>
-
-
+"------------------------------------
+" syntastic.vim
+let g:syntastic_ignore_files=['\.tpl$']
