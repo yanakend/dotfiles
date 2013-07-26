@@ -33,6 +33,9 @@ NeoBundle 'git://github.com/scrooloose/syntastic.git'
 NeoBundle 'git://github.com/vim-scripts/Align.git'
 NeoBundle 'git://github.com/othree/eregex.vim.git'
 NeoBundle 'git://github.com/Shougo/neocomplcache.git'
+NeoBundle 'git://github.com/sjl/gundo.vim'
+NeoBundle 'git://github.com/Lokaltog/vim-easymotion'
+NeoBundle 'git://github.com/gregsexton/gitv'
 "NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 "NeoBundle 'git://github.com/tmhedberg/matchit.git'
 "NeoBundle 'git://github.com/kien/ctrlp.vim.git'
@@ -237,7 +240,7 @@ cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 autocmd FileType objc setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
 autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
-autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
+autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2
 autocmd FileType html setlocal tabstop=2 shiftwidth=2
 autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
 autocmd FileType smarty setlocal tabstop=2 shiftwidth=2
@@ -401,7 +404,7 @@ function! s:unite_my_settings()
   " ESCキーを押すと終了する
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
   nmap <silent><buffer> <ESC> <Plug>(unite_exit)
-  nunmap <silent><buffer> N
+"  nunmap <silent><buffer> N
 endfunction
 
 "----------------------------------------
@@ -613,3 +616,41 @@ endfunction
 "------------------------------------
 " syntastic.vim
 let g:syntastic_ignore_files=['\.tpl$']
+
+"------------------------------------
+" 
+function! CSVH(x)
+    execute 'match Keyword /^\([^,]*,\)\{'.a:x.'}\zs[^,]*/'
+    execute 'normal ^'.a:x.'f,'
+endfunction
+command! -nargs=1 Csvhl :call CSVH(<args>)
+
+" Gundoの起動
+nmap U :<C-u>GundoToggle<CR>
+
+" easy-motionのprefixキーバインドを <SPACE>eにする。
+"let g:EasyMotion_leader_key = '<SPACE>e'
+
+autocmd FileType gitv call s:my_gitv_settings()
+function! s:my_gitv_settings()
+	" s:my_gitv_settings 内
+	setlocal iskeyword+=/,-,.
+	nnoremap <silent><buffer> C :<C-u>Git checkout <C-r><C-w><CR>
+	nnoremap <buffer> <Space>rb :<C-u>Git rebase <C-r>=GitvGetCurrentHash()<CR><Space>
+	nnoremap <buffer> <Space>R :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>
+	nnoremap <buffer> <Space>h :<C-u>Git cherry-pick <C-r>=GitvGetCurrentHash()<CR><CR>
+	nnoremap <buffer> <Space>rh :<C-u>Git reset --hard <C-r>=GitvGetCurrentHash()<CR>
+	nnoremap <silent><buffer> t :<C-u>windo call <SID>toggle_git_folding()<CR>1<C-w>w
+endfunction
+
+" これは外に定義!
+function! s:gitv_get_current_hash()
+  return matchstr(getline('.'), '\[\zs.\{7\}\ze\]$')
+endfunction
+
+autocmd FileType git setlocal nofoldenable foldlevel=0
+function! s:toggle_git_folding()
+  if &filetype ==# 'git'
+    setlocal foldenable!
+  endif
+endfunction
