@@ -36,7 +36,6 @@ NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/sjl/gundo.vim'
 NeoBundle 'git://github.com/Lokaltog/vim-easymotion'
 NeoBundle 'git://github.com/gregsexton/gitv'
-"NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 "NeoBundle 'git://github.com/tmhedberg/matchit.git'
 "NeoBundle 'git://github.com/kien/ctrlp.vim.git'
 "NeoBundle 'git://github.com/Shougo/neosnippet.git'
@@ -63,6 +62,7 @@ set nocompatible					" viとの互換性を取らない
 set t_Co=256						" 256色に
 " カラースキーム設定
 colorscheme desert
+hi SpecialKey    ctermfg=darkgreen
 
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
@@ -529,12 +529,32 @@ endfunction
 
 "------------------------------------
 " vim-fugitive
+let g:Gitv_DoNotMapCtrlKey = 0
 nnoremap <silent> <Space>gb :Gblame<CR>
 nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gh :Gdiff ~1<CR>zR<C-W>hgg]c
-nnoremap <silent> <Space>gl :!git ncslog <C-R>%<CR>
+nnoremap <silent> <Space>gl :Gitv!<CR>
 nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
+
+"------------------------------------
+" gitv
+"  D diff
+autocmd FileType gitv call s:my_gitv_settings()
+function! s:my_gitv_settings()
+	" s:my_gitv_settings 内
+	setlocal iskeyword+=/,-,.
+	nnoremap <silent><buffer> C  :<C-u>Git checkout <C-r><C-w><CR>
+	nnoremap <silent><buffer> Rb :<C-u>Git rebase <C-r>=GitvGetCurrentHash()<CR><Space>
+	nnoremap <silent><buffer> Rv :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>
+	nnoremap <silent><buffer> P  :<C-u>Git cherry-pick <C-r>=GitvGetCurrentHash()<CR><CR>
+	nnoremap <silent><buffer> Rh :<C-u>Git reset --hard <C-r>=GitvGetCurrentHash()<CR>
+endfunction
+
+" これは外に定義!
+function! s:gitv_get_current_hash()
+  return matchstr(getline('.'), '\[\zs.\{7\}\ze\]$')
+endfunction
 
 "------------------------------------
 " ctrlp.vim
@@ -603,7 +623,7 @@ endfunction
 
 " コメントからバリデートへ置換
 function! Com2Val()
-	let line = substitute(getline('.'), '.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*', "'".'\7'."'"." => "."'".'\3'."',", '')
+	let line = substitute(getline('.'), '.*@\(\w\+\)\(\W\+\)\([0-9a-zA-Z,]\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*', "'".'\7'."'"." => "."'".'\3'."',", '')
 	call setline('.', line)
 endfunction
 
@@ -628,29 +648,3 @@ command! -nargs=1 Csvhl :call CSVH(<args>)
 " Gundoの起動
 nmap U :<C-u>GundoToggle<CR>
 
-" easy-motionのprefixキーバインドを <SPACE>eにする。
-"let g:EasyMotion_leader_key = '<SPACE>e'
-
-autocmd FileType gitv call s:my_gitv_settings()
-function! s:my_gitv_settings()
-	" s:my_gitv_settings 内
-	setlocal iskeyword+=/,-,.
-	nnoremap <silent><buffer> C :<C-u>Git checkout <C-r><C-w><CR>
-	nnoremap <buffer> <Space>rb :<C-u>Git rebase <C-r>=GitvGetCurrentHash()<CR><Space>
-	nnoremap <buffer> <Space>R :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>
-	nnoremap <buffer> <Space>h :<C-u>Git cherry-pick <C-r>=GitvGetCurrentHash()<CR><CR>
-	nnoremap <buffer> <Space>rh :<C-u>Git reset --hard <C-r>=GitvGetCurrentHash()<CR>
-	nnoremap <silent><buffer> t :<C-u>windo call <SID>toggle_git_folding()<CR>1<C-w>w
-endfunction
-
-" これは外に定義!
-function! s:gitv_get_current_hash()
-  return matchstr(getline('.'), '\[\zs.\{7\}\ze\]$')
-endfunction
-
-autocmd FileType git setlocal nofoldenable foldlevel=0
-function! s:toggle_git_folding()
-  if &filetype ==# 'git'
-    setlocal foldenable!
-  endif
-endfunction
