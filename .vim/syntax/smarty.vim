@@ -20,10 +20,6 @@ syn case ignore
 
 runtime! syntax/html.vim
 
-"syn cluster htmlPreproc add=smartyUnZone
-
-"syn match smartyBlock contained "[\[\]]"
-"
 syn keyword smartyTagName capture config_load include include_php
 syn keyword smartyTagName insert if elseif else ldelim rdelim literal
 syn keyword smartyTagName php section sectionelse foreach foreachelse
@@ -38,26 +34,10 @@ syn keyword smartyModifier escape indent lower nl2br regex_replace replace
 syn keyword smartyModifier spacify string_format strip strip_tags truncate
 syn keyword smartyModifier upper wordwrap
 
-"syn keyword smartyInFunc neq eq
-"
-"syn keyword smartyProperty contained "file="
-"syn keyword smartyProperty contained "loop="
-"syn keyword smartyProperty contained "name="
-"syn keyword smartyProperty contained "include="
-"syn keyword smartyProperty contained "skip="
-"syn keyword smartyProperty contained "section="
-"
-"syn keyword smartyConstant "\$smarty"
-"
-"syn keyword smartyDot .
-"
-"syn region smartyZone matchgroup=Delimiter start="{" end="}" contains=smartyProperty, smartyString, smartyBlock, smartyTagName, smartyConstant, smartyInFunc, smartyModifier
-"
-"syn region  htmlString   contained start=+"+ end=+"+ contains=htmlSpecialChar,javaScriptExpression,@htmlPreproc,smartyZone
-"syn region  htmlString   contained start=+'+ end=+'+ contains=htmlSpecialChar,javaScriptExpression,@htmlPreproc,smartyZone
-"  syn region htmlLink start="<a\>\_[^>]*\<href\>" end="</a>"me=e-4 contains=@Spell,htmlTag,htmlEndTag,htmlSpecialChar,htmlPreProc,htmlComment,javaScript,@htmlPreproc,smartyZone
-"
-"
+syn clear htmlError
+syn region smartyZone start="{" end="}"  contains=smartyTagName, smartyModifier
+syn region htmlComment start=+{\*+    end=+\*}+ contains=@Spell
+
 if version >= 508 || !exists("did_smarty_syn_inits")
   if version < 508
     let did_smarty_syn_inits = 1
@@ -66,20 +46,14 @@ if version >= 508 || !exists("did_smarty_syn_inits")
     command -nargs=+ HiLink hi def link <args>
   endif
 
+  hi smartyZone guifg=White guibg=grey20
   HiLink smartyTagName Identifier
-"  HiLink smartyProperty Constant
-"  " if you want the text inside the braces to be colored, then
-"  " remove the comment in from of the next statement
-"  "HiLink smartyZone Include
+  HiLink smartyModifier Function
 "  HiLink smartyInFunc Function
 "  HiLink smartyBlock Constant
 "  HiLink smartyDot SpecialChar
-"  HiLink smartyModifier Function
   delcommand HiLink
 endif
-
-syn clear htmlError
-syn region htmlComment start=+{\*+    end=+\*}+ contains=@Spell
 
 let b:current_syntax = "smarty"
 

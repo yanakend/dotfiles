@@ -36,7 +36,6 @@ NeoBundle 'git://github.com/Shougo/neocomplcache.git'
 NeoBundle 'git://github.com/sjl/gundo.vim'
 NeoBundle 'git://github.com/Lokaltog/vim-easymotion'
 NeoBundle 'git://github.com/gregsexton/gitv'
-"NeoBundle 'git://github.com/vim-scripts/smarty.vim.git'
 "NeoBundle 'git://github.com/tmhedberg/matchit.git'
 "NeoBundle 'git://github.com/kien/ctrlp.vim.git'
 "NeoBundle 'git://github.com/Shougo/neosnippet.git'
@@ -63,6 +62,7 @@ set nocompatible					" viとの互換性を取らない
 set t_Co=256						" 256色に
 " カラースキーム設定
 colorscheme desert
+hi SpecialKey    ctermfg=darkgreen
 
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
@@ -529,12 +529,32 @@ endfunction
 
 "------------------------------------
 " vim-fugitive
+let g:Gitv_DoNotMapCtrlKey = 0
 nnoremap <silent> <Space>gb :Gblame<CR>
 nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gh :Gdiff ~1<CR>zR<C-W>hgg]c
-nnoremap <silent> <Space>gl :!git ncslog <C-R>%<CR>
+nnoremap <silent> <Space>gl :Gitv!<CR>
 nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
+
+"------------------------------------
+" gitv
+"  D diff
+autocmd FileType gitv call s:my_gitv_settings()
+function! s:my_gitv_settings()
+	" s:my_gitv_settings 内
+	setlocal iskeyword+=/,-,.
+	nnoremap <silent><buffer> C  :<C-u>Git checkout <C-r><C-w><CR>
+	nnoremap <silent><buffer> Rb :<C-u>Git rebase <C-r>=GitvGetCurrentHash()<CR><Space>
+	nnoremap <silent><buffer> Rv :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>
+	nnoremap <silent><buffer> P  :<C-u>Git cherry-pick <C-r>=GitvGetCurrentHash()<CR><CR>
+	nnoremap <silent><buffer> Rh :<C-u>Git reset --hard <C-r>=GitvGetCurrentHash()<CR>
+endfunction
+
+" これは外に定義!
+function! s:gitv_get_current_hash()
+  return matchstr(getline('.'), '\[\zs.\{7\}\ze\]$')
+endfunction
 
 "------------------------------------
 " ctrlp.vim
@@ -603,7 +623,7 @@ endfunction
 
 " コメントからバリデートへ置換
 function! Com2Val()
-	let line = substitute(getline('.'), '.*@\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*', "'".'\7'."'"." => "."'".'\3'."',", '')
+	let line = substitute(getline('.'), '.*@\(\w\+\)\(\W\+\)\([0-9a-zA-Z,]\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*', "'".'\7'."'"." => "."'".'\3'."',", '')
 	call setline('.', line)
 endfunction
 
@@ -618,34 +638,49 @@ endfunction
 let g:syntastic_ignore_files=['\.tpl$']
 
 "------------------------------------
-" easy-motion.vim
-let g:EasyMotion_leader_key = '<Leader>'
-
-"------------------------------------
-" 
-function! CSVH(x)
-    execute 'match Keyword /^\([^,]*,\)\{'.a:x.'}\zs[^,]*/'
-    execute 'normal ^'.a:x.'f,'
-endfunction
-command! -nargs=1 Csvhl :call CSVH(<args>)
-
 " Gundoの起動
 nmap U :<C-u>GundoToggle<CR>
 
-autocmd FileType gitv call s:my_gitv_settings()
-function! s:my_gitv_settings()
-	" s:my_gitv_settings 内
-	setlocal iskeyword+=/,-,.
-	nnoremap <buffer> <silent> C :<C-u>Git checkout <C-r><C-w><CR>
-	nnoremap <buffer> <Space>rb :<C-u>Git rebase <C-r>=GitvGetCurrentHash()<CR><Space>
-	nnoremap <buffer> <Space>R :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>
-	nnoremap <buffer> <Space>h :<C-u>Git cherry-pick <C-r>=GitvGetCurrentHash()<CR><CR>
-	nnoremap <buffer> <Space>rh :<C-u>Git reset --hard <C-r>=GitvGetCurrentHash()<CR>
-	nnoremap <buffer> <silent> t :<C-u>windo call <SID>toggle_git_folding()<CR>1<C-w>w
+
+" Anywhere SID.
+function! s:SID_PREFIX()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
 endfunction
 
-" 
-function! s:gitv_get_current_hash()
-  return matchstr(getline('.'), '\[\zs.\{7\}\ze\]$')
-endfunction
+" Set tabline.
+function! s:my_tabline()  "{{{
+  let s = ''
+  for i in range(1, tabpagenr('$'))
+    let bufnrs = tabpagebuflist(i)
+    let bufnr = bufnrs[tabpagewinnr(i) - 1]  " first window, first appears
+    let no = i  " display 0-origin tabpagenr.
+    let mod = getbufvar(bufnr, '&modified') ? '!' : ' '
+    let title = fnamemodify(bufname(bufnr), ':t')
+    let s .= '%'.i.'T'
+    let s .= '%#' . (i == tabpagenr() ? 'TabLineSel' : 'TabLine') . '#'
+    let s .= no . ':' . title
+    let s .= mod
+    let s .= '%#TabLineFill #'
+  endfor
+  let s .= '%#TabLineFill#%T%=%#TabLine#'
+  return s
+endfunction "}}}
+let &tabline = '%!'. s:SID_PREFIX() . 'my_tabline()'
+set showtabline=2 " 常にタブラインを表示
 
+" The prefix key.
+nnoremap    [Tag]   <Nop>
+" Tab jump
+nmap    t [Tag]
+" t1 で1番左のタブ、t2 で1番左から2番目のタブにジャンプ
+for n in range(1, 9)
+  execute 'nnoremap <silent> [Tag]'.n  ':<C-u>tabnext'.n.'<CR>'
+endfor
+" tc 新しいタブを一番右に作る
+map <silent> [Tag]c :tablast <bar> tabnew<CR>
+" tx タブを閉じる
+map <silent> [Tag]x :tabclose<CR>
+" tn 次のタブ
+map <silent> [Tag]n :tabnext<CR>
+" tp 前のタブ
+map <silent> [Tag]p :tabprevious<CR>

@@ -16,6 +16,7 @@
 !/install.sh
 !/install.bat
 !/.zsh
+!/syntax
 
 /.vim/bundle/*
 /.vim/test.*
