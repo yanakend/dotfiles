@@ -22,21 +22,21 @@
 	trustExitCode = true
 [alias]
     br = branch
-    ci = commit
-    cia = commit -a
+    a = add
+    c = commit
+    ca = commit -a
     co = checkout
     d = diff
+    ds = diff --staged
+    dt = difftool -d 
+    dts = difftool -d --staged 
     h = help
     graph = log --graph --date-order -C -M --pretty=format:\"%h [%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --all --date=short
     pl = pull
     pr = pull --rebase
     ps = push
-    st = status -sb
+    s = status -sb
     slog = log --no-merges --date=iso --pretty='format:%h %C(green)[%cd] %C(yellow)%an %C(cyan reverse)%d%C(reset)%s'
-    ncslog = log  -n 10 --no-merges --date=iso --pretty='format:%h [%cd] %an %d%s'
-    reset-head = reset --soft
-    reset-index = reset --mixed
-    reset-work = reset --hard
 
 [core]
     autocrlf = false

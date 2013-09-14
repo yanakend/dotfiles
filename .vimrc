@@ -8,37 +8,41 @@ endif
 
 " originalrepos on github
 " 自動でリポジトリと同期するプラグイン
-NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
-NeoBundle 'git://github.com/Shougo/vimproc.git', {
+NeoBundle 'Shougo/neobundle.vim.git'
+NeoBundle 'Shougo/vimproc.git', {
 	\	'build': {
 	\	  'cygwin': 'make -f make_cygwin.mak',
 	\	  'mac':	'make -f make_mac.mak',
 	\	  'unix':	'make -f make_unix.mak',
 	\	},
 	\ }
-NeoBundle 'git://github.com/Shougo/unite.vim.git'
-NeoBundle 'git://github.com/Shougo/vimfiler.git'
-NeoBundle 'git://github.com/Shougo/vimshell.git'
-NeoBundle 'git://github.com/thinca/vim-quickrun.git'
-NeoBundle 'git://github.com/vim-jp/vimdoc-ja.git'
-NeoBundle 'git://github.com/fuenor/qfixhowm.git'
-NeoBundle 'git://github.com/vim-scripts/EnhCommentify.vim.git'
-NeoBundle 'git://github.com/vim-scripts/savevers.vim.git'
-NeoBundle 'git://github.com/Lokaltog/vim-powerline.git', 'develop'
-NeoBundle 'git://github.com/vim-scripts/sudo.vim.git'
-NeoBundle 'git://github.com/acustodioo/vim-enter-indent.git'
-NeoBundle 'git://github.com/tpope/vim-fugitive.git'
-NeoBundle 'git://github.com/vim-scripts/gtags.vim.git'
-NeoBundle 'git://github.com/scrooloose/syntastic.git'
-NeoBundle 'git://github.com/vim-scripts/Align.git'
-NeoBundle 'git://github.com/othree/eregex.vim.git'
-NeoBundle 'git://github.com/Shougo/neocomplcache.git'
-NeoBundle 'git://github.com/sjl/gundo.vim'
-NeoBundle 'git://github.com/Lokaltog/vim-easymotion'
-NeoBundle 'git://github.com/gregsexton/gitv'
-"NeoBundle 'git://github.com/tmhedberg/matchit.git'
-"NeoBundle 'git://github.com/kien/ctrlp.vim.git'
-"NeoBundle 'git://github.com/Shougo/neosnippet.git'
+NeoBundle 'Shougo/unite.vim.git'
+NeoBundle 'Shougo/vimfiler.git'
+NeoBundle 'Shougo/vimshell.git'
+
+NeoBundle 'thinca/vim-quickrun.git'
+NeoBundle 'vim-jp/vimdoc-ja.git'
+NeoBundle 'fuenor/qfixhowm.git'
+NeoBundle 'vim-scripts/EnhCommentify.vim.git'
+NeoBundle 'vim-scripts/savevers.vim.git'
+NeoBundle 'vim-scripts/sudo.vim.git'
+NeoBundle 'acustodioo/vim-enter-indent.git'
+NeoBundle 'vim-scripts/gtags.vim.git'
+NeoBundle 'scrooloose/syntastic.git'
+NeoBundle 'vim-scripts/Align.git'
+NeoBundle 'othree/eregex.vim.git'
+NeoBundle 'Shougo/neocomplcache.git'
+NeoBundle 'sjl/gundo.vim'
+NeoBundle 'Lokaltog/vim-easymotion.git'
+NeoBundle 'gregsexton/gitv.git'
+NeoBundle 'vim-scripts/SQLUtilities.git'
+NeoBundle 'tpope/vim-fugitive.git'
+NeoBundle 'Lokaltog/vim-powerline.git', 'develop'
+NeoBundle 'kien/ctrlp.vim.git'
+"NeoBundle 'bling/vim-airline'
+"NeoBundle 'itchyny/lightline.vim'
+"NeoBundle 'tmhedberg/matchit.git'
+"NeoBundle 'Shougo/neosnippet.git'
 
 "--------------------------------------
 " Get running OS
@@ -498,22 +502,16 @@ endfunction
 
 "------------------------------------
 " gtags
-let Gtags_No_Auto_Jump = 1
-let Gtags_Auto_Update = 1
 " カーソル以下の定義元を探す
-nnoremap <Space>td :Gtags <C-r><C-w><CR>
+nnoremap <Space>td :Gtags <C-r><C-w><CR><C-w><C-w>
 " カーソル以下の使用箇所を探す
-nnoremap <Space>tr :Gtags -r <C-r><C-w><CR>
+nnoremap <Space>tr :Gtags -r <C-r><C-w><CR><C-w><C-w>
 " Grep 準備
 nnoremap <Space>tg :Gtags -g 
 " このファイルの関数一覧
 nnoremap <Space>tf :Gtags -f %<CR>
 " 検索結果Windowを閉じる
 nnoremap <C-q> :ccl<CR>
-" 次の検索結果
-nnoremap <C-n> :cn<CR>
-" 前の検索結果
-nnoremap <C-p> :cp<CR>
 
 "------------------------------------
 " 空白→タブ変換
@@ -532,7 +530,7 @@ endfunction
 let g:Gitv_DoNotMapCtrlKey = 0
 nnoremap <silent> <Space>gb :Gblame<CR>
 nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
-nnoremap <silent> <Space>gh :Gdiff ~1<CR>zR<C-W>hgg]c
+nnoremap <silent> <Space>gD :Gdiff HEAD<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gl :Gitv!<CR>
 nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
@@ -672,16 +670,16 @@ set showtabline=2 " 常にタブラインを表示
 nnoremap    [Tag]   <Nop>
 nmap    t [Tag]
 " Tab jump
+" t1 で1番左のタブ、t2 で1番左から2番目のタブにジャンプ
 for n in range(1, 9)
   execute 'nnoremap <silent> [Tag]'.n  ':<C-u>tabnext'.n.'<CR>'
 endfor
-" t1 で1番左のタブ、t2 で1番左から2番目のタブにジャンプ
-
-map <silent> [Tag]c :tablast <bar> tabnew<CR>
 " tc 新しいタブを一番右に作る
-map <silent> [Tag]x :tabclose<CR>
+map <silent> [Tag]c :tablast <bar> tabnew<CR>
 " tx タブを閉じる
-map <silent> [Tag]n :tabnext<CR>
+map <silent> [Tag]x :tabclose<CR>
 " tn 次のタブ
-map <silent> [Tag]p :tabprevious<CR>
+map <silent> [Tag]n :tabnext<CR>
 " tp 前のタブ
+map <silent> [Tag]p :tabprevious<CR>
+
