@@ -1,25 +1,6 @@
-[user]
-	name = yanagi_kenji
-	email = yanagi_kenji@griphone.co.jp
-[core]
-    excludesfile = /Users/cp0008/.gitignore_global
-[difftool "sourcetree"]
-	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
-	trustExitCode = true
-[color]
-	ui = true
-[diff]
-	tool = diffmerge
-[difftool "diffmerge"]
-	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
-[merge]
-	tool = diffmerge
-[mergetool "diffmerge"]
-	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
-	trustExitCode = true
+[include]
+    path = ~/.gitconfig.local
+
 [alias]
     br = branch
     a = add
@@ -42,10 +23,7 @@
     autocrlf = false
     editor = /usr/bin/vim
     excludesfile = ~/.gitignore
-    #pager = vimcat
-    #pager = vimpager
     pager = less -R
-    #pager = less.sh
     quotepath = false
 
 [color]
@@ -61,7 +39,6 @@
 
 [help]
     autocorrect = 10
-[push]
-	default = current
+
 [push]
 	default = current
