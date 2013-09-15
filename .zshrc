@@ -99,11 +99,6 @@ myps ()
 # .zshrcローカル設定ファイル読み込み
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
-# ログイン時にtmux 起動
-if [ $SHLVL = 1 ]; then
-  tmux attach || tmux
-fi
-
 # cd git-root-dir
 function git-root() {
   if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
