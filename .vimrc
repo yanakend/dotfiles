@@ -37,10 +37,10 @@ NeoBundle 'Lokaltog/vim-easymotion.git'
 NeoBundle 'gregsexton/gitv.git'
 NeoBundle 'vim-scripts/SQLUtilities.git'
 NeoBundle 'tpope/vim-fugitive.git'
-NeoBundle 'Lokaltog/vim-powerline.git', 'develop'
+"NeoBundle 'Lokaltog/vim-powerline.git', 'develop'
 NeoBundle 'kien/ctrlp.vim.git'
 "NeoBundle 'bling/vim-airline'
-"NeoBundle 'itchyny/lightline.vim'
+NeoBundle 'itchyny/lightline.vim'
 "NeoBundle 'tmhedberg/matchit.git'
 "NeoBundle 'Shougo/neosnippet.git'
 
@@ -275,9 +275,10 @@ let g:quickrun_config["_"] = {
 	\ "outputter" : "error",
 \ }
 let $JS_CMD='node'
-function! Open(ft)
-	execute "e $HOME/.vim/test.".a:ft
+function! QuickTest(arg1)
+	execute "e $HOME/.vim/test.".a:arg1
 endfunction
+command! -nargs=1 Quick call QuickTest(<f-args>)
 
 "----------------------------------------
 " qfixhowm.vim
@@ -440,17 +441,6 @@ let g:vimfiler_safe_mode_by_default = 0
 call vimfiler#set_execute_file('_', 'vim')
 nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 
-"----------------------------------------
-" vimshell setting
-"let g:vimshell_interactive_update_time = 10
-"let g:vimshell_prompt = $USERNAME."% "
-"" vimshell map
-"nnoremap <silent> <Space>s :VimShellCurrentDir<CR>
-"autocmd FileType vimshell call vimshell#hook#add('chpwd', 'my_chpwd', 'g:my_chpwd')
-"function! g:my_chpwd(args, context)
-"    call vimshell#execute('ls')
-"endfunction
-
 "------------------------------------
 " EnhCommentify.vim
 function! EnhCommentifyCallback(ft)
@@ -474,31 +464,6 @@ let g:EnhCommentifyCallbackExists = 'Yes'
 " vimdoc-ja.git
 helptags ~/.vim/doc
 set helplang=ja,en
-
-"------------------------------------
-" Improved increment.
-nmap <C-a> <SID>(increment)
-nmap <C-x> <SID>(decrement)
-nnoremap <silent> <SID>(increment)	 :AddNumbers 1<CR>
-nnoremap <silent> <SID>(decrement)	 :AddNumbers -1<CR>
-command! -range -nargs=1 AddNumbers call s:add_numbers((<line2>-<line1>+1) * eval(<args>))
-function! s:add_numbers(num)
-  let prev_line = getline('.')[: col('.')-1]
-  let next_line = getline('.')[col('.') :]
-  let prev_num = matchstr(prev_line, '\d\+$')
-  if prev_num != ''
-	let next_num = matchstr(next_line, '^\d\+')
-	let new_line = prev_line[: -len(prev_num)-1] .
-		  \ printf('%0'.len(prev_num).'d',
-		  \    max([0, prev_num . next_num + a:num])) . next_line[len(next_num):]
-  else
-	let new_line = prev_line . substitute(next_line, '\d\+', "\\=printf('%0'.len(submatch(0)).'d', max([0, submatch(0) + a:num]))", '')
-  endif
-
-  if getline('.') !=# new_line
-	call setline('.', new_line)
-  endif
-endfunction
 
 "------------------------------------
 " gtags
@@ -556,8 +521,8 @@ endfunction
 
 "------------------------------------
 " ctrlp.vim
-"let g:ctrlp_clear_cache_on_exit = 0   " 終了時キャッシュをクリアしない
-"let g:ctrlp_mruf_max            = 500 " MRUの最大記録数
+let g:ctrlp_clear_cache_on_exit = 0   " 終了時キャッシュをクリアしない
+let g:ctrlp_mruf_max            = 500 " MRUの最大記録数
 
 "------------------------------------
 " eregex.vim :M/ で起動
@@ -636,10 +601,11 @@ endfunction
 let g:syntastic_ignore_files=['\.tpl$']
 
 "------------------------------------
-" Gundoの起動
+" gundo.vim
 nmap U :<C-u>GundoToggle<CR>
 
-
+"------------------------------------
+" tab
 " Anywhere SID.
 function! s:SID_PREFIX()
   return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
@@ -682,3 +648,66 @@ map <silent> [Tag]x :tabclose<CR>
 map <silent> [Tag]n :tabnext<CR>
 " tp 前のタブ
 map <silent> [Tag]p :tabprevious<CR>
+
+"------------------------------------
+" lightline.vim
+let g:lightline = {
+        \ 'colorscheme': 'wombat',
+        \ 'mode_map': {'c': 'NORMAL'},
+        \ 'active': {
+        \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
+        \ },
+        \ 'component_function': {
+        \   'modified': 'MyModified',
+        \   'readonly': 'MyReadonly',
+        \   'fugitive': 'MyFugitive',
+        \   'filename': 'MyFilename',
+        \   'fileformat': 'MyFileformat',
+        \   'filetype': 'MyFiletype',
+        \   'fileencoding': 'MyFileencoding',
+        \   'mode': 'MyMode'
+        \ }
+        \ }
+
+function! MyModified()
+  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! MyReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? 'x' : ''
+endfunction
+
+function! MyFilename()
+  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \  &ft == 'unite' ? unite#get_status_string() :
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFugitive()
+  try
+    if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
+      return fugitive#head()
+    endif
+  catch
+  endtry
+  return ''
+endfunction
+
+function! MyFileformat()
+  return winwidth('.') > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth('.') > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth('.') > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+  return winwidth('.') > 60 ? lightline#mode() : ''
+endfunction

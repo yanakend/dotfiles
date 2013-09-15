@@ -1,6 +1,9 @@
 [include]
     path = ~/.gitconfig.local
 
+[color]
+	ui = true
+
 [alias]
     br = branch
     a = add
