@@ -1,24 +1,25 @@
 "--------------------------------------------------------------------------------
 " plugin
-filetype off
+set nocpoptions
 if has('vim_starting')
 	set runtimepath+=~/.vim/bundle/neobundle.vim
-	call neobundle#rc(expand('~/.vim/bundle/'))
 endif
+call neobundle#rc(expand('~/.vim/bundle/'))
+filetype plugin on
 
 " originalrepos on github
 " 自動でリポジトリと同期するプラグイン
 NeoBundle 'Shougo/neobundle.vim.git'
 NeoBundle 'Shougo/vimproc.git', {
-	\	'build': {
-	\	  'cygwin': 'make -f make_cygwin.mak',
-	\	  'mac':	'make -f make_mac.mak',
-	\	  'unix':	'make -f make_unix.mak',
-	\	},
-	\ }
+      \	'build': {
+      \	  'cygwin': 'make -f make_cygwin.mak',
+      \	  'mac':	'make -f make_mac.mak',
+      \	  'unix':	'make -f make_unix.mak',
+      \	},
+      \ }
 NeoBundle 'Shougo/unite.vim.git'
-NeoBundle 'Shougo/vimfiler.git'
 NeoBundle 'Shougo/vimshell.git'
+"NeoBundle 'Shougo/neosnippet.git'
 
 NeoBundle 'thinca/vim-quickrun.git'
 NeoBundle 'vim-jp/vimdoc-ja.git'
@@ -37,26 +38,22 @@ NeoBundle 'Lokaltog/vim-easymotion.git'
 NeoBundle 'gregsexton/gitv.git'
 NeoBundle 'vim-scripts/SQLUtilities.git'
 NeoBundle 'tpope/vim-fugitive.git'
-"NeoBundle 'Lokaltog/vim-powerline.git', 'develop'
 NeoBundle 'kien/ctrlp.vim.git'
-"NeoBundle 'bling/vim-airline'
 NeoBundle 'itchyny/lightline.vim'
-"NeoBundle 'tmhedberg/matchit.git'
-"NeoBundle 'Shougo/neosnippet.git'
-
+NeoBundle 'Shougo/vimfiler'
 "--------------------------------------
 " Get running OS
 function! GetRunningOS()
-	if has("win32")
-		return "win"
-	endif
-	if has("unix")
-		if has('gui_macvim')
-			return "macvim"
-		else
-			return "linux"
-		endif
-	endif
+  if has("win32")
+    return "win"
+  endif
+  if has("unix")
+    if has('gui_macvim')
+      return "macvim"
+    else
+      return "linux"
+    endif
+  endif
 endfunction
 let os=GetRunningOS()
 
@@ -152,18 +149,18 @@ nnoremap <silent> <C-k> :call Prevdiff()<CR>
 nnoremap <silent> <C-l> dp
 nnoremap <silent> <C-h> do
 function! NextDiff()
-    if &diff
-        silent normal! ]c
-    else
-        silent normal! <C-j>
-    endif
+  if &diff
+    silent normal! ]c
+  else
+    silent normal! <C-j>
+  endif
 endfunction
 function! Prevdiff()
-    if &diff
-        silent normal! [c
-    else
-        silent normal! <C-k>
-    endif
+  if &diff
+    silent normal! [c
+  else
+    silent normal! <C-k>
+  endif
 endfunction
 
 " set imd
@@ -242,13 +239,14 @@ cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
 "----------------------------------------
 " command
 autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
-autocmd FileType objc setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
-autocmd FileType objcpp setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal expandtab
-autocmd FileType javascript setlocal tabstop=2 | setlocal shiftwidth=2
+autocmd FileType objc setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType objcpp setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
 autocmd FileType html setlocal tabstop=2 shiftwidth=2
 autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
 autocmd FileType smarty setlocal tabstop=2 shiftwidth=2
 autocmd FileType css setlocal tabstop=2 shiftwidth=2
+autocmd FileType vim setlocal tabstop=2 shiftwidth=2 expandtab
 
 "--------------------------------------------------------------------------------
 " netrw.vim
@@ -265,15 +263,15 @@ autocmd FileType css setlocal tabstop=2 shiftwidth=2
 "----------------------------------------
 " quickrun.vim
 if !exists("g:quickrun_config")
-	let g:quickrun_config={}
+  let g:quickrun_config={}
 endif
 let g:quickrun_config["_"] = {
-	\ "runner/vimproc/updatetime" : 80,
-	\ "outputter/buffer/split" : ":rightbelow 8sp",
-	\ "outputter/error/error" : "quickfix",
-	\ "outputter/error/success" : "buffer",
-	\ "outputter" : "error",
-\ }
+      \ "runner/vimproc/updatetime" : 80,
+      \ "outputter/buffer/split" : ":rightbelow 8sp",
+      \ "outputter/error/error" : "quickfix",
+      \ "outputter/error/success" : "buffer",
+      \ "outputter" : "error",
+      \ }
 let $JS_CMD='node'
 function! QuickTest(arg1)
 	execute "e $HOME/.vim/test.".a:arg1
@@ -293,10 +291,10 @@ let g:MyGrep_FilePattern = '*'
 let g:MyGrep_RecursiveMode = 1
 " メモファイルの保存先
 if os=="win"
-	let qfixmemo_dir = 'D:\dev\Dropbox\qfixmemo'
+  let qfixmemo_dir = 'D:\dev\Dropbox\qfixmemo'
 endif
 if os=="macvim" || os=="linux"
-	let qfixmemo_dir = '~/Dropbox/qfixmemo'
+  let qfixmemo_dir = '~/Dropbox/qfixmemo'
 endif
 
 " QFixGrepの検索時にカーソル位置の単語を拾う/拾わない
@@ -305,9 +303,9 @@ nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
 " Windowsからcygwin1.7以降のgrep.exeを使用する場合
 " UTF-8の一部文字列が検索不可なのを修正します。
 if os=="win"
-	let MyGrep_cygwin17 = 1
-	let mygrepprg = 'D:/dev/cygwin/bin/grep'
-	let grepprg='D:/dev/cygwin/bin/grep\ -nH'
+  let MyGrep_cygwin17 = 1
+  let mygrepprg = 'D:/dev/cygwin/bin/grep'
+  let grepprg='D:/dev/cygwin/bin/grep\ -nH'
 endif
 
 "----------------------------------------
@@ -350,7 +348,7 @@ let g:neocomplcache_dictionary_filetype_lists = {
 
 " Define keyword.
 if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
+  let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 " smartyはhtmlと同じに
@@ -422,23 +420,27 @@ endfunction
 " Cc コピー
 " Cp 貼り付け
 " <C-J> 履歴
-autocmd FileType vimfiler call s:vimfiler_my_settings()
-function! s:vimfiler_my_settings()
-  " ESCキーを押すと終了する
-  nmap <silent><buffer> <C-[> q
-  nmap <silent><buffer> <ESC> q
-  nunmap <buffer> j
-  nunmap <buffer> k
-  " N は検索として、i を新規作成にする
-  nunmap <buffer> N
-  nmap <buffer> i <Plug>(vimfiler_new_file)
+let s:bundle = neobundle#get('vimfiler')
+function! s:bundle.hooks.on_source(bundle)
+  autocmd FileType vimfiler call s:vimfiler_my_settings()
+  function! s:vimfiler_my_settings()
+    " ESCキーを押すと終了する
+    nmap <silent><buffer> <C-[> q
+    nmap <silent><buffer> <ESC> q
+    nunmap <buffer> j
+    nunmap <buffer> k
+    " N は検索として、i を新規作成にする
+    nunmap <buffer> N
+    nmap <buffer> i <Plug>(vimfiler_new_file)
+  endfunction
+  " vimfilerをデフォルトのファイラにする
+  let g:vimfiler_as_default_explorer = 1
+  " セーフモード無効化
+  let g:vimfiler_safe_mode_by_default = 0
+  " デフォルトでvim開く
+  call vimfiler#set_execute_file('_', 'vim')
+  " ココにvimfilerの設定とか記述する。
 endfunction
-" vimfilerをデフォルトのファイラにする
-let g:vimfiler_as_default_explorer = 1
-" セーフモード無効化
-let g:vimfiler_safe_mode_by_default = 0
-" デフォルトでvim開く
-call vimfiler#set_execute_file('_', 'vim')
 nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
 
 "------------------------------------
@@ -505,13 +507,13 @@ nnoremap <silent> <Space>gs :Gstatus<CR>
 "  D diff
 autocmd FileType gitv call s:my_gitv_settings()
 function! s:my_gitv_settings()
-	" s:my_gitv_settings 内
-	setlocal iskeyword+=/,-,.
-	nnoremap <silent><buffer> C  :<C-u>Git checkout <C-r><C-w><CR>
-	nnoremap <silent><buffer> Rb :<C-u>Git rebase <C-r>=GitvGetCurrentHash()<CR><Space>
-	nnoremap <silent><buffer> Rv :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>
-	nnoremap <silent><buffer> P  :<C-u>Git cherry-pick <C-r>=GitvGetCurrentHash()<CR><CR>
-	nnoremap <silent><buffer> Rh :<C-u>Git reset --hard <C-r>=GitvGetCurrentHash()<CR>
+  " s:my_gitv_settings 内
+  setlocal iskeyword+=/,-,.
+  nnoremap <silent><buffer> C  :<C-u>Git checkout <C-r><C-w><CR>
+  nnoremap <silent><buffer> Rb :<C-u>Git rebase <C-r>=GitvGetCurrentHash()<CR><Space>
+  nnoremap <silent><buffer> Rv :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>
+  nnoremap <silent><buffer> P  :<C-u>Git cherry-pick <C-r>=GitvGetCurrentHash()<CR><CR>
+  nnoremap <silent><buffer> Rh :<C-u>Git reset --hard <C-r>=GitvGetCurrentHash()<CR>
 endfunction
 
 " これは外に定義!
@@ -538,62 +540,62 @@ autocmd FileType php nnoremap <silent> <Space>c :call PhpJDoc()<CR>
 " param summary: Summary of the function
 " param args: list of arguments' name
 function! AddJDocComment(summary, args)
-	let c = indent(".") / &tabstop
-	let top = a:firstline - 1 
-	let l = a:firstline - 1 
-	let s = ''
-	while len(s) < (c) 
-		let s = s . "\t"
-	endwhile
+  let c = indent(".") / &tabstop
+  let top = a:firstline - 1 
+  let l = a:firstline - 1 
+  let s = ''
+  while len(s) < (c) 
+    let s = s . "\t"
+  endwhile
 
-	call append(l, s . '/**')
-	let l+=1
-	call append(l, s . ' * ' . a:summary)
-	let l+=1
-	call append(l, s . ' * ' . a:summary)
-	let l+=1
+  call append(l, s . '/**')
+  let l+=1
+  call append(l, s . ' * ' . a:summary)
+  let l+=1
+  call append(l, s . ' * ' . a:summary)
+  let l+=1
 
-	for arg in a:args
-		let arg_name = matchstr(arg, '.*')
-		call append(l, s . ' * @param  array ' . arg_name . ' ')
-		let l+=1
-		if arg_name == '$params'
-			call append(l, s . ' * @param  id    ' . arg_name . '.user_id ユーザーID')
-			let l+=1
-		endif
-	endfor
+  for arg in a:args
+    let arg_name = matchstr(arg, '.*')
+    call append(l, s . ' * @param  array ' . arg_name . ' ')
+    let l+=1
+    if arg_name == '$params'
+      call append(l, s . ' * @param  id    ' . arg_name . '.user_id ユーザーID')
+      let l+=1
+    endif
+  endfor
 
-	call append(l, s . ' * @return void ' . a:summary)
-	let l+=1
+  call append(l, s . ' * @return void ' . a:summary)
+  let l+=1
 
-	call append(l, s . ' */')
+  call append(l, s . ' */')
 
-	call cursor(top+2, 80) 
-	call feedkeys('A', 'n')
+  call cursor(top+2, 80) 
+  call feedkeys('A', 'n')
 endfunction
 
 " Insert JDoc Comment in Js source code
 function! JsJDoc()
-    let args = split(matchstr(getline('.'), 'function(\zs.*\ze)'),' *, *')
-    call AddJDocComment('', args)
+  let args = split(matchstr(getline('.'), 'function(\zs.*\ze)'),' *, *')
+  call AddJDocComment('', args)
 endfunction
 
 " Insert JDoc Comment in PHP source code
 function! PhpJDoc()
-    let args = split(matchstr(getline('.'), 'function [^(]*(\zs.*\ze)'),' *, *')
-    call AddJDocComment('', args)
+  let args = split(matchstr(getline('.'), 'function [^(]*(\zs.*\ze)'),' *, *')
+  call AddJDocComment('', args)
 endfunction
 
 " コメントからバリデートへ置換
 function! Com2Val()
-	let line = substitute(getline('.'), '.*@\(\w\+\)\(\W\+\)\([0-9a-zA-Z,]\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*', "'".'\7'."'"." => "."'".'\3'."',", '')
-	call setline('.', line)
+  let line = substitute(getline('.'), '.*@\(\w\+\)\(\W\+\)\([0-9a-zA-Z,]\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*', "'".'\7'."'"." => "."'".'\3'."',", '')
+  call setline('.', line)
 endfunction
 
 " ymlから配列形式へ置換
 function! Yml2Array()
-	let line = substitute(getline('.'), '\([0-9A-Za-z_-]\+\)[ ]*:[ '."'".'"]*\([0-9A-Za-z_-]\+\)['."'".'"]*', "'".'\1'."'"." => "."'".'\2'."',", '')
-	call setline('.', line)
+  let line = substitute(getline('.'), '\([0-9A-Za-z_-]\+\)[ ]*:[ '."'".'"]*\([0-9A-Za-z_-]\+\)['."'".'"]*', "'".'\1'."'"." => "."'".'\2'."',", '')
+  call setline('.', line)
 endfunction
 
 "------------------------------------
