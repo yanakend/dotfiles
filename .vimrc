@@ -482,8 +482,8 @@ nnoremap <C-q> :ccl<CR>
 
 "------------------------------------
 " 空白→タブ変換
-set list
-set listchars=tab:.\ 
+"set list
+"set listchars=tab:.\ 
 function! s:CleanSpace()
   let cursor = getpos(".")
   %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
@@ -654,7 +654,7 @@ map <silent> [Tag]p :tabprevious<CR>
 "------------------------------------
 " lightline.vim
 let g:lightline = {
-        \ 'colorscheme': 'wombat',
+        \ 'colorscheme': 'powerline',
         \ 'mode_map': {'c': 'NORMAL'},
         \ 'active': {
         \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
