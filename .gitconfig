@@ -5,7 +5,7 @@
 	ui = true
 
 [alias]
-    br = branch
+    br = branch -avv
     a = add
     c = commit
     ca = commit -a
@@ -15,7 +15,8 @@
     dt = difftool -d 
     dts = difftool -d --staged 
     h = help
-    graph = log --graph --date-order -C -M --pretty=format:\"%h [%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --all --date=short
+    l = log --date-order -C -M --pretty=format:\"%h [%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short
+    graph = log --graph --date-order -C -M --pretty=format:\"%h [%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short
     pl = pull
     pr = pull --rebase
     ps = push

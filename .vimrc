@@ -102,7 +102,6 @@ set formatoptions-=ro
 set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
 set fileformats=unix,dos,mac
-set textwidth=0
 set nofoldenable
 "let php_folding=1
 
@@ -112,6 +111,7 @@ if os=="macvim"
   " macvimではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
+	let $PATH='/usr/local/bin:/usr/local/sbin:'.$PATH
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
