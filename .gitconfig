@@ -21,6 +21,7 @@
     pr = pull --rebase
     ps = push
     s = status -sb
+    ss = stash save -u
     slog = log --no-merges --date=iso --pretty='format:%h %C(green)[%cd] %C(yellow)%an %C(cyan reverse)%d%C(reset)%s'
 
 [core]
