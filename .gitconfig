@@ -23,6 +23,7 @@
     s = status -sb
     ss = stash save -u
 	contains = branch -r --contains
+	subup = submodule update
 
 [core]
     autocrlf = false
