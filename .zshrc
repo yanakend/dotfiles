@@ -66,6 +66,7 @@ setopt rmstar_wait
 export LSCOLORS=ExFxCxDxBxEGEDABAGACAD
  
 # エイリアス
+alias g="git"
 alias vi="vim"
 alias ls="ls -FG"
 alias ll="ls -lhaG"
