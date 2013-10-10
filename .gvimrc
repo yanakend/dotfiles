@@ -22,7 +22,6 @@ if has('gui_macvim')
 	set noimdisableactivate
 endif
 
-set textwidth=0
 set cmdheight=1                     " コマンドラインの高さ(GUI使用時)
 hi SpecialKey guibg=NONE guifg=Gray40
 

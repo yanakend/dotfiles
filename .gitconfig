@@ -34,6 +34,7 @@
 	br = branch -avv
 	a = add
 	c = commit
+	ca = commit --amend
 	cp = cherry-pick -x
 	co = checkout
 	d = diff
@@ -64,3 +65,10 @@
 [mergetool "sourcetree"]
 	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 	trustExitCode = true
+[mergetool "vimdiff3"]
+	cmd = git_merge_wrapper3 \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+	trustExitCode = true
+[mergetool]
+	keepBackup = false
+[merge]
+	tool = vimdiff3

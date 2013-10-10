@@ -111,7 +111,7 @@ if os=="macvim"
   " macvimではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-	let $PATH='/usr/local/bin:/usr/local/sbin:'.$PATH
+	let $PATH='/usr/local/bin/usr/local/bin:/usr/local/sbin:'.$PATH
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
@@ -371,7 +371,10 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType smarty setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd BufRead,BufNewFile *.csv set filetype=csv
 "autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+" textwidth設定上書き
+autocmd FileType vim,text setlocal textwidth=0
 
 " 改行で補完ウィンドウを閉じる
 inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
@@ -501,6 +504,11 @@ nnoremap <silent> <Space>gD :Gdiff HEAD<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gl :Gitv!<CR>
 nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
+function! s:toggle_git_folding()
+  if &filetype ==# 'git'
+    setlocal foldenable!
+  endif
+endfunction
 
 "------------------------------------
 " gitv
@@ -514,6 +522,7 @@ function! s:my_gitv_settings()
   nnoremap <silent><buffer> Rv :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>
   nnoremap <silent><buffer> P  :<C-u>Git cherry-pick <C-r>=GitvGetCurrentHash()<CR><CR>
   nnoremap <silent><buffer> Rh :<C-u>Git reset --hard <C-r>=GitvGetCurrentHash()<CR>
+	nnoremap <silent><buffer> t :<C-u>windo call <SID>toggle_git_folding()<CR>1<C-w>w
 endfunction
 
 " これは外に定義!

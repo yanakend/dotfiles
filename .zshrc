@@ -50,6 +50,7 @@ zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^P" history-beginning-search-backward-end
 bindkey "^N" history-beginning-search-forward-end
+bindkey "^U" backward-kill-line
  
 # emacs風のキーバインド
 bindkey -e
@@ -66,7 +67,6 @@ setopt rmstar_wait
 export LSCOLORS=ExFxCxDxBxEGEDABAGACAD
  
 # エイリアス
-alias g="git"
 alias vi="vim"
 alias ls="ls -FG"
 alias ll="ls -lhaG"
