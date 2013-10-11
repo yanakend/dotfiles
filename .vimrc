@@ -509,6 +509,14 @@ function! s:toggle_git_folding()
     setlocal foldenable!
   endif
 endfunction
+autocmd FileType fugitiveblame call s:fugitiveblame_my_settings()
+function! s:fugitiveblame_my_settings()
+  nnoremap <silent><buffer> <C-[> :close<CR>
+endfunction
+autocmd FileType gitcommit call s:gitcommit_my_settings()
+function! s:gitcommit_my_settings()
+  nnoremap <silent><buffer> <C-[> :close<CR>
+endfunction
 
 "------------------------------------
 " gitv
@@ -517,6 +525,7 @@ autocmd FileType gitv call s:my_gitv_settings()
 function! s:my_gitv_settings()
   " s:my_gitv_settings 内
   setlocal iskeyword+=/,-,.
+  nnoremap <silent><buffer> <C-[> :close<CR>
   nnoremap <silent><buffer> C  :<C-u>Git checkout <C-r><C-w><CR>
   nnoremap <silent><buffer> Rb :<C-u>Git rebase <C-r>=GitvGetCurrentHash()<CR><Space>
   nnoremap <silent><buffer> Rv :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>

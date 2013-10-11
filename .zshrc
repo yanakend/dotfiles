@@ -69,7 +69,7 @@ export LSCOLORS=ExFxCxDxBxEGEDABAGACAD
 # エイリアス
 alias vi="vim"
 alias ls="ls -FG"
-alias ll="ls -lhaG"
+alias ll="ls -lhG"
 alias la="ls -aGv"
 alias rm="rm -rf"
 alias cp="cp -i"
