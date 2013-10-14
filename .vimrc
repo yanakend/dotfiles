@@ -618,7 +618,7 @@ endfunction
 
 "------------------------------------
 " syntastic.vim
-let g:syntastic_ignore_files=['\.tpl$']
+let g:syntastic_ignore_files=['\.tpl$','\.m$']
 
 "------------------------------------
 " gundo.vim
