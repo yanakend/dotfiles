@@ -31,7 +31,8 @@
 	pager = less -R
 
 [alias]
-	br = branch -avv
+	br = branch
+	brv = branch -av
 	a = add
 	c = commit
 	ca = commit --amend
