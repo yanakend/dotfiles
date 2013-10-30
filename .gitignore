@@ -3,6 +3,10 @@
 # さらにdotfileを無視
 /.*
 
+Thumbs.db
+desktop.ini
+.DS_Store
+
 # 無視したくないファイルを![filename]で指定
 !/.bashrc
 !/.zshrc

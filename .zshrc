@@ -2,7 +2,10 @@
   
 export GNUTERM=aqua
 export DISPLAY=0.0
- 
+
+# バックスペースキー有効
+stty erase ^H
+
 # 補完
 autoload -U compinit
 compinit
@@ -48,9 +51,9 @@ setopt hist_ignore_space # 最初がスペースで始まる場合は記憶し�
 autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
-bindkey "^P" history-beginning-search-backward-end
-bindkey "^N" history-beginning-search-forward-end
-bindkey "^U" backward-kill-line
+bindkey \^P history-beginning-search-backward-end
+bindkey \^N history-beginning-search-forward-end
+bindkey \^U backward-kill-line
  
 # emacs風のキーバインド
 bindkey -e

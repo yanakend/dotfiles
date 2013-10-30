@@ -5,7 +5,6 @@ if has('vim_starting')
 	set runtimepath+=~/.vim/bundle/neobundle.vim
 endif
 call neobundle#rc(expand('~/.vim/bundle/'))
-filetype plugin on
 
 " originalrepos on github
 " 自動でリポジトリと同期するプラグイン
@@ -19,8 +18,6 @@ NeoBundle 'Shougo/vimproc.git', {
       \ }
 NeoBundle 'Shougo/unite.vim.git'
 NeoBundle 'Shougo/vimshell.git'
-"NeoBundle 'Shougo/neosnippet.git'
-
 NeoBundle 'thinca/vim-quickrun.git'
 NeoBundle 'vim-jp/vimdoc-ja.git'
 NeoBundle 'fuenor/qfixhowm.git'
@@ -41,6 +38,11 @@ NeoBundle 'tpope/vim-fugitive.git'
 NeoBundle 'kien/ctrlp.vim.git'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'Shougo/vimfiler'
+NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
+"NeoBundle 'gist:soramugi/6775207', { 'script_type' : 'plugin' }
+filetype plugin indent on
+NeoBundleCheck
+
 "--------------------------------------
 " Get running OS
 function! GetRunningOS()
@@ -650,7 +652,7 @@ function! s:my_tabline()  "{{{
   return s
 endfunction "}}}
 let &tabline = '%!'. s:SID_PREFIX() . 'my_tabline()'
-set showtabline=2 " 常にタブラインを表示
+set showtabline=1 " 常にタブラインを表示
 
 " The prefix key.
 nnoremap    [Tag]   <Nop>

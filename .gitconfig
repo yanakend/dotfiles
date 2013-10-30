@@ -44,15 +44,20 @@
 	dts = difftool -d --staged 
 	h = help
 	l = log --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short
-	graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short
+;     graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short
+	graph = !sh -c 'tig'
 	pl = pull
 	pr = pull --rebase
 	ps = push
+;     s = !sh -c 'tig status'
 	s = status -sb
 	ss = stash save -u
 	contains = branch -r --contains
 	subup = submodule update
 	coclean = !git checkout . && git clean -f -d
+	hf-start = "!f() { [ -z '$1' ] && exit 1; git fetch -p origin && git checkout master && git checkout -b feature/$1 && git push -u origin feature/$1 }; f"
+	hf-merge = "!f() { [ -z '$1' ] && exit 1; git fetch -p origin; git checkout master; git merge feature/$1; }; f"
+	hf-finish = "!f() { [ -z '$1' ] && exit 1; git push origin master; git push --delete origin feature/$1; }; f"
 
 [help]
 	autocorrect = 30
@@ -60,9 +65,19 @@
 [push]
 	default = current
 
+[diff]
+	tool = default-difftool
+[difftool]
+	prompt = false
 [difftool "sourcetree"]
 	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
 	path = 
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[difftool "default-difftool"]
+	cmd = vim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE
+[merge]
+	tool = Kaleidoscope
 [mergetool "sourcetree"]
 	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 	trustExitCode = true
@@ -71,5 +86,7 @@
 	trustExitCode = true
 [mergetool]
 	keepBackup = false
-[merge]
-	tool = vimdiff3
+	prompt = false
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustExitCode = true
