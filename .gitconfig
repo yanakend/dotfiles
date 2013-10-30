@@ -55,9 +55,9 @@
 	contains = branch -r --contains
 	subup = submodule update
 	coclean = !git checkout . && git clean -f -d
-	hf-start = "!f() { [ -z '$1' ] && exit 1; git fetch -p origin && git checkout master && git checkout -b feature/$1 && git push -u origin feature/$1 }; f"
-	hf-merge = "!f() { [ -z '$1' ] && exit 1; git fetch -p origin; git checkout master; git merge feature/$1; }; f"
-	hf-finish = "!f() { [ -z '$1' ] && exit 1; git push origin master; git push --delete origin feature/$1; }; f"
+	hf-start = "!f() { [ -z \"$1\" ] && exit 1; git fetch -p origin && git checkout master && git checkout -b feature/$1 && git push -u origin feature/$1; }; f"
+	hf-merge = "!f() { [ -z \"$1\" ] && exit 1; git fetch -p origin; git checkout master; git merge feature/$1; }; f"
+	hf-finish = "!f() { [ -z \"$1\" ] && exit 1; git push origin master; git push --delete origin feature/$1; }; f"
 
 [help]
 	autocorrect = 30
