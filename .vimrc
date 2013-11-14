@@ -39,7 +39,6 @@ NeoBundle 'kien/ctrlp.vim.git'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
-"NeoBundle 'gist:soramugi/6775207', { 'script_type' : 'plugin' }
 filetype plugin indent on
 NeoBundleCheck
 
@@ -398,6 +397,10 @@ inoremap <expr><C-n> neocomplcache#manual_keyword_complete()
 "----------------------------------------
 " unite.vim
 " 入力モードで開始する
+let g:unite_enable_start_insert = 1
+let g:unite_enable_short_source_names = 1
+let g:unite_split_rule = 'botright'
+
 " バッファ一覧	-auto-resize
 nnoremap <silent> <Space>b	:<C-u>Unite buffer -horizontal -direction=botright<CR>
 " 最近使用したファイル一覧
@@ -733,3 +736,13 @@ endfunction
 function! MyMode()
   return winwidth('.') > 60 ? lightline#mode() : ''
 endfunction
+
+"------------------------------------
+" ctrlp.vim
+let g:ctrlp_map = '<Space>p'
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:10'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/](\.(git|hg|svn)|cache)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+  \ }
