@@ -45,6 +45,7 @@
 	h = help
 	l = log --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short
     graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short
+    grapha = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short --all
 	graph2 = !sh -c 'tig'
 	pl = pull
 	pr = pull --rebase

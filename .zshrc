@@ -3,9 +3,6 @@
 export GNUTERM=aqua
 export DISPLAY=0.0
 
-# バックスペースキー有効
-stty erase ^H
-
 # 補完
 autoload -U compinit
 compinit
@@ -16,7 +13,7 @@ setopt no_beep
  
 # ミスコマンドの訂正
 setopt correct
- 
+
 # プロンプト
 autoload colors
 colors
@@ -109,3 +106,31 @@ function git-root() {
     cd `pwd`/`git rev-parse --show-cdup`
   fi
 }
+
+# VCSの情報を取得するzshの便利関数 vcs_infoを使う
+autoload -Uz vcs_info
+# 表示フォーマットの指定
+# %b ブランチ情報
+# %a アクション名(mergeなど)
+zstyle ':vcs_info:*' formats '[%r:%b]'
+zstyle ':vcs_info:*' actionformats '[%r:%b|%a]'
+precmd () {
+    psvar=()
+    LANG=en_US.UTF-8 vcs_info
+    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+}
+# バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
+RPROMPT="%1(v|%F{blue}%1v%f|)"
+
+# tmux ssh 時に新規ウィンドウを作る
+ssh_tmux() {
+    ssh_cmd="ssh $@"
+    tmux new-window -n "$*" "$ssh_cmd"
+}
+if [ $TERM = "screen" ] ; then
+    tmux lsw
+    if [ $? -eq 0 ] ; then
+        alias tssh=ssh_tmux
+    fi
+fi
+
