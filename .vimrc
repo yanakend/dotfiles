@@ -28,7 +28,6 @@ NeoBundle 'acustodioo/vim-enter-indent.git'
 NeoBundle 'vim-scripts/gtags.vim.git'
 NeoBundle 'scrooloose/syntastic.git'
 NeoBundle 'vim-scripts/Align.git'
-NeoBundle 'othree/eregex.vim.git'
 NeoBundle 'Shougo/neocomplcache.git'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'Lokaltog/vim-easymotion.git'
@@ -413,6 +412,8 @@ function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
   inoremap <buffer> <C-w> <Plug>(unite_delete_backward_path)
   " ESCキーを押すと終了する
+  nmap <silent><buffer> <C-j> <Down>
+  nmap <silent><buffer> <C-k> <Up>
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
   nmap <silent><buffer> <ESC> <Plug>(unite_exit)
 "  nunmap <silent><buffer> N
@@ -548,10 +549,6 @@ endfunction
 " ctrlp.vim
 let g:ctrlp_clear_cache_on_exit = 0   " 終了時キャッシュをクリアしない
 let g:ctrlp_mruf_max            = 500 " MRUの最大記録数
-
-"------------------------------------
-" eregex.vim :M/ で起動
-let g:eregex_default_enable = 0
 
 "------------------------------------
 " JDoc
@@ -740,6 +737,7 @@ endfunction
 "------------------------------------
 " ctrlp.vim
 let g:ctrlp_map = '<Space>p'
+let g:ctrlp_regexp = 1
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:10'
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/](\.(git|hg|svn)|cache)$',
