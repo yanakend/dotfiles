@@ -10,7 +10,7 @@ endif
 " plugin
 set nocp
 if has('vim_starting')
-	set runtimepath+=$VIMHOME.'/bundle/neobundle.vim'
+	set runtimepath+=$VIMHOME/bundle/neobundle.vim
 endif
 call neobundle#rc(expand($VIMHOME.'/bundle/'))
 
