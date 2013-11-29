@@ -1,10 +1,18 @@
 "--------------------------------------------------------------------------------
+" home
+if has('win32') || has ('win64')
+    let $VIMHOME = $VIM."/vimfiles"
+else
+    let $VIMHOME = $HOME."/.vim"
+endif
+
+"--------------------------------------------------------------------------------
 " plugin
 set nocp
 if has('vim_starting')
-	set runtimepath+=~/.vim/bundle/neobundle.vim
+	set runtimepath+=$VIMHOME.'/bundle/neobundle.vim'
 endif
-call neobundle#rc(expand('~/.vim/bundle/'))
+call neobundle#rc(expand($VIMHOME.'/bundle/'))
 
 " originalrepos on github
 " 自動でリポジトリと同期するプラグイン
@@ -94,8 +102,8 @@ set virtualedit=block				"ブロック選択時にフリーカーソルモード
 set hidden							"バッファを切替えてもundoの効力を失わない
 set backup
 set writebackup
-set backupdir=~/.vim/backup
-set directory=~/.vim/swap
+set backupdir=$VIMHOME/backup
+set directory=$VIMHOME/swap
 set imsearch=0
 set iminsert=0
 set formatoptions-=ro
@@ -192,7 +200,7 @@ endif
 
 nnoremap ZZ <Nop>
 nnoremap <silent><Space>w  :write<CR>
-nnoremap <silent><Space>vi :e ~/dotfiles/.vimrc<CR>
+nnoremap <silent><Space>vi :e $VIMHOME/dotfiles/.vimrc<CR>
 
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
@@ -221,13 +229,6 @@ inoremap <C-d>	<Del>
 " <C-t>: insert tab.
 inoremap <C-t>  <C-v><TAB>
 
-"ヤンクした文字列とカーソル位置の単語を置換する vim bible p123
-"cy カーソル位置移行の文字列とヤンクした単語を置換
-"ciyテキストオブジェクト的にカーソルが単語内のどこにあってもヤンクした文字列と置換
-"必要ならn.で繰り返し実行
-nnoremap <silent> cy ce<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
-nnoremap <silent> ciy ciw<C-r>a<ESC>:let@/=@1<CR>:noh<CR>
-
 " 選択した文字列を置換
 vnoremap s "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
 
@@ -247,18 +248,6 @@ autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
 autocmd FileType smarty setlocal tabstop=2 shiftwidth=2
 autocmd FileType css setlocal tabstop=2 shiftwidth=2
 autocmd FileType vim setlocal tabstop=2 shiftwidth=2 expandtab
-
-"--------------------------------------------------------------------------------
-" netrw.vim
-"nnoremap <silent><Space>e :Exp<cr>
-"autocmd FileType netrw call s:retrw_my_settings()
-"function! s:retrw_my_settings() " ESCキーを押すと終了する
-"  nmap <silent><buffer> <C-[> <C-o>
-"  nmap <silent><buffer> <ESC> <C-o>
-"  nmap <silent><buffer> q	   <C-o>
-"  nmap <silent><buffer> l	   <cr>
-"  nmap <silent><buffer> h	   -
-"endfunction
 
 "----------------------------------------
 " quickrun.vim
@@ -315,7 +304,7 @@ set patchmode=.clean			" バックアップファイルの設定savevers.vimの�
 let savevers_types = "*"		" カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
 let savevers_dirs = &backupdir	" バックアップファイルが書き込まれるディレクトリです
 let versdiff_no_resize=1		" バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
-let savevers_max = 99			"
+let savevers_max = 99
 
 "----------------------------------------
 " EnhancedCommentify.vim
@@ -412,8 +401,8 @@ function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
   inoremap <buffer> <C-w> <Plug>(unite_delete_backward_path)
   " ESCキーを押すと終了する
-  nmap <silent><buffer> <C-j> <Down>
-  nmap <silent><buffer> <C-k> <Up>
+  imap <silent><buffer> <C-j> <Down>
+  imap <silent><buffer> <C-k> <Up>
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
   nmap <silent><buffer> <ESC> <Plug>(unite_exit)
 "  nunmap <silent><buffer> N
@@ -426,8 +415,7 @@ endfunction
 " I 特定ディレクトリへ異動
 " r リネーム
 " dd 削除
-" Cc コピー
-" Cp 貼り付け
+" cc コピー
 " <C-J> 履歴
 let s:bundle = neobundle#get('vimfiler')
 function! s:bundle.hooks.on_source(bundle)
@@ -526,7 +514,6 @@ endfunction
 
 "------------------------------------
 " gitv
-"  D diff
 autocmd FileType gitv call s:my_gitv_settings()
 function! s:my_gitv_settings()
   " s:my_gitv_settings 内
