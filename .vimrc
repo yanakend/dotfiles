@@ -202,7 +202,7 @@ endif
 
 nnoremap ZZ <Nop>
 nnoremap <silent><Space>w  :write<CR>
-nnoremap <silent><Space>vi :e $VIMHOME/dotfiles/.vimrc<CR>
+nnoremap <silent><Space>vi :e $VIMHOME/../.vimrc<CR>
 
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
