@@ -47,6 +47,7 @@ NeoBundle 'tpope/vim-fugitive.git'
 NeoBundle 'kien/ctrlp.vim.git'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'Shougo/vimfiler'
+NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
 filetype plugin indent on
 NeoBundleCheck
@@ -733,3 +734,15 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
   \ }
+
+"------------------------------------
+" vim-ref
+let g:ref_phpmanual_path = $VIMHOME.'/doc/php-chunked-xhtml'
+autocmd FileType ref call s:initialize_ref_viewer()
+function! s:initialize_ref_viewer()
+  nmap b (ref-back)
+  nmap f (ref-forward)
+  nnoremap q c
+  nnoremap c
+  setlocal nonumber
+endfunction
