@@ -1,9 +1,11 @@
 "--------------------------------------------------------------------------------
 " home
-if has('win32') || has ('win64')
-    let $VIMHOME = $VIM."/vimfiles"
-else
-    let $VIMHOME = $HOME."/.vim"
+if $VIMHOME == ""
+	if has('win32') || has ('win64')
+		let $VIMHOME = $VIM."/vimfiles"
+	else
+		let $VIMHOME = $HOME."/.vim"
+	endif
 endif
 
 "--------------------------------------------------------------------------------
@@ -461,7 +463,7 @@ let g:EnhCommentifyCallbackExists = 'Yes'
 
 "------------------------------------
 " vimdoc-ja.git
-helptags ~/.vim/doc
+helptags $VIMHOME/doc
 set helplang=ja,en
 
 "------------------------------------
