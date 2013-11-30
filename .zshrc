@@ -79,6 +79,7 @@ alias LESS="less -IM -x 4"
 alias where="command -v"
 alias j="jobs -l"
 alias cronedit="crontab -e"
+alias yvim="export VIMHOME=~/.yanagi/.vim; vim -u ~/.yanagi/.vimrc"
 
 ### バイナリファイルにはマッチさせない。
 export GREP_OPTIONS="--binary-files=without-match"
@@ -122,15 +123,17 @@ precmd () {
 # バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
 RPROMPT="%1(v|%F{blue}%1v%f|)"
 
-# tmux ssh 時に新規ウィンドウを作る
-ssh_tmux() {
-    ssh_cmd="ssh $@"
-    tmux new-window -n "$*" "$ssh_cmd"
-}
-if [ $TERM = "screen" ] ; then
-    tmux lsw
-    if [ $? -eq 0 ] ; then
-        alias tssh=ssh_tmux
-    fi
+if which tmux > /dev/null 2>&1; then
+	# tmux ssh 時に新規ウィンドウを作る
+	ssh_tmux() {
+		ssh_cmd="ssh $@"
+		tmux new-window -n "$*" "$ssh_cmd"
+	}
+	if [ $TERM = "screen" ] ; then
+		tmux lsw
+		if [ $? -eq 0 ] ; then
+			alias tssh=ssh_tmux
+		fi
+	fi
 fi
 
