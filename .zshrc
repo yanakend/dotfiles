@@ -81,25 +81,19 @@ alias j="jobs -l"
 alias cronedit="crontab -e"
 alias yvim="export VIMHOME=~/.yanagi/.vim; vim -u ~/.yanagi/.vimrc"
 
-### バイナリファイルにはマッチさせない。
+# バイナリファイルにはマッチさせない。
 export GREP_OPTIONS="--binary-files=without-match"
-## 可能なら色を付ける。
+# 可能なら色を付ける。
 export GREP_OPTIONS="--color=auto $GREP_OPTIONS"
-### 拡張子が.tmpのファイルは無視する。
+# 拡張子が.tmpのファイルは無視する。
 export GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
 
 export EDITOR=/usr/bin/vi 
 export PATH=~/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
-
-myps ()
-{
-    ps -awwwxo "pid ppid %cpu %mem user stat start time command" | egrep "[P]PID|\b$1"
-}
-
-# .zshrcローカル設定ファイル読み込み
-[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
+export NDK_ROOT="/Applications/android-ndk" 
 
 # cd git-root-dir
 function git-root() {
@@ -123,8 +117,8 @@ precmd () {
 # バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
 RPROMPT="%1(v|%F{blue}%1v%f|)"
 
+# tmux ssh 時に新規ウィンドウを作る
 if which tmux > /dev/null 2>&1; then
-	# tmux ssh 時に新規ウィンドウを作る
 	ssh_tmux() {
 		ssh_cmd="ssh $@"
 		tmux new-window -n "$*" "$ssh_cmd"
@@ -136,4 +130,7 @@ if which tmux > /dev/null 2>&1; then
 		fi
 	fi
 fi
+
+# .zshrcローカル設定ファイル読み込み
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
 

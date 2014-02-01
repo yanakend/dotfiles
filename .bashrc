@@ -21,6 +21,8 @@ PATH=/usr/local/bin:/usr/X11R6/bin:/usr/bin:/bin:$PATH
 PAGER=less
 JLESSCHARSET=japanese-sjis
 export PATH PAGER JLESSCHARSET
+export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
+export NDK_ROOT="/Applications/android-ndk" 
 
 PS1="$HOSTNAME:\w$ "
 
