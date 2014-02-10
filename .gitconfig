@@ -53,15 +53,10 @@
 	ps = push
 	s = status -sb
 	ss = stash
-	sss = stash save -u
 	contains = branch -r --contains
 	subup = submodule update
-	coclean = !git checkout . && git clean -f -d
-	hf-start = "!f() { [ -z \"$1\" ] && exit 1; git fetch -p origin; git checkout master; git checkout -b feature/$1; git push -u origin feature/$1; }; f"
-	hf-merge = "!f() { [ -z \"$1\" ] && exit 1; git fetch -p origin; git checkout master; git merge origin/feature/$1; }; f"
-	hf-finish = "!f() { [ -z \"$1\" ] && exit 1; git push origin master; git push --delete origin feature/$1; }; f"
-;     graph = !sh -c 'tig'
-;     s = !sh -c 'tig status'
+	coclean = !git checkout . && git clean -fd
+	ignore = "!f() { [ -z \"$1\" ] && exit 1; curl http://gitignore.io/api/$1 ;}; f"
 
 [help]
 	autocorrect = 30

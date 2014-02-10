@@ -49,6 +49,7 @@ NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
+NeoBundle '5t111111/alt-gtags.vim'
 filetype plugin indent on
 NeoBundleCheck
 
@@ -122,7 +123,7 @@ if os=="macvim"
   " macvimではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-	let $PATH='/usr/local/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
+	let $PATH='/usr/local/Cellar/php55/5.5.7/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
@@ -391,6 +392,7 @@ inoremap <expr><C-n> neocomplcache#manual_keyword_complete()
 let g:unite_enable_start_insert = 1
 let g:unite_enable_short_source_names = 1
 let g:unite_split_rule = 'botright'
+let g:unite_source_file_mru_limit = 200
 
 " バッファ一覧	-auto-resize
 nnoremap <silent> <Space>b	:<C-u>Unite buffer -horizontal -direction=botright<CR>
@@ -437,6 +439,8 @@ function! s:bundle.hooks.on_source(bundle)
   let g:vimfiler_as_default_explorer = 1
   " セーフモード無効化
   let g:vimfiler_safe_mode_by_default = 0
+
+  let g:vimfiler_draw_files_limit=1000
   " デフォルトでvim開く
   call vimfiler#set_execute_file('_', 'vim')
   " ココにvimfilerの設定とか記述する。
@@ -514,7 +518,7 @@ autocmd FileType gitcommit call s:gitcommit_my_settings()
 function! s:gitcommit_my_settings()
   nnoremap <silent><buffer> <C-[> :close<CR>
 endfunction
-
+ 
 "------------------------------------
 " gitv
 autocmd FileType gitv call s:my_gitv_settings()
@@ -617,51 +621,6 @@ let g:syntastic_ignore_files=['\.tpl$','\.m$']
 nmap U :<C-u>GundoToggle<CR>
 
 "------------------------------------
-" tab
-" Anywhere SID.
-function! s:SID_PREFIX()
-  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
-endfunction
-
-" Set tabline.
-function! s:my_tabline()  "{{{
-  let s = ''
-  for i in range(1, tabpagenr('$'))
-    let bufnrs = tabpagebuflist(i)
-    let bufnr = bufnrs[tabpagewinnr(i) - 1]  " first window, first appears
-    let no = i  " display 0-origin tabpagenr.
-    let mod = getbufvar(bufnr, '&modified') ? '!' : ' '
-    let title = fnamemodify(bufname(bufnr), ':t')
-    let s .= '%'.i.'T'
-    let s .= '%#' . (i == tabpagenr() ? 'TabLineSel' : 'TabLine') . '#'
-    let s .= no . ':' . title
-    let s .= mod
-    let s .= '%#TabLineFill #'
-  endfor
-  let s .= '%#TabLineFill#%T%=%#TabLine#'
-  return s
-endfunction "}}}
-let &tabline = '%!'. s:SID_PREFIX() . 'my_tabline()'
-set showtabline=1 " 常にタブラインを表示
-
-" The prefix key.
-nnoremap    [Tag]   <Nop>
-" Tab jump
-nmap    t [Tag]
-" t1 で1番左のタブ、t2 で1番左から2番目のタブにジャンプ
-for n in range(1, 9)
-  execute 'nnoremap <silent> [Tag]'.n  ':<C-u>tabnext'.n.'<CR>'
-endfor
-" tc 新しいタブを一番右に作る
-map <silent> [Tag]c :tablast <bar> tabnew<CR>
-" tx タブを閉じる
-map <silent> [Tag]x :tabclose<CR>
-" tn 次のタブ
-map <silent> [Tag]n :tabnext<CR>
-" tp 前のタブ
-map <silent> [Tag]p :tabprevious<CR>
-
-"------------------------------------
 " lightline.vim
 let g:lightline = {
         \ 'colorscheme': 'powerline',
@@ -740,9 +699,14 @@ let g:ctrlp_custom_ignore = {
 let g:ref_phpmanual_path = $VIMHOME.'/doc/php-chunked-xhtml'
 autocmd FileType ref call s:initialize_ref_viewer()
 function! s:initialize_ref_viewer()
-  nmap b (ref-back)
-  nmap f (ref-forward)
-  nnoremap q c
-  nnoremap c
+  nmap <buffer> b (ref-back)
+  nmap <buffer> f (ref-forward)
+  nnoremap <buffer> q c
+  nnoremap <buffer> c
   setlocal nonumber
 endfunction
+
+"------------------------------------
+" vim-shell
+let g:vimshell_prompt_expr = 'getcwd()."% "'
+let g:vimshell_prompt_pattern = '^\f\+% '

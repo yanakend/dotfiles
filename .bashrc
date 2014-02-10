@@ -41,16 +41,16 @@ alias j=jobs
 alias vi=vim
 alias more=less
 
-SYSTEM=`cygpath -u ${SYSTEMROOT}`/system32
-alias ping="$SYSTEM/ping.exe"
-alias arp="$SYSTEM/arp.exe"
-alias nslookup="$SYSTEM/nslookup.exe"
-alias traceroute="$SYSTEM/tracert.exe"
-alias route="$SYSTEM/route.exe"
-alias netstat="$SYSTEM/netstat.exe"
-alias ipconfig="$SYSTEM/ipconfig.exe"
-alias ifconfig=ipconfig
-#alias start="$SYSTEM/CMD.exe /c start"
-alias start=cygstart
-unset SYSTEM                           
+#SYSTEM=`cygpath -u ${SYSTEMROOT}`/system32
+#alias ping="$SYSTEM/ping.exe"
+#alias arp="$SYSTEM/arp.exe"
+#alias nslookup="$SYSTEM/nslookup.exe"
+#alias traceroute="$SYSTEM/tracert.exe"
+#alias route="$SYSTEM/route.exe"
+#alias netstat="$SYSTEM/netstat.exe"
+#alias ipconfig="$SYSTEM/ipconfig.exe"
+#alias ifconfig=ipconfig
+##alias start="$SYSTEM/CMD.exe /c start"
+#alias start=cygstart
+#unset SYSTEM                           
 

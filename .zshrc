@@ -89,11 +89,12 @@ export GREP_OPTIONS="--color=auto $GREP_OPTIONS"
 export GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
 
 export EDITOR=/usr/bin/vi 
+export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
+export NDK_ROOT="/Applications/android-ndk" 
 export PATH=~/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
-export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
-export NDK_ROOT="/Applications/android-ndk" 
+export PATH="$(brew --prefix josegonzalez/php/php55)/bin:$PATH"
 
 # cd git-root-dir
 function git-root() {
