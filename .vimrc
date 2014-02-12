@@ -365,6 +365,7 @@ autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType smarty setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd BufRead,BufNewFile *.csv set filetype=csv
+autocmd BufRead,BufNewFile *.mm set filetype=objc
 "autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 " textwidth設定上書き
 autocmd FileType vim,text setlocal textwidth=0
