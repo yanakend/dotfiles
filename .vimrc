@@ -49,7 +49,6 @@ NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
-NeoBundle '5t111111/alt-gtags.vim'
 filetype plugin indent on
 NeoBundleCheck
 
