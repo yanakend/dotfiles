@@ -426,11 +426,12 @@ let s:bundle = neobundle#get('vimfiler')
 function! s:bundle.hooks.on_source(bundle)
   autocmd FileType vimfiler call s:vimfiler_my_settings()
   function! s:vimfiler_my_settings()
+    nunmap <buffer> j
+    nunmap <buffer> k
+  	nmap <buffer> <Space><Space> <Plug>(vimfiler_toggle_mark_current_line)
     " ESCキーを押すと終了する
     nmap <silent><buffer> <C-[> q
     nmap <silent><buffer> <ESC> q
-    nunmap <buffer> j
-    nunmap <buffer> k
     " N は検索として、i を新規作成にする
     nunmap <buffer> N
     nmap <buffer> i <Plug>(vimfiler_new_file)

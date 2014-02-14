@@ -2,6 +2,9 @@
   
 export GNUTERM=aqua
 export DISPLAY=0.0
+ 
+# emacs風のキーバインド
+bindkey -e
 
 # 補完
 autoload -U compinit
@@ -18,8 +21,6 @@ setopt correct
 autoload colors
 colors
 setopt prompt_subst
-#cd するたびに clear と ls をする
-chpwd() { clear }
 PROMPT="%/%% "
 PROMPT2="%_%% "
 SPROMPT="%r is correct? [n,y,a,e]: "
@@ -48,18 +49,32 @@ setopt hist_ignore_space # 最初がスペースで始まる場合は記憶し�
 autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
-bindkey \^P history-beginning-search-backward-end
-bindkey \^N history-beginning-search-forward-end
-bindkey \^U backward-kill-line
- 
-# emacs風のキーバインド
-bindkey -e
+bindkey "^P" history-beginning-search-backward-end
+bindkey "^N" history-beginning-search-forward-end
+bindkey "^U" backward-kill-line
  
 # cdの便利化
 setopt auto_cd # ディレクトリ名だけでcdする
 setopt auto_pushd # cdの履歴
 setopt pushd_ignore_dups # 重複しないようにする
- 
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# コマンドがスペースで始まる場合、コマンド履歴に追加しない
+# 例： <Space>echo hello と入力
+setopt hist_ignore_space
+
+# <Tab> でパス名の補完候補を表示したあと、
+# 続けて <Tab> を押すと候補からパス名を選択できるようになる
+# 候補を選ぶには <Tab> か Ctrl-N,B,F,P
+zstyle ':completion:*:default' menu select=1
+
+# 単語の一部として扱われる文字のセットを指定する
+# ここではデフォルトのセットから / を抜いたものとする
+# こうすると、 Ctrl-W でカーソル前の1単語を削除したとき、 / までで削除が止まる
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
+
 # rm * を実行時に確認
 setopt rmstar_wait
  
@@ -99,7 +114,7 @@ export PATH="$(brew --prefix josegonzalez/php/php55)/bin:$PATH"
 # cd git-root-dir
 function git-root() {
   if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-    cd `pwd`/`git rev-parse --show-cdup`
+	cd `pwd`/`git rev-parse --show-cdup`
   fi
 }
 
@@ -111,9 +126,9 @@ autoload -Uz vcs_info
 zstyle ':vcs_info:*' formats '[%r:%b]'
 zstyle ':vcs_info:*' actionformats '[%r:%b|%a]'
 precmd () {
-    psvar=()
-    LANG=en_US.UTF-8 vcs_info
-    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+	psvar=()
+	LANG=en_US.UTF-8 vcs_info
+	[[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
 }
 # バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
 RPROMPT="%1(v|%F{blue}%1v%f|)"
@@ -132,6 +147,6 @@ if which tmux > /dev/null 2>&1; then
 	fi
 fi
 
-# .zshrcローカル設定ファイル読み込み
-[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+# # .zshrcローカル設定ファイル読み込み
+# [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
