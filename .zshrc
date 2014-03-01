@@ -103,7 +103,7 @@ export GREP_OPTIONS="--color=auto $GREP_OPTIONS"
 # 拡張子が.tmpのファイルは無視する。
 export GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
 
-export EDITOR=/usr/bin/vi 
+export EDITOR=/usr/local/bin/vim
 export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
 export NDK_ROOT="/Applications/android-ndk" 
 export PATH=~/bin:$PATH
