@@ -31,3 +31,5 @@ desktop.ini
 /.vim/backup/*
 /.vim/.netrwhist
 /.vim/.netrwhist.clean
+/.vim/.neomru_direcroty
+/.vim/.neomru_file

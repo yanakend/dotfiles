@@ -148,5 +148,5 @@ if which tmux > /dev/null 2>&1; then
 fi
 
 # # .zshrcローカル設定ファイル読み込み
-# [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
 

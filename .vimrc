@@ -18,36 +18,40 @@ call neobundle#rc(expand($VIMHOME.'/bundle/'))
 
 " originalrepos on github
 " 自動でリポジトリと同期するプラグイン
-NeoBundle 'Shougo/neobundle.vim.git'
-NeoBundle 'Shougo/vimproc.git', {
+NeoBundle 'Shougo/neobundle.vim'
+NeoBundle 'Shougo/vimproc', {
       \	'build': {
       \	  'cygwin': 'make -f make_cygwin.mak',
       \	  'mac':	'make -f make_mac.mak',
       \	  'unix':	'make -f make_unix.mak',
       \	},
       \ }
-NeoBundle 'Shougo/unite.vim.git'
-NeoBundle 'Shougo/vimshell.git'
-NeoBundle 'thinca/vim-quickrun.git'
-NeoBundle 'vim-jp/vimdoc-ja.git'
-NeoBundle 'fuenor/qfixhowm.git'
-NeoBundle 'vim-scripts/EnhCommentify.vim.git'
-NeoBundle 'vim-scripts/savevers.vim.git'
-NeoBundle 'vim-scripts/sudo.vim.git'
-NeoBundle 'acustodioo/vim-enter-indent.git'
-NeoBundle 'vim-scripts/gtags.vim.git'
-NeoBundle 'scrooloose/syntastic.git'
-NeoBundle 'vim-scripts/Align.git'
-NeoBundle 'Shougo/neocomplcache.git'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neomru.vim', {
+    \ 'depends' : 'Shougo/unite.vim'
+    \ }
+NeoBundle 'Shougo/vimshell'
+NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'vim-jp/vimdoc-ja'
+NeoBundle 'fuenor/qfixhowm'
+NeoBundle 'vim-scripts/EnhCommentify.vim'
+NeoBundle 'vim-scripts/savevers.vim'
+NeoBundle 'vim-scripts/sudo.vim'
+NeoBundle 'acustodioo/vim-enter-indent'
+NeoBundle 'vim-scripts/gtags.vim'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'vim-scripts/Align'
+NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'Lokaltog/vim-easymotion.git'
-NeoBundle 'gregsexton/gitv.git'
-NeoBundle 'vim-scripts/SQLUtilities.git'
-NeoBundle 'tpope/vim-fugitive.git'
-NeoBundle 'kien/ctrlp.vim.git'
+NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'gregsexton/gitv'
+NeoBundle 'vim-scripts/SQLUtilities'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'Shougo/vimfiler'
-NeoBundle 'thinca/vim-ref.git'
+NeoBundle 'thinca/vim-ref'
+NeoBundle 'vim-scripts/PreserveNoEOL'
 NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
 filetype plugin indent on
 NeoBundleCheck
@@ -221,8 +225,8 @@ vnoremap <TAB>	>
 vnoremap <S-TAB>  <
 
 " Indent
-nnoremap > >>
-nnoremap < <<
+"nnoremap > >>
+"nnoremap < <<
 vnoremap > >gv
 vnoremap < <gv
 			
@@ -251,6 +255,7 @@ autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
 autocmd FileType smarty setlocal tabstop=2 shiftwidth=2
 autocmd FileType css setlocal tabstop=2 shiftwidth=2
 autocmd FileType vim setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd BufRead,BufNewFile *.blade.php setlocal tabstop=2 shiftwidth=2 expandtab
 
 "----------------------------------------
 " quickrun.vim
@@ -392,7 +397,9 @@ inoremap <expr><C-n> neocomplcache#manual_keyword_complete()
 let g:unite_enable_start_insert = 1
 let g:unite_enable_short_source_names = 1
 let g:unite_split_rule = 'botright'
-let g:unite_source_file_mru_limit = 200
+"let g:unite_source_file_mru_limit = 200
+let g:neomru#file_mru_path=expand('~/.vim/.neomru_file')
+let g:neomru#directory_mru_path=expand('~/.vim/.neomru_direcroty')
 
 " バッファ一覧	-auto-resize
 nnoremap <silent> <Space>b	:<C-u>Unite buffer -horizontal -direction=botright<CR>
