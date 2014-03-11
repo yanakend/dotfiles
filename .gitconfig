@@ -57,6 +57,7 @@
 	subup = submodule update
 	coclean = !git checkout . && git clean -fd
 	ignore = "!f() { [ -z \"$1\" ] && exit 1; curl http://gitignore.io/api/$1 ;}; f"
+	ammend = commit --amend --no-edit
 
 [help]
 	autocorrect = 30
