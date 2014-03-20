@@ -62,7 +62,7 @@
 [help]
 	autocorrect = 30
 [push]
-	default = simple
+	default = current
 [pager]
     log = diff-highlight | less
     show = diff-highlight | less

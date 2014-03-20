@@ -53,6 +53,7 @@ NeoBundle 'Shougo/vimfiler'
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'vim-scripts/PreserveNoEOL'
 NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
+NeoBundle 'nathanaelkane/vim-indent-guides.git'
 filetype plugin indent on
 NeoBundleCheck
 
