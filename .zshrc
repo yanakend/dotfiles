@@ -1,7 +1,4 @@
 #!/bin/zsh
-  
-export GNUTERM=aqua
-export DISPLAY=0.0
  
 # emacs風のキーバインド
 bindkey -e
@@ -18,7 +15,7 @@ setopt no_beep
 setopt correct
 
 # プロンプト
-autoload colors
+autoload -U colors
 colors
 setopt prompt_subst
 PROMPT="%/%% "
@@ -39,14 +36,14 @@ HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 
-setopt hist_ignore_dups # 直前と同じコマンドは記憶しない
-setopt share_history # ヒストリを共有
-setopt extended_history # ヒストリに時刻を追加
+setopt hist_ignore_dups   # 直前と同じコマンドは記憶しない
+setopt share_history      # ヒストリを共有
+setopt extended_history   # ヒストリに時刻を追加
 setopt hist_reduce_blanks # 余分な空白は詰める
-setopt hist_ignore_space # 最初がスペースで始まる場合は記憶しない
+setopt hist_ignore_space  # 最初がスペースで始まる場合は記憶しない
  
 # ヒストリの検索
-autoload history-search-end
+autoload -U history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^P" history-beginning-search-backward-end
@@ -86,7 +83,6 @@ alias vi="vim"
 alias ls="ls -FG"
 alias ll="ls -lhG"
 alias la="ls -aGv"
-alias rm="rm -rf"
 alias cp="cp -i"
 alias mv="mv -i"
 alias emacs="emacs -nw"
@@ -94,31 +90,29 @@ alias LESS="less -IM -x 4"
 alias where="command -v"
 alias j="jobs -l"
 alias cronedit="crontab -e"
-alias yvim="export VIMHOME=~/.yanagi/.vim; vim -u ~/.yanagi/.vimrc"
 
 # バイナリファイルにはマッチさせない。
-export GREP_OPTIONS="--binary-files=without-match"
 # 可能なら色を付ける。
-export GREP_OPTIONS="--color=auto $GREP_OPTIONS"
 # 拡張子が.tmpのファイルは無視する。
-export GREP_OPTIONS="--exclude=\*.tmp $GREP_OPTIONS"
+export GREP_OPTIONS="--binary-files=without-match --color=auto --exclude=\*.tmp $GREP_OPTIONS"
 
 export EDITOR=/usr/local/bin/vim
+
 export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
 export NDK_ROOT="/Applications/android-ndk" 
+
 export PATH=~/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 export PATH="$(brew --prefix josegonzalez/php/php55)/bin:$PATH"
 
-# cd git-root-dir
-function git-root() {
+function cd-gitroot() {
   if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
 	cd `pwd`/`git rev-parse --show-cdup`
   fi
 }
 
-# VCSの情報を取得するzshの便利関数 vcs_infoを使う
+# VCS(git|svn|hg)の情報を取得するzshの便利関数 vcs_infoを使う
 autoload -Uz vcs_info
 # 表示フォーマットの指定
 # %b ブランチ情報
