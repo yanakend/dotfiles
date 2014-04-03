@@ -27,7 +27,7 @@
 [core]
 	autocrlf = input
 	editor = /usr/bin/vim
-	excludesfile = ~/.gitignore
+	excludesfile = ~/.gitignore_global
 	pager = less -R
 
 [alias]
@@ -45,8 +45,7 @@
 	dts = difftool -d --staged 
 	h = help
 	l = log --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short
-    graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short
-    grapha = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=short --all
+    graph = !git log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=iso8601
 	pl = pull
 	pr = pull --rebase
 	ps = push
