@@ -4,7 +4,7 @@
 bindkey -e
 
 # 補完
-autoload -U compinit
+autoload -Uz compinit
 compinit
 
 # ビープ音を消す
@@ -15,7 +15,7 @@ setopt no_beep
 setopt correct
 
 # プロンプト
-autoload -U colors
+autoload -Uz colors
 colors
 setopt prompt_subst
 PROMPT="%/%% "
@@ -43,7 +43,7 @@ setopt hist_reduce_blanks # 余分な空白は詰める
 setopt hist_ignore_space  # 最初がスペースで始まる場合は記憶しない
  
 # ヒストリの検索
-autoload -U history-search-end
+autoload -Uz history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^P" history-beginning-search-backward-end
@@ -119,13 +119,19 @@ autoload -Uz vcs_info
 # %a アクション名(mergeなど)
 zstyle ':vcs_info:*' formats '[%r:%b]'
 zstyle ':vcs_info:*' actionformats '[%r:%b|%a]'
-precmd () {
-	psvar=()
-	LANG=en_US.UTF-8 vcs_info
-	[[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
-}
 # バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
 RPROMPT="%1(v|%F{blue}%1v%f|)"
+
+# auto-fu.zsh git://github.com/hchbaw/auto-fu.zsh.git
+if [ -f ~/.zsh/auto-fu.zsh/auto-fu.zsh ]; then
+	source ~/.zsh/auto-fu.zsh/auto-fu.zsh
+	function zle-line-init () {
+		auto-fu-init
+	}
+	zle -N zle-line-init
+	# 「-azfu-」を表示させない
+	zstyle ':auto-fu:var' postdisplay $''.
+fi
 
 # tmux ssh 時に新規ウィンドウを作る
 if which tmux > /dev/null 2>&1; then
@@ -141,6 +147,12 @@ if which tmux > /dev/null 2>&1; then
 	fi
 fi
 
-# # .zshrcローカル設定ファイル読み込み
+# .zshrcローカル設定ファイル読み込み
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
+# プロンプトを表示直前に呼び出される
+precmd () {
+	psvar=()
+	LANG=en_US.UTF-8 vcs_info
+	[[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+}
