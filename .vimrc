@@ -54,6 +54,7 @@ NeoBundle 'thinca/vim-ref'
 NeoBundle 'vim-scripts/PreserveNoEOL'
 NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
 NeoBundle 'nathanaelkane/vim-indent-guides.git'
+NeoBundle 'thinca/vim-localrc'
 filetype plugin indent on
 NeoBundleCheck
 
@@ -93,7 +94,7 @@ set noterse							" ファイルの端まで検索してしまったときのメ
 set smartcase						" でも大文字小文字が混ざって入力されたら区別する
 set tabstop=4						" 4タブ
 set shiftwidth=4					" 4タブ
-set noexpandtab						  " タブを空白に
+set expandtab						  " タブを空白に
 set nowrap							" 折り返さない
 set cmdheight=1						" コマンドラインの高さ(GUI使用時)
 set ignorecase
