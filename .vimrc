@@ -27,10 +27,13 @@ NeoBundle 'Shougo/vimproc', {
       \	},
       \ }
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim', {
     \ 'depends' : 'Shougo/unite.vim'
     \ }
-NeoBundle 'Shougo/vimshell'
+NeoBundle "h1mesuke/unite-outline"
+"NeoBundle 'Shougo/vimshell'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'fuenor/qfixhowm'
@@ -38,10 +41,10 @@ NeoBundle 'vim-scripts/EnhCommentify.vim'
 NeoBundle 'vim-scripts/savevers.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'acustodioo/vim-enter-indent'
-NeoBundle 'vim-scripts/gtags.vim'
+"NeoBundle 'vim-scripts/gtags.vim'
+NeoBundle '5t111111/alt-gtags.vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'vim-scripts/Align'
-NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'gregsexton/gitv'
@@ -49,12 +52,15 @@ NeoBundle 'vim-scripts/SQLUtilities'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'Shougo/vimfiler'
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'vim-scripts/PreserveNoEOL'
 NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
 NeoBundle 'nathanaelkane/vim-indent-guides.git'
 NeoBundle 'thinca/vim-localrc'
+NeoBundle 'rhysd/clever-f.vim'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'Townk/vim-autoclose'
+
 filetype plugin indent on
 NeoBundleCheck
 
@@ -146,13 +152,6 @@ nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
 
-" search
-" *での検索時は次候補ではなくカーソル下結果から動かないように
-nnoremap <silent> n nzz
-nnoremap <silent> N Nzz
-nnoremap <silent> * *N
-nnoremap <silent> # #N
-
 " windo diffthis
 " diffoff!
 " diff diff更新
@@ -227,8 +226,6 @@ vnoremap <TAB>	>
 vnoremap <S-TAB>  <
 
 " Indent
-"nnoremap > >>
-"nnoremap < <<
 vnoremap > >gv
 vnoremap < <gv
 			
@@ -258,6 +255,9 @@ autocmd FileType smarty setlocal tabstop=2 shiftwidth=2
 autocmd FileType css setlocal tabstop=2 shiftwidth=2
 autocmd FileType vim setlocal tabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.blade.php setlocal tabstop=2 shiftwidth=2 expandtab
+autocmd BufRead,BufNewFile *.csv set filetype=csv
+autocmd BufRead,BufNewFile *.mm set filetype=objc
+autocmd FileType vim,text setlocal textwidth=0
 
 "----------------------------------------
 " quickrun.vim
@@ -309,7 +309,7 @@ endif
 
 "----------------------------------------
 " savevers.vim
-":VersDiff - :VersDiff + :VersDiff -c
+":VersDiff - :VersDiff + :VersDiff -c :Purge -a 0
 set patchmode=.clean			" バックアップファイルの設定savevers.vimのためにパッチモードにします
 let savevers_types = "*"		" カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
 let savevers_dirs = &backupdir	" バックアップファイルが書き込まれるディレクトリです
@@ -346,11 +346,11 @@ let g:neocomplcache_dictionary_filetype_lists = {
       \ }
 
 " Define keyword.
+" smartyはhtmlと同じに
 if !exists('g:neocomplcache_keyword_patterns')
   let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-" smartyはhtmlと同じに
 let g:neocomplcache_keyword_patterns['smarty'] = '</\?\%([[:alnum:]_:-]\+\s*\)\?\%(/\?>\)\?\|&amp;\h\%(\w*;\)\?\|\h[[:alnum:]_-]*="\%([^"]*"\?\)\?\|\h[[:alnum:]_:-]*'
 
 " 関数を補完するための区切り文字パターン
@@ -359,10 +359,10 @@ if !exists('g:neocomplcache_delimiter_patterns')
 endif
 let g:neocomplcache_delimiter_patterns['php'] = ['->', '::', '\']
 
+" smartyはhtmlと同じに
 if !exists('g:neocomplcache_next_keyword_patterns')
   let g:neocomplcache_next_keyword_patterns = {}
 endif
-" smartyはhtmlと同じに
 let g:neocomplcache_next_keyword_patterns['smarty'] = '[[:alnum:]_:-]*>\|[^"]*"'
 
 " オムニ補完
@@ -370,11 +370,7 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType smarty setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd BufRead,BufNewFile *.csv set filetype=csv
-autocmd BufRead,BufNewFile *.mm set filetype=objc
-"autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
-" textwidth設定上書き
-autocmd FileType vim,text setlocal textwidth=0
+autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 
 " 改行で補完ウィンドウを閉じる
 inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
@@ -406,9 +402,9 @@ let g:neomru#directory_mru_path=expand('~/.vim/.neomru_direcroty')
 " バッファ一覧	-auto-resize
 nnoremap <silent> <Space>b	:<C-u>Unite buffer -horizontal -direction=botright<CR>
 " 最近使用したファイル一覧
-nnoremap <silent> <Space>m	:<C-u>Unite file_mru -direction=botright<CR>
+nnoremap <silent> <Space>m	:<C-u>Unite file_mru -horizontal -direction=botright<CR>
 " 関数一覧
-nnoremap <silent> <Space>f :<C-u>Unite get_function -direction=botright<CR>
+nnoremap <silent> <Space>f :<C-u>Unite outline -horizontal -direction=botright<CR>
 " unite.vim上でのキーマッピング
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
@@ -483,27 +479,24 @@ set helplang=ja,en
 
 "------------------------------------
 " gtags
-" カーソル以下の定義元を探す
-nnoremap <Space>td :Gtags <C-r><C-w><CR><C-w><C-w>
-" カーソル以下の使用箇所を探す
-nnoremap <Space>tr :Gtags -r <C-r><C-w><CR><C-w><C-w>
-" Grep 準備
-nnoremap <Space>tg :Gtags -g 
-" このファイルの関数一覧
-nnoremap <Space>tf :Gtags -f %<CR>
-" 検索結果Windowを閉じる
+nnoremap <Space>td :AltGtags<CR>
+nnoremap <Space>tr :AltGtags -r<CR>
+nnoremap <Space>ts :AltGtags -s<CR>
+nnoremap <Space>tf :AltGtags -f<CR>
+nnoremap <C-n> :cn<CR>
+nnoremap <C-p> :cp<CR>
 nnoremap <C-q> :ccl<CR>
 
 "------------------------------------
 " 空白→タブ変換
-"set list
-"set listchars=tab:.\ 
-function! s:CleanSpace()
-  let cursor = getpos(".")
-  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
-  call setpos(".", cursor)
-  unlet cursor
-endfunction
+set list
+set listchars=tab:.\ 
+"function! s:CleanSpace()
+"  let cursor = getpos(".")
+"  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
+"  call setpos(".", cursor)
+"  unlet cursor
+"endfunction
 "autocmd BufWritePre *.php call <SID>CleanSpace()
 
 "------------------------------------
@@ -553,74 +546,6 @@ endfunction
 " ctrlp.vim
 let g:ctrlp_clear_cache_on_exit = 0   " 終了時キャッシュをクリアしない
 let g:ctrlp_mruf_max            = 500 " MRUの最大記録数
-
-"------------------------------------
-" JDoc
-" Auto JDoc Commands
-autocmd FileType javascript nnoremap <silent> <Space>c :call JsJDoc()<CR>
-autocmd FileType php nnoremap <silent> <Space>c :call PhpJDoc()<CR>
-
-" Insert JDoc Comment
-" param summary: Summary of the function
-" param args: list of arguments' name
-function! AddJDocComment(summary, args)
-  let c = indent(".") / &tabstop
-  let top = a:firstline - 1 
-  let l = a:firstline - 1 
-  let s = ''
-  while len(s) < (c) 
-    let s = s . "\t"
-  endwhile
-
-  call append(l, s . '/**')
-  let l+=1
-  call append(l, s . ' * ' . a:summary)
-  let l+=1
-  call append(l, s . ' * ' . a:summary)
-  let l+=1
-
-  for arg in a:args
-    let arg_name = matchstr(arg, '.*')
-    call append(l, s . ' * @param  array ' . arg_name . ' ')
-    let l+=1
-    if arg_name == '$params'
-      call append(l, s . ' * @param  id    ' . arg_name . '.user_id ユーザーID')
-      let l+=1
-    endif
-  endfor
-
-  call append(l, s . ' * @return void ' . a:summary)
-  let l+=1
-
-  call append(l, s . ' */')
-
-  call cursor(top+2, 80) 
-  call feedkeys('A', 'n')
-endfunction
-
-" Insert JDoc Comment in Js source code
-function! JsJDoc()
-  let args = split(matchstr(getline('.'), 'function(\zs.*\ze)'),' *, *')
-  call AddJDocComment('', args)
-endfunction
-
-" Insert JDoc Comment in PHP source code
-function! PhpJDoc()
-  let args = split(matchstr(getline('.'), 'function [^(]*(\zs.*\ze)'),' *, *')
-  call AddJDocComment('', args)
-endfunction
-
-" コメントからバリデートへ置換
-function! Com2Val()
-  let line = substitute(getline('.'), '.*@\(\w\+\)\(\W\+\)\([0-9a-zA-Z,]\+\)\(\W\+\)\(\w\+\)\(\W\+\)\(\w\+\).*', "'".'\7'."'"." => "."'".'\3'."',", '')
-  call setline('.', line)
-endfunction
-
-" ymlから配列形式へ置換
-function! Yml2Array()
-  let line = substitute(getline('.'), '\([0-9A-Za-z_-]\+\)[ ]*:[ '."'".'"]*\([0-9A-Za-z_-]\+\)['."'".'"]*', "'".'\1'."'"." => "."'".'\2'."',", '')
-  call setline('.', line)
-endfunction
 
 "------------------------------------
 " syntastic.vim
@@ -718,5 +643,34 @@ endfunction
 
 "------------------------------------
 " vim-shell
-let g:vimshell_prompt_expr = 'getcwd()."% "'
-let g:vimshell_prompt_pattern = '^\f\+% '
+"let g:vimshell_prompt_expr = 'getcwd()."% "'
+"let g:vimshell_prompt_pattern = '^\f\+% '
+
+"------------------------------------
+" PreserveNoEOL
+let g:PreserveNoEOL = 1
+
+"------------------------------------
+" EasyMotion
+let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_startofline = 0
+let g:EasyMotion_use_upper = 1
+let g:EasyMotion_enter_jump_first = 1
+let g:EasyMotion_space_jump_first = 1
+nmap s <Plug>(easymotion-s2)
+xmap s <Plug>(easymotion-s2)
+omap z <Plug>(easymotion-s2)
+nmap g/ <Plug>(easymotion-sn)
+xmap g/ <Plug>(easymotion-sn)
+omap g/ <Plug>(easymotion-tn)
+"map  / <Plug>(easymotion-sn)
+"omap / <Plug>(easymotion-tn)
+"map  n <Plug>(easymotion-next)
+"map  N <Plug>(easymotion-prev)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+
+"------------------------------------
+" clever-f.vim
+let g:clever_f_smart_case = 1
