@@ -28,6 +28,8 @@ NeoBundle 'Shougo/vimproc', {
       \ }
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neocomplcache'
+NeoBundle "Shougo/neosnippet"
+NeoBundle "Shougo/neosnippet-snippets"
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim', {
     \ 'depends' : 'Shougo/unite.vim'
@@ -389,6 +391,19 @@ inoremap <expr><C-g> neocomplcache#undo_completion()
 " vim標準のキーワード補完を置き換える
 inoremap <expr><C-n> neocomplcache#manual_keyword_complete()
 
+"------------------------------------
+" neosnippet.vim
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+
 "----------------------------------------
 " unite.vim
 " 入力モードで開始する
@@ -674,3 +689,4 @@ map <Leader>k <Plug>(easymotion-k)
 "------------------------------------
 " clever-f.vim
 let g:clever_f_smart_case = 1
+
