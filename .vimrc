@@ -690,3 +690,7 @@ map <Leader>k <Plug>(easymotion-k)
 " clever-f.vim
 let g:clever_f_smart_case = 1
 
+"------------------------------------
+" vim-autoclose
+" autoclose.vim function! s:CreateExtraMaps() を書き換えてる
+let g:AutoClosePreserveDotReg = 0
