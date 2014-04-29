@@ -506,12 +506,12 @@ nnoremap <C-q> :ccl<CR>
 " 空白→タブ変換
 set list
 set listchars=tab:.\ 
-"function! s:CleanSpace()
-"  let cursor = getpos(".")
-"  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
-"  call setpos(".", cursor)
-"  unlet cursor
-"endfunction
+function! s:CleanSpace()
+  let cursor = getpos(".")
+  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
+  call setpos(".", cursor)
+  unlet cursor
+endfunction
 "autocmd BufWritePre *.php call <SID>CleanSpace()
 
 "------------------------------------
@@ -655,11 +655,6 @@ function! s:initialize_ref_viewer()
   nnoremap <buffer> c
   setlocal nonumber
 endfunction
-
-"------------------------------------
-" vim-shell
-"let g:vimshell_prompt_expr = 'getcwd()."% "'
-"let g:vimshell_prompt_pattern = '^\f\+% '
 
 "------------------------------------
 " PreserveNoEOL
