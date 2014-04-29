@@ -237,6 +237,12 @@ inoremap <C-d>	<Del>
 " <C-t>: insert tab.
 inoremap <C-t>  <C-v><TAB>
 
+" 挿入モードでのカーソル移動
+inoremap <C-p> <Up>
+inoremap <C-b> <Left>
+inoremap <C-f> <Right>
+inoremap <silent> <C-a> <C-o>0
+
 " 選択した文字列を置換
 vnoremap s "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
 
@@ -389,7 +395,7 @@ inoremap <expr><C-e> pumvisible() ? neocomplcache#cancel_popup() : "\<End>"
 " C-gで補完を元に戻す
 inoremap <expr><C-g> neocomplcache#undo_completion()
 " vim標準のキーワード補完を置き換える
-inoremap <expr><C-n> neocomplcache#manual_keyword_complete()
+inoremap <expr><C-n> pumvisible() ? neocomplcache#manual_keyword_complete() : "\<Down>"
 
 "------------------------------------
 " neosnippet.vim
