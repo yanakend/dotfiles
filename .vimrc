@@ -234,8 +234,6 @@ vnoremap < <gv
 " Insert mode keymappings:
 " <C-d>: delete char.
 inoremap <C-d>	<Del>
-" <C-t>: insert tab.
-inoremap <C-t>  <C-v><TAB>
 
 " 挿入モードでのカーソル移動
 inoremap <C-p> <Up>
@@ -280,10 +278,33 @@ let g:quickrun_config["_"] = {
       \ "outputter" : "error",
       \ }
 let $JS_CMD='node'
-function! QuickTest(arg1)
+
+function! s:QuickTest(arg1)
 	execute "e $HOME/.vim/test.".a:arg1
 endfunction
-command! -nargs=1 Quick call QuickTest(<f-args>)
+command! -nargs=1 Quick call s:QuickTest(<f-args>)
+
+function! s:OpenTest(arg1)
+  let filepath = expand("%:p")
+  if (a:arg1 == 'view')
+    if (stridx(filepath, '/fp/') == -1)
+      execute "e ".substitute(filepath, 'sp', 'fp', "g")
+    elseif (stridx(filepath, '/sp/') == -1)
+      execute "e ".substitute(filepath, 'fp', 'sp', "g")
+    endif
+  endif
+  if (a:arg1 == 'pj')
+    if (stridx(filepath, '/god/') == -1)
+      execute "e ".substitute(filepath, 'king', 'god', "g")
+    elseif (stridx(filepath, '/king/') == -1)
+      execute "e ".substitute(filepath, 'god', 'king', "g")
+    endif
+  endif
+endfunction
+command! Vopen call s:OpenTest('view')
+command! Popen call s:OpenTest('pj')
+nnoremap <Space>ov :Vopen<CR>
+nnoremap <Space>op :Popen<CR>
 
 "----------------------------------------
 " qfixhowm.vim

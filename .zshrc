@@ -122,17 +122,6 @@ zstyle ':vcs_info:*' actionformats '[%r:%b|%a]'
 # バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
 RPROMPT="%1(v|%F{blue}%1v%f|)"
 
-# auto-fu.zsh git://github.com/hchbaw/auto-fu.zsh.git
-if [ -f ~/.zsh/auto-fu.zsh/auto-fu.zsh ]; then
-	source ~/.zsh/auto-fu.zsh/auto-fu.zsh
-	function zle-line-init () {
-		auto-fu-init
-	}
-	zle -N zle-line-init
-	# 「-azfu-」を表示させない
-	zstyle ':auto-fu:var' postdisplay $''.
-fi
-
 # tmux ssh 時に新規ウィンドウを作る
 if which tmux > /dev/null 2>&1; then
 	ssh_tmux() {
