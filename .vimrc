@@ -525,9 +525,9 @@ nnoremap <Space>td :AltGtags<CR>
 nnoremap <Space>tr :AltGtags -r<CR>
 nnoremap <Space>ts :AltGtags -s<CR>
 nnoremap <Space>tf :AltGtags -f<CR>
-nnoremap <C-n> :cn<CR>
-nnoremap <C-p> :cp<CR>
-nnoremap <C-q> :ccl<CR>
+nnoremap <silent> <C-n> :cn<CR>
+nnoremap <silent> <C-p> :cp<CR>
+nnoremap <silent> <C-q> :ccl<CR>
 
 "------------------------------------
 " 空白→タブ変換
