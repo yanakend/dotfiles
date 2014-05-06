@@ -35,7 +35,6 @@ NeoBundle 'Shougo/neomru.vim', {
     \ 'depends' : 'Shougo/unite.vim'
     \ }
 NeoBundle "h1mesuke/unite-outline"
-"NeoBundle 'Shougo/vimshell'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'fuenor/qfixhowm'
@@ -43,7 +42,6 @@ NeoBundle 'vim-scripts/EnhCommentify.vim'
 NeoBundle 'vim-scripts/savevers.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'acustodioo/vim-enter-indent'
-"NeoBundle 'vim-scripts/gtags.vim'
 NeoBundle '5t111111/alt-gtags.vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'vim-scripts/Align'
@@ -284,6 +282,8 @@ function! s:QuickTest(arg1)
 endfunction
 command! -nargs=1 Quick call s:QuickTest(<f-args>)
 
+"----------------------------------------
+" project
 function! s:OpenTest(arg1)
   let filepath = expand("%:p")
   if (a:arg1 == 'view')
@@ -308,6 +308,11 @@ nnoremap <Space>op :Popen<CR>
 
 "----------------------------------------
 " qfixhowm.vim
+" <Space>gm file list
+" <Space>gu quick memo
+" <Space>ge grep
+" <Space>gc new file
+"
 let g:MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|logs[/\\]\|cached[/\\]\|compiled[/\\]\|[/\\]\.svn[/\\]\|[/\\]\.git[/\\]'
 " 検索ディレクトリはカレントディレクトリを基点にしない
 let g:MyGrep_CurrentDirMode = 1
@@ -317,24 +322,20 @@ let g:qfixmemo_mapleader = '<Space>g'
 let QFix_PreviewHeight = 20
 let g:MyGrep_FilePattern = '*'
 let g:MyGrep_RecursiveMode = 1
-" メモファイルの保存先
-if os=="win"
-  let qfixmemo_dir = 'D:\dev\Dropbox\qfixmemo'
-endif
-if os=="macvim" || os=="linux"
-  let qfixmemo_dir = '~/Dropbox/qfixmemo'
-endif
-
-" QFixGrepの検索時にカーソル位置の単語を拾う/拾わない
 let MyGrep_DefaultSearchWord = 0
-nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
+" メモファイルの保存先
 " Windowsからcygwin1.7以降のgrep.exeを使用する場合
 " UTF-8の一部文字列が検索不可なのを修正します。
 if os=="win"
+  let qfixmemo_dir = 'D:\dev\Dropbox\qfixmemo'
   let MyGrep_cygwin17 = 1
   let mygrepprg = 'D:/dev/cygwin/bin/grep'
   let grepprg='D:/dev/cygwin/bin/grep\ -nH'
+elseif os=="macvim" || os=="linux"
+  let qfixmemo_dir = '~/Dropbox/qfixmemo'
 endif
+" カレントディレクトリ移動
+nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
 
 "----------------------------------------
 " savevers.vim
@@ -487,7 +488,7 @@ function! s:bundle.hooks.on_source(bundle)
   let g:vimfiler_as_default_explorer = 1
   " セーフモード無効化
   let g:vimfiler_safe_mode_by_default = 0
-
+  " ファイル数が多い場合、これがないと/検索でヒットしない
   let g:vimfiler_draw_files_limit=1000
   " デフォルトでvim開く
   call vimfiler#set_execute_file('_', 'vim')
@@ -716,3 +717,4 @@ let g:clever_f_smart_case = 1
 " vim-autoclose
 " autoclose.vim function! s:CreateExtraMaps() を書き換えてる
 let g:AutoClosePreserveDotReg = 0
+
