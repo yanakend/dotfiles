@@ -37,7 +37,6 @@ NeoBundle 'Shougo/neomru.vim', {
 NeoBundle "h1mesuke/unite-outline"
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'vim-jp/vimdoc-ja'
-NeoBundle 'fuenor/qfixhowm'
 NeoBundle 'vim-scripts/EnhCommentify.vim'
 NeoBundle 'vim-scripts/savevers.vim'
 NeoBundle 'vim-scripts/sudo.vim'
@@ -278,9 +277,14 @@ let g:quickrun_config["_"] = {
 let $JS_CMD='node'
 
 function! s:QuickTest(arg1)
-	execute "e $HOME/.vim/test.".a:arg1
+	execute "e ~/Dropbox/vim/test.".a:arg1
 endfunction
 command! -nargs=1 Quick call s:QuickTest(<f-args>)
+
+function! s:OpenMemo()
+	execute "e ~/Dropbox/vim/memo.txt"
+endfunction
+command! Memo call s:OpenMemo()
 
 "----------------------------------------
 " project
@@ -306,36 +310,9 @@ command! Popen call s:OpenTest('pj')
 nnoremap <Space>ov :Vopen<CR>
 nnoremap <Space>op :Popen<CR>
 
-"----------------------------------------
-" qfixhowm.vim
-" <Space>gm file list
-" <Space>gu quick memo
-" <Space>ge grep
-" <Space>gc new file
-"
-let g:MyGrep_ExcludeReg = '[~#]$\|\.dll$\|\.exe$\|\.lnk$\|\.o$\|\.obj$\|\.pdf$\|\.xls$\|logs[/\\]\|cached[/\\]\|compiled[/\\]\|[/\\]\.svn[/\\]\|[/\\]\.git[/\\]'
-" 検索ディレクトリはカレントディレクトリを基点にしない
-let g:MyGrep_CurrentDirMode = 1
-let g:QFix_CloseOnJump = 1
-let g:QFix_HighSpeedPreview = 1
-let g:qfixmemo_mapleader = '<Space>g'
-let QFix_PreviewHeight = 20
-let g:MyGrep_FilePattern = '*'
-let g:MyGrep_RecursiveMode = 1
-let MyGrep_DefaultSearchWord = 0
-" メモファイルの保存先
-" Windowsからcygwin1.7以降のgrep.exeを使用する場合
-" UTF-8の一部文字列が検索不可なのを修正します。
-if os=="win"
-  let qfixmemo_dir = 'D:\dev\Dropbox\qfixmemo'
-  let MyGrep_cygwin17 = 1
-  let mygrepprg = 'D:/dev/cygwin/bin/grep'
-  let grepprg='D:/dev/cygwin/bin/grep\ -nH'
-elseif os=="macvim" || os=="linux"
-  let qfixmemo_dir = '~/Dropbox/qfixmemo'
-endif
 " カレントディレクトリ移動
 nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
+
 
 "----------------------------------------
 " savevers.vim
@@ -448,11 +425,23 @@ nnoremap <silent> <Space>b	:<C-u>Unite buffer -horizontal -direction=botright<CR
 nnoremap <silent> <Space>m	:<C-u>Unite file_mru -horizontal -direction=botright<CR>
 " 関数一覧
 nnoremap <silent> <Space>f :<C-u>Unite outline -horizontal -direction=botright<CR>
+" grep
+nnoremap <silent> <Space>gr  :<C-u>Unite grep:. -buffer-name=search-buffer -auto-preview<CR>
+" grep検索結果の再呼出
+nnoremap <silent> <Space>r  :<C-u>UniteResume search-buffer<CR>
+
+" unite grep に ag(The Silver Searcher) を使う
+if executable('ag')
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_recursive_opt = ''
+endif
+
 " unite.vim上でのキーマッピング
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
-  inoremap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+  inoremap <silent><buffer> <C-w> <Plug>(unite_delete_backward_path)
   " ESCキーを押すと終了する
   imap <silent><buffer> <C-j> <Down>
   imap <silent><buffer> <C-k> <Up>
@@ -476,13 +465,14 @@ function! s:bundle.hooks.on_source(bundle)
   function! s:vimfiler_my_settings()
     nunmap <buffer> j
     nunmap <buffer> k
-  	nmap <buffer> <Space><Space> <Plug>(vimfiler_toggle_mark_current_line)
+    nmap <silent><buffer> <Space><Space> <Plug>(vimfiler_toggle_mark_current_line)k
     " ESCキーを押すと終了する
     nmap <silent><buffer> <C-[> q
     nmap <silent><buffer> <ESC> q
-    " N は検索として、i を新規作成にする
+    " N は検索として
     nunmap <buffer> N
-    nmap <buffer> i <Plug>(vimfiler_new_file)
+    " i を新規作成にする
+    nmap <silent><buffer> i <Plug>(vimfiler_new_file)
   endfunction
   " vimfilerをデフォルトのファイラにする
   let g:vimfiler_as_default_explorer = 1
@@ -530,6 +520,11 @@ nnoremap <silent> <C-n> :cn<CR>
 nnoremap <silent> <C-p> :cp<CR>
 nnoremap <silent> <C-q> :ccl<CR>
 
+"QuickFixウィンドウでq/ESCで閉じる
+autocmd FileType qf nnoremap <silent> <buffer> <CR> <CR>:ccl<CR>
+autocmd FileType qf nnoremap <silent> <buffer> q :ccl<CR>
+autocmd FileType qf nnoremap <silent> <buffer> <ESC> :ccl<CR>
+
 "------------------------------------
 " 空白→タブ変換
 set list
@@ -549,7 +544,7 @@ nnoremap <silent> <Space>gb :Gblame<CR>
 nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gD :Gdiff HEAD<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gl :Gitv!<CR>
-nnoremap <silent> <Space>gr :Gread<CR>
+"nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
 function! s:toggle_git_folding()
   if &filetype ==# 'git'

@@ -90,6 +90,8 @@ alias LESS="less -IM -x 4"
 alias where="command -v"
 alias j="jobs -l"
 alias cronedit="crontab -e"
+alias ag='ag -S --stats --pager "less -F"'
+alias agh='ag --hidden'
 
 # バイナリファイルにはマッチさせない。
 # 可能なら色を付ける。
