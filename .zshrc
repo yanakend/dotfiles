@@ -58,6 +58,8 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
+fpath=(~/src/zsh-completions/src $fpath)
+
 # コマンドがスペースで始まる場合、コマンド履歴に追加しない
 # 例： <Space>echo hello と入力
 setopt hist_ignore_space
@@ -103,10 +105,11 @@ export EDITOR=/usr/local/bin/vim
 export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
 export NDK_ROOT="/Applications/android-ndk" 
 
-export PATH=~/bin:$PATH
-export PATH=/usr/local/bin:$PATH
-export PATH=/usr/local/sbin:$PATH
-export PATH="$(brew --prefix josegonzalez/php/php55)/bin:$PATH"
+# 重複パスを登録しない
+typeset -U path PATH cdpath fpath manpath
+
+# pathを設定
+path=(~/bin(N-/) /usr/local/bin(N-/) ${path})
 
 function cd-gitroot() {
   if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
@@ -147,3 +150,5 @@ precmd () {
 	LANG=en_US.UTF-8 vcs_info
 	[[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
 }
+
+source ~/.phpbrew/bashrc

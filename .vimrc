@@ -310,10 +310,6 @@ command! Popen call s:OpenTest('pj')
 nnoremap <Space>ov :Vopen<CR>
 nnoremap <Space>op :Popen<CR>
 
-" カレントディレクトリ移動
-nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
-
-
 "----------------------------------------
 " savevers.vim
 ":VersDiff - :VersDiff + :VersDiff -c :Purge -a 0
@@ -419,21 +415,23 @@ let g:unite_split_rule = 'botright'
 let g:neomru#file_mru_path=expand('~/.vim/.neomru_file')
 let g:neomru#directory_mru_path=expand('~/.vim/.neomru_direcroty')
 
+" カレントディレクトリ移動
+nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
 " バッファ一覧	-auto-resize
-nnoremap <silent> <Space>b	:<C-u>Unite buffer -horizontal -direction=botright<CR>
+nnoremap <silent> <Space>b :<C-u>Unite buffer -horizontal -direction=botright<CR>
 " 最近使用したファイル一覧
-nnoremap <silent> <Space>m	:<C-u>Unite file_mru -horizontal -direction=botright<CR>
+nnoremap <silent> <Space>m :<C-u>Unite file_mru -horizontal -direction=botright<CR>
 " 関数一覧
 nnoremap <silent> <Space>f :<C-u>Unite outline -horizontal -direction=botright<CR>
 " grep
-nnoremap <silent> <Space>gr  :<C-u>Unite grep:. -buffer-name=search-buffer -auto-preview<CR>
+nnoremap <silent> <Space>gr :<C-u>Unite grep:. -buffer-name=search-buffer -auto-preview<CR>
 " grep検索結果の再呼出
-nnoremap <silent> <Space>r  :<C-u>UniteResume search-buffer<CR>
+nnoremap <silent> <Space>r :<C-u>UniteResume search-buffer<CR>
 
 " unite grep に ag(The Silver Searcher) を使う
 if executable('ag')
   let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--nogroup --nocolor --column'
+  let g:unite_source_grep_default_opts = '-S --nogroup --nocolor --column'
   let g:unite_source_grep_recursive_opt = ''
 endif
 
@@ -484,7 +482,7 @@ function! s:bundle.hooks.on_source(bundle)
   call vimfiler#set_execute_file('_', 'vim')
   " ココにvimfilerの設定とか記述する。
 endfunction
-nnoremap <silent><Space>e  :VimFilerBufferDir<cr>
+nnoremap <silent> <Space>e  :VimFilerBufferDir<cr>
 
 "------------------------------------
 " EnhCommentify.vim
