@@ -81,7 +81,7 @@ export LSCOLORS=ExFxCxDxBxEGEDABAGACAD
 # エイリアス
 alias vi="vim"
 alias ls="ls -FG"
-alias ll="ls -lhG"
+alias ll="ls -alhG"
 alias la="ls -aGv"
 alias cp="cp -i"
 alias mv="mv -i"
@@ -106,7 +106,6 @@ export NDK_ROOT="/Applications/android-ndk"
 export PATH=~/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
-export PATH="$(brew --prefix josegonzalez/php/php55)/bin:$PATH"
 
 function cd-gitroot() {
   if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
@@ -147,3 +146,12 @@ precmd () {
 	LANG=en_US.UTF-8 vcs_info
 	[[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
 }
+
+#_Z_CMD=j
+#source ~/z/z.sh
+#precmd() {
+#  _z --add "$(pwd -P)"
+#}
+
+# for phpbrew
+source ~/.phpbrew/bashrc

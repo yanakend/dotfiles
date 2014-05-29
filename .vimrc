@@ -58,7 +58,7 @@ NeoBundle 'nathanaelkane/vim-indent-guides.git'
 NeoBundle 'thinca/vim-localrc'
 NeoBundle 'rhysd/clever-f.vim'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'Townk/vim-autoclose'
+NeoBundle 'yanakend/vim-autoclose'
 
 filetype plugin indent on
 NeoBundleCheck
@@ -125,6 +125,7 @@ set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
 set fileformats=unix,dos,mac
 set nofoldenable
+set noundofile
 "let php_folding=1
 
 " Don't redraw while macro executing.
