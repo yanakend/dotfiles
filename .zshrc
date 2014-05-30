@@ -41,6 +41,7 @@ setopt share_history      # ヒストリを共有
 setopt extended_history   # ヒストリに時刻を追加
 setopt hist_reduce_blanks # 余分な空白は詰める
 setopt hist_ignore_space  # 最初がスペースで始まる場合は記憶しない
+setopt inc_append_history # 履歴をインクリメンタルに追加
  
 # ヒストリの検索
 autoload -Uz history-search-end
@@ -57,8 +58,6 @@ setopt pushd_ignore_dups # 重複しないようにする
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-
-fpath=(~/src/zsh-completions/src $fpath)
 
 # コマンドがスペースで始まる場合、コマンド履歴に追加しない
 # 例： <Space>echo hello と入力
@@ -108,8 +107,16 @@ export NDK_ROOT="/Applications/android-ndk"
 # 重複パスを登録しない
 typeset -U path PATH cdpath fpath manpath
 
-# pathを設定
-path=(~/bin(N-/) /usr/local/bin(N-/) ${path})
+path=(
+~/bin(N-/)
+/usr/local/bin(N-/) 
+${path}
+)
+
+fpath=(
+~/src/zsh-completions/src(N-/)
+${fpath}
+)
 
 #export PATH="$(brew --prefix josegonzalez/php/php55)/bin:$PATH"
 
@@ -146,18 +153,17 @@ fi
 # .zshrcローカル設定ファイル読み込み
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
+if [ -f $(brew --prefix z) ] ; then
+    _Z_CMD=j
+    source $(brew --prefix z)/etc/profile.d/z.sh
+fi
+
 # プロンプトを表示直前に呼び出される
 precmd () {
-	psvar=()
-	LANG=en_US.UTF-8 vcs_info
-	[[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+    psvar=()
+    LANG=en_US.UTF-8 vcs_info
+    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+    _z --add "$(pwd -P)"
 }
-
-#_Z_CMD=j
-#source ~/z/z.sh
-#precmd() {
-#  _z --add "$(pwd -P)"
-#}
-
 # for phpbrew
-source ~/.phpbrew/bashrc
+[ -f ~/.phpbrew/bashrc ] && source ~/.phpbrew/bashrc
