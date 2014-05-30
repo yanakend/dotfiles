@@ -153,7 +153,7 @@ fi
 # .zshrcローカル設定ファイル読み込み
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
-if [ -f $(brew --prefix z) ] ; then
+if [ -f $(brew --prefix z)/etc/profile.d/z.sh ] ; then
     _Z_CMD=j
     source $(brew --prefix z)/etc/profile.d/z.sh
 fi
