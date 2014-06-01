@@ -97,8 +97,8 @@ set incsearch						" インクリメンタルサーチ
 set nowrapscan						" 検索をファイルの末尾まで検索したら、ファイルの先頭へループする
 set noterse							" ファイルの端まで検索してしまったときのメッセージが表示しない
 set smartcase						" でも大文字小文字が混ざって入力されたら区別する
-set tabstop=4						" 4タブ
-set shiftwidth=4					" 4タブ
+set tabstop=2						" 4タブ
+set shiftwidth=2					" 4タブ
 set expandtab						  " タブを空白に
 set nowrap							" 折り返さない
 set cmdheight=1						" コマンドラインの高さ(GUI使用時)
@@ -249,19 +249,19 @@ cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
 
 "----------------------------------------
 " command
-autocmd FileType html setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
+autocmd FileType html setlocal tabstop=2 shiftwidth=2 omnifunc=htmlcomplete#CompleteTags includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 autocmd FileType objc setlocal tabstop=2 shiftwidth=2 expandtab
 autocmd FileType objcpp setlocal tabstop=2 shiftwidth=2 expandtab
-autocmd FileType javascript setlocal tabstop=2 shiftwidth=2
-autocmd FileType html setlocal tabstop=2 shiftwidth=2
+autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
-autocmd FileType smarty setlocal tabstop=2 shiftwidth=2
-autocmd FileType css setlocal tabstop=2 shiftwidth=2
 autocmd FileType vim setlocal tabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.blade.php setlocal tabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.csv set filetype=csv
 autocmd BufRead,BufNewFile *.mm set filetype=objc
 autocmd FileType vim,text setlocal textwidth=0
+autocmd FileType smarty setlocal tabstop=2 shiftwidth=2 omnifunc=htmlcomplete#CompleteTags
+autocmd FileType php setlocal tabstop=2 shiftwidth=2 omnifunc=phpcomplete#CompletePHP
+autocmd FileType css setlocal tabstop=2 shiftwidth=2 omnifunc=csscomplete#CompleteCSS
 
 "----------------------------------------
 " quickrun.vim
@@ -368,13 +368,6 @@ if !exists('g:neocomplcache_next_keyword_patterns')
   let g:neocomplcache_next_keyword_patterns = {}
 endif
 let g:neocomplcache_next_keyword_patterns['smarty'] = '[[:alnum:]_:-]*>\|[^"]*"'
-
-" オムニ補完
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType smarty setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 
 " 改行で補完ウィンドウを閉じる
 inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
