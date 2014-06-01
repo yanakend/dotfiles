@@ -114,9 +114,10 @@ if which tmux > /dev/null 2>&1; then
 	if [ $TERM = "screen" ] ; then
 		tmux lsw
 		if [ $? -eq 0 ] ; then
-			alias tssh=ssh_tmux
+			alias ssh=ssh_tmux
 		fi
 	fi
+  tmux attach || tmux
 fi
 
 # z.git
