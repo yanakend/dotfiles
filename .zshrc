@@ -108,13 +108,13 @@ fi
 # tmux
 if which tmux > /dev/null 2>&1; then
 	ssh_tmux() {
-		ssh_cmd="ssh $@"
+		ssh_cmd="\ssh $@"
 		tmux new-window -n "$*" "$ssh_cmd"
 	}
 	if [ $TERM = "screen" ] ; then
 		tmux lsw
 		if [ $? -eq 0 ] ; then
-			alias ssh=ssh_tmux
+			alias tssh=ssh_tmux
 		fi
 	fi
   tmux attach || tmux
