@@ -1,49 +1,49 @@
 #!/bin/zsh
  
-# emacs風のキーバインド
+#-------------------------------------------------------------------------------
 bindkey -e
-
-# 補完
 autoload -Uz compinit
 compinit
 
-# ビープ音を消す
-setopt nolistbeep 
-setopt no_beep
- 
-# ミスコマンドの訂正
-setopt correct
-
-# プロンプト
+#-------------------------------------------------------------------------------
+# prompt 
 autoload -Uz colors
 colors
-setopt prompt_subst
 PROMPT="%/%% "
 PROMPT2="%_%% "
-SPROMPT="%r is correct? [n,y,a,e]: "
-
-# 入力ミス確認用プロンプト
 SPROMPT=$'correct: %R -&gt; %r ? [n,y,a,e]: '
  
-# ^Dでログアウトしないようにする
-setopt ignore_eof
- 
+# <Tab> でパス名の補完候補を表示したあと、
+# 続けて <Tab> を押すと候補からパス名を選択できるようになる
+# 候補を選ぶには <Tab> か Ctrl-N,B,F,P
+zstyle ':completion:*:default' menu select=1
 # 補完の時に大文字小文字を区別しない
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
  
-# ヒストリの設定
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
+# 単語の一部として扱われる文字のセットを指定する
+# ここではデフォルトのセットから / を抜いたものとする
+# こうすると、 Ctrl-W でカーソル前の1単語を削除したとき、 / までで削除が止まる
+WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
 
+# history settings
+HISTFILE=~/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+
+setopt nolistbeep no_beep # silent mode
+setopt correct            # correct miss command
+setopt ignore_eof         # permission logout press ^D
 setopt hist_ignore_dups   # 直前と同じコマンドは記憶しない
 setopt share_history      # ヒストリを共有
 setopt extended_history   # ヒストリに時刻を追加
 setopt hist_reduce_blanks # 余分な空白は詰める
 setopt hist_ignore_space  # 最初がスペースで始まる場合は記憶しない
 setopt inc_append_history # 履歴をインクリメンタルに追加
+setopt hist_ignore_space  # コマンドがスペースで始まる場合、コマンド履歴に追加しない
+setopt rmstar_wait        # rm * を実行時に確認
  
-# ヒストリの検索
+#-------------------------------------------------------------------------------
+# search histories
 autoload -Uz history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
@@ -55,88 +55,57 @@ bindkey "^U" backward-kill-line
 setopt auto_cd # ディレクトリ名だけでcdする
 setopt auto_pushd # cdの履歴
 setopt pushd_ignore_dups # 重複しないようにする
+
+#-------------------------------------------------------------------------------
+# alias
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
-
-# コマンドがスペースで始まる場合、コマンド履歴に追加しない
-# 例： <Space>echo hello と入力
-setopt hist_ignore_space
-
-# <Tab> でパス名の補完候補を表示したあと、
-# 続けて <Tab> を押すと候補からパス名を選択できるようになる
-# 候補を選ぶには <Tab> か Ctrl-N,B,F,P
-zstyle ':completion:*:default' menu select=1
-
-# 単語の一部として扱われる文字のセットを指定する
-# ここではデフォルトのセットから / を抜いたものとする
-# こうすると、 Ctrl-W でカーソル前の1単語を削除したとき、 / までで削除が止まる
-WORDCHARS='*?_-.[]~=&;!#$%^(){}<>'
-
-# rm * を実行時に確認
-setopt rmstar_wait
- 
-# lsのカラー設定
-export LSCOLORS=ExFxCxDxBxEGEDABAGACAD
- 
-# エイリアス
 alias vi="vim"
 alias ls="ls -FG"
-alias ll="ls -alhG"
-alias la="ls -aGv"
+alias la="ls -aFG"
+alias ll="ls -lhFG"
+alias lla="ls -alhFG"
 alias cp="cp -i"
 alias mv="mv -i"
-alias emacs="emacs -nw"
-alias LESS="less -IM -x 4"
-alias where="command -v"
-alias j="jobs -l"
+alias sd=sudo
 alias cronedit="crontab -e"
+alias eu='iconv -f euc-jp -t utf-8'
+alias neu='nkf -uEw8m0'
+alias nes='nkf -uEsm0'
 alias ag='ag -S --stats --pager "less -F"'
 alias agh='ag --hidden'
 
 # バイナリファイルにはマッチさせない。
 # 可能なら色を付ける。
 # 拡張子が.tmpのファイルは無視する。
-export GREP_OPTIONS="--binary-files=without-match --color=auto --exclude=\*.tmp $GREP_OPTIONS"
+export GREP_OPTIONS
+GREP_OPTIONS="--binary-files=without-match --directories=recurse --color=auto --exclude=\*.tmp"
 
-export EDITOR=/usr/local/bin/vim
-
-export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
-export NDK_ROOT="/Applications/android-ndk" 
+# editor setting
+export EDITOR=vim
+# if not exist vim, execute vim instead of vi.
+if ! type vim > /dev/null 2>&1; then
+  alias vim=vi
+fi
 
 # 重複パスを登録しない
 typeset -U path PATH cdpath fpath manpath
+path=(~/bin(N-/) /usr/local/bin(N-/) ${path})
+fpath=(~/src/zsh-completions/src(N-/) ${fpath})
+[ -f /Applications/adt-bundle-mac/sdk ] && export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
+[ -f /Applications/android-ndk ] && export NDK_ROOT="/Applications/android-ndk" 
 
-path=(
-~/bin(N-/)
-/usr/local/bin(N-/) 
-${path}
-)
+# git
+if which git > /dev/null 2>&1 ; then
+    function cd-gitroot() {
+    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+      cd `pwd`/`git rev-parse --show-cdup`
+    fi
+  }
+fi
 
-fpath=(
-~/src/zsh-completions/src(N-/)
-${fpath}
-)
-
-#export PATH="$(brew --prefix josegonzalez/php/php55)/bin:$PATH"
-
-function cd-gitroot() {
-  if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-	cd `pwd`/`git rev-parse --show-cdup`
-  fi
-}
-
-# VCS(git|svn|hg)の情報を取得するzshの便利関数 vcs_infoを使う
-autoload -Uz vcs_info
-# 表示フォーマットの指定
-# %b ブランチ情報
-# %a アクション名(mergeなど)
-zstyle ':vcs_info:*' formats '[%r:%b]'
-zstyle ':vcs_info:*' actionformats '[%r:%b|%a]'
-# バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
-RPROMPT="%1(v|%F{blue}%1v%f|)"
-
-# tmux ssh 時に新規ウィンドウを作る
+# tmux
 if which tmux > /dev/null 2>&1; then
 	ssh_tmux() {
 		ssh_cmd="ssh $@"
@@ -150,20 +119,46 @@ if which tmux > /dev/null 2>&1; then
 	fi
 fi
 
-# .zshrcローカル設定ファイル読み込み
-[ -f ~/.zshrc.local ] && source ~/.zshrc.local
-
+# z.git
 if [ -f $(brew --prefix z)/etc/profile.d/z.sh ] ; then
-    _Z_CMD=j
-    source $(brew --prefix z)/etc/profile.d/z.sh
+  _Z_CMD=j
+  source $(brew --prefix z)/etc/profile.d/z.sh
 fi
 
-# プロンプトを表示直前に呼び出される
+# hook function
 precmd () {
-    psvar=()
-    LANG=en_US.UTF-8 vcs_info
-    [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
-    _z --add "$(pwd -P)"
+  psvar=()
+  LANG=en_US.UTF-8 vcs_info
+  [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+  _z --add "$(pwd -P)"
 }
-# for phpbrew
+
+# vis
+function vis() {
+  args=()
+  for i in "$@"; do
+    if [ -e "$i" ]; then
+      args[$(( $#args + 1))]="sudo:$i"
+    else
+      args[$(( $#args + 1))]="$i"
+    fi
+  done
+  command vim $args
+}
+
+#-------------------------------------------------------------------------------
+# VCS(git|svn|hg)の情報を取得するzshの便利関数
+setopt prompt_subst
+autoload -Uz vcs_info
+# 表示フォーマットの指定
+# %r レポジトリ
+# %b ブランチ情報
+# %a アクション名(mergeなど)
+zstyle ':vcs_info:*' formats '[%r:%b]'
+zstyle ':vcs_info:*' actionformats '[%r:%b|%a]'
+# バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
+RPROMPT="%1(v|%F{blue}%1v%f|)"
+
+#-------------------------------------------------------------------------------
+# phpbrew
 [ -f ~/.phpbrew/bashrc ] && source ~/.phpbrew/bashrc
