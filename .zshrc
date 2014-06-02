@@ -110,7 +110,10 @@ if which tmux > /dev/null 2>&1; then
 			alias tssh=ssh_tmux
 		fi
 	fi
-  tmux attach || tmux
+  # ログイン時にtmux 起動
+  if [ $SHLVL = 1 ]; then
+    tmux attach || tmux
+  fi
 fi
 
 # z.git
