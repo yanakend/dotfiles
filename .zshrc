@@ -91,7 +91,7 @@ fi
 
 # 重複パスを登録しない
 typeset -U path PATH cdpath fpath manpath
-path=(~/bin(N-/) /usr/local/bin(N-/) ${path})
+path=(~/bin(N-/) ~/dotfiles/bin(N-/) /usr/local/bin(N-/) ${path})
 fpath=(~/src/zsh-completions/src(N-/) ${fpath})
 [ -f /Applications/adt-bundle-mac/sdk ] && export ANDROID_SDK_ROOT="/Applications/adt-bundle-mac/sdk"
 [ -f /Applications/android-ndk ] && export NDK_ROOT="/Applications/android-ndk" 
