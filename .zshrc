@@ -80,7 +80,7 @@ alias agh='ag --hidden'
 # 可能なら色を付ける。
 # 拡張子が.tmpのファイルは無視する。
 export GREP_OPTIONS
-GREP_OPTIONS="--binary-files=without-match --directories=recurse --color=auto --exclude=\*.tmp"
+GREP_OPTIONS="--binary-files=without-match --color=auto --exclude=\*.tmp"
 
 # editor setting
 export EDITOR=vim
