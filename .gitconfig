@@ -71,11 +71,8 @@
 	tool = vim-diff
 [difftool]
 	prompt = false
-[difftool "sourcetree"]
-	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
-	path = 
 [difftool "vim-diff"]
-	cmd = vim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE
+  cmd = /Applications/MacVim.app/Contents/MacOS/mvim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE
 [merge]
 	tool = sourcetree
 	conflictstyle = diff3
