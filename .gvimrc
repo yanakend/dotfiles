@@ -19,7 +19,7 @@ if has('gui_macvim')
 	set guioptions-=r
 	set guioptions-=R
 	set visualbell t_vb= " エラーのときに、ビープ音を出さない
-	set noimdisableactivate
+	"set noimdisableactivate
 endif
 
 set cmdheight=1                     " コマンドラインの高さ(GUI使用時)
