@@ -435,6 +435,8 @@ function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
   inoremap <silent><buffer> <C-w> <Plug>(unite_delete_backward_path)
   " ESCキーを押すと終了する
+  imap <silent><buffer> <C-j> <Down>
+  imap <silent><buffer> <C-k> <Up>
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
   nmap <silent><buffer> <ESC> <Plug>(unite_exit)
 endfunction
