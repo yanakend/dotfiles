@@ -35,7 +35,7 @@
 	brv = branch -av
 	br-new = "!f() { [ -z \"$1\" ] && exit 1; git checkout -b $1 && git push -u origin $1; }; f"
 	br-del = "!f() { [ -z \"$1\" ] && exit 1; git br -D $1 && git push --delete origin $1; }; f"
-	a = add
+	a = add -A
 	c = commit -v
 	cp = cherry-pick -x
 	co = checkout
@@ -45,7 +45,7 @@
 	dts = difftool -d --staged 
 	h = help
 	l = log --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=iso8601
-graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=iso8601
+	graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=iso8601
 	pl = pull
 	pr = pull --rebase
 	ps = push
@@ -84,3 +84,6 @@ graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%
 	trustExitCode = true
 [rebase]
 	autosquash = true
+[difftool "sourcetree"]
+	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
+	path = 

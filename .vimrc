@@ -34,14 +34,13 @@ NeoBundle 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim', {
     \ 'depends' : 'Shougo/unite.vim'
     \ }
-NeoBundle "h1mesuke/unite-outline"
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'vim-scripts/EnhCommentify.vim'
 NeoBundle 'vim-scripts/savevers.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'acustodioo/vim-enter-indent'
-NeoBundle '5t111111/alt-gtags.vim'
+NeoBundle 'szw/vim-tags'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'vim-scripts/Align'
 NeoBundle 'sjl/gundo.vim'
@@ -217,8 +216,6 @@ cnoremap <C-f>	  <Right>
 cnoremap <C-b>	  <Left>
 cnoremap <C-d>	  <Delete>
 cnoremap <C-k>	  <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
-cnoremap <C-w>	  <Home>\<<End>\><Left><Left>
-cnoremap <C-c>	  <End>\C
 
 " <TAB>: indent.
 vnoremap <TAB>	>
@@ -260,8 +257,12 @@ autocmd BufRead,BufNewFile *.csv set filetype=csv
 autocmd BufRead,BufNewFile *.mm set filetype=objc
 autocmd FileType vim,text setlocal textwidth=0
 autocmd FileType smarty setlocal tabstop=2 shiftwidth=2 omnifunc=htmlcomplete#CompleteTags
-autocmd FileType php setlocal tabstop=2 shiftwidth=2 omnifunc=phpcomplete#CompletePHP
+autocmd FileType php setlocal tabstop=4 shiftwidth=4 omnifunc=phpcomplete#CompletePHP
 autocmd FileType css setlocal tabstop=2 shiftwidth=2 omnifunc=csscomplete#CompleteCSS
+autocmd BufNewFile,BufRead *.php let g:vim_tags_project_tags_command = "ctags --languages=php -f ~/php.tags `pwd` 2>/dev/null &"
+
+" 拡張子で読み込みタグ変更                                                      
+autocmd BufNewFile,BufRead *.php set tags+=$HOME/php.tags  
 
 "----------------------------------------
 " quickrun.vim
@@ -415,8 +416,6 @@ nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
 nnoremap <silent> <Space>b :<C-u>Unite buffer -horizontal -direction=botright<CR>
 " 最近使用したファイル一覧
 nnoremap <silent> <Space>m :<C-u>Unite file_mru -horizontal -direction=botright<CR>
-" 関数一覧
-nnoremap <silent> <Space>f :<C-u>Unite outline -horizontal -direction=botright<CR>
 " grep
 nnoremap <silent> <Space>gr :<C-u>Unite grep:. -buffer-name=search-buffer -auto-preview<CR>
 " grep検索結果の再呼出
@@ -427,6 +426,7 @@ if executable('ag')
   let g:unite_source_grep_command = 'ag'
   let g:unite_source_grep_default_opts = '-S --nogroup --nocolor --column'
   let g:unite_source_grep_recursive_opt = ''
+  let g:unite_source_grep_max_candidates = 200
 endif
 
 " unite.vim上でのキーマッピング
@@ -435,11 +435,8 @@ function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
   inoremap <silent><buffer> <C-w> <Plug>(unite_delete_backward_path)
   " ESCキーを押すと終了する
-  imap <silent><buffer> <C-j> <Down>
-  imap <silent><buffer> <C-k> <Up>
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
   nmap <silent><buffer> <ESC> <Plug>(unite_exit)
-"  nunmap <silent><buffer> N
 endfunction
 
 "----------------------------------------
@@ -651,6 +648,7 @@ endfunction
 "------------------------------------
 " ctrlp.vim
 let g:ctrlp_map = '<Space>p'
+let g:ctrlp_user_command = 'ag %s -l'
 let g:ctrlp_regexp = 1
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:10'
 let g:ctrlp_custom_ignore = {
