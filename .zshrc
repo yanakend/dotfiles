@@ -111,9 +111,9 @@ if which tmux > /dev/null 2>&1; then
 		fi
 	fi
   # ログイン時にtmux 起動
-  if [ $SHLVL = 1 ]; then
-    tmux attach || tmux
-  fi
+  #if [ $SHLVL = 1 ]; then
+  #  tmux attach || tmux
+  #fi
 fi
 
 # z.git
