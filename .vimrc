@@ -1,18 +1,18 @@
 "--------------------------------------------------------------------------------
 " home
 if $VIMHOME == ""
-	if has('win32') || has ('win64')
-		let $VIMHOME = $VIM."/vimfiles"
-	else
-		let $VIMHOME = $HOME."/.vim"
-	endif
+  if has('win32') || has ('win64')
+    let $VIMHOME = $VIM."/vimfiles"
+  else
+    let $VIMHOME = $HOME."/.vim"
+  endif
 endif
 
 "--------------------------------------------------------------------------------
 " plugin
 set nocp
 if has('vim_starting')
-	set runtimepath+=$VIMHOME/bundle/neobundle.vim
+  set runtimepath+=$VIMHOME/bundle/neobundle.vim
 endif
 call neobundle#rc(expand($VIMHOME.'/bundle/'))
 
@@ -20,11 +20,11 @@ call neobundle#rc(expand($VIMHOME.'/bundle/'))
 " 自動でリポジトリと同期するプラグイン
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', {
-      \	'build': {
-      \	  'cygwin': 'make -f make_cygwin.mak',
-      \	  'mac':	'make -f make_mac.mak',
-      \	  'unix':	'make -f make_unix.mak',
-      \	},
+      \'build': {
+      \  'cygwin': 'make -f make_cygwin.mak',
+      \  'mac': 'make -f make_mac.mak',
+      \  'unix': 'make -f make_unix.mak',
+      \},
       \ }
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neocomplcache'
@@ -32,8 +32,8 @@ NeoBundle "Shougo/neosnippet"
 NeoBundle "Shougo/neosnippet-snippets"
 NeoBundle 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim', {
-    \ 'depends' : 'Shougo/unite.vim'
-    \ }
+      \ 'depends' : 'Shougo/unite.vim'
+      \ }
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'vim-scripts/EnhCommentify.vim'
@@ -46,7 +46,6 @@ NeoBundle 'vim-scripts/Align'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'gregsexton/gitv'
-NeoBundle 'vim-scripts/SQLUtilities'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'itchyny/lightline.vim'
@@ -80,39 +79,39 @@ let os=GetRunningOS()
 
 "----------------------------------------
 " settings
-set nocompatible					" viとの互換性を取らない
-set t_Co=256						" 256色に
+set nocompatible        " viとの互換性を取らない
+set t_Co=256            " 256色に
 " カラースキーム設定
 colorscheme desert
-hi SpecialKey    ctermfg=darkgreen
+hi SpecialKey ctermfg=darkgreen
 
 set encoding=utf-8
 set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set guioptions=mr
-set nonumber						" 行数表示
-set hlsearch						" 索文字列を色づけ
-set ignorecase						" 文字小文字を判別しない
-set incsearch						" インクリメンタルサーチ
-set nowrapscan						" 検索をファイルの末尾まで検索したら、ファイルの先頭へループする
-set noterse							" ファイルの端まで検索してしまったときのメッセージが表示しない
-set smartcase						" でも大文字小文字が混ざって入力されたら区別する
-set tabstop=2						" 4タブ
-set shiftwidth=2					" 4タブ
-set expandtab						  " タブを空白に
-set nowrap							" 折り返さない
-set cmdheight=1						" コマンドラインの高さ(GUI使用時)
+set nonumber            " 行数表示
+set hlsearch            " 索文字列を色づけ
+set ignorecase          " 文字小文字を判別しない
+set incsearch           " インクリメンタルサーチ
+set nowrapscan          " 検索をファイルの末尾まで検索したら、ファイルの先頭へループする
+set noterse             " ファイルの端まで検索してしまったときのメッセージが表示しない
+set smartcase           " でも大文字小文字が混ざって入力されたら区別する
+set tabstop=2           " 4タブ
+set shiftwidth=2        " 4タブ
+set expandtab           " タブを空白に
+set nowrap              " 折り返さない
+set cmdheight=1         " コマンドラインの高さ(GUI使用時)
 set ignorecase
 set smartcase
-set showcmd							" 入力中のコマンドをステータスに表示する
-set laststatus=2					" ステータスラインを常に表示
+set showcmd             " 入力中のコマンドをステータスに表示する
+set laststatus=2        " ステータスラインを常に表示
 set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l\|%c\|%L>
 set autoindent
 set cindent
-set ambiwidth=double				" □や○の文字があってもカーソル位置がずれないようにする
-set whichwrap=b,s,[,],<,>			" カーソルキーで行末／行頭の移動可能に設定
-set title							" タイトルをウインドウ枠に表示する
-set virtualedit=block				"ブロック選択時にフリーカーソルモード
-set hidden							"バッファを切替えてもundoの効力を失わない
+set ambiwidth=double      " □や○の文字があってもカーソル位置がずれないようにする
+set whichwrap=b,s,[,],<,> " カーソルキーで行末／行頭の移動可能に設定
+set title                 " タイトルをウインドウ枠に表示する
+set virtualedit=block     " ブロック選択時にフリーカーソルモード
+set hidden                " バッファを切替えてもundoの効力を失わない
 set backup
 set writebackup
 set backupdir=$VIMHOME/backup
@@ -125,7 +124,6 @@ set diffopt=filler,vertical,foldcolumn:0
 set fileformats=unix,dos,mac
 set nofoldenable
 set noundofile
-"let php_folding=1
 
 " Don't redraw while macro executing.
 set lazyredraw
@@ -133,7 +131,7 @@ if os=="macvim"
   " macvimではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-	let $PATH='/usr/local/Cellar/php55/5.5.7/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
+  let $PATH='/usr/local/Cellar/php55/5.5.7/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
@@ -142,9 +140,9 @@ set shortmess+=A " 警告を無効にする
 "----------------------------------------
 " map
 if os=="win" || os=="macvim"
-	nnoremap <silent> <C-[> :noh<CR>
+  nnoremap <silent> <C-[> :noh<CR>
 else
-	nnoremap <silent> <C-[><C-[> :noh<CR>
+  nnoremap <silent> <C-[><C-[> :noh<CR>
 endif
 nnoremap <silent> h zv<Left>
 nnoremap <silent> j gj
@@ -180,29 +178,29 @@ endfunction
 
 " set imd
 if os=="linux"
-	nnoremap y "ay
-	vnoremap y "ay
-	nnoremap Y "ay$
-	vnoremap Y "ay$
-	nnoremap p "agp
-	vnoremap p "agp
-	nnoremap P "agP
-	vnoremap P "agP
-	vnoremap x "ax
-	inoremap <C-v> <C-R>a
-	cnoremap <C-v> <C-R>a
+  nnoremap y "ay
+  vnoremap y "ay
+  nnoremap Y "ay$
+  vnoremap Y "ay$
+  nnoremap p "agp
+  vnoremap p "agp
+  nnoremap P "agP
+  vnoremap P "agP
+  vnoremap x "ax
+  inoremap <C-v> <C-R>a
+  cnoremap <C-v> <C-R>a
 else
-	nnoremap y "+y
-	vnoremap y "+y
-	nnoremap Y "+y$
-	vnoremap Y "+y$
-	nnoremap p "+gp
-	vnoremap p "+gp
-	nnoremap P "+gP
-	vnoremap P "+gP
-	vnoremap x "+x
-	inoremap <C-v> <C-R>+
-	cnoremap <C-v> <C-R>+
+  nnoremap y "+y
+  vnoremap y "+y
+  nnoremap Y "+y$
+  vnoremap Y "+y$
+  nnoremap p "+gp
+  vnoremap p "+gp
+  nnoremap P "+gP
+  vnoremap P "+gP
+  vnoremap x "+x
+  inoremap <C-v> <C-R>+
+  cnoremap <C-v> <C-R>+
 endif
 
 nnoremap ZZ <Nop>
@@ -211,24 +209,24 @@ nnoremap <silent><Space>vi :e $VIMHOME/../.vimrc<CR>
 
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
-cnoremap <C-a>	  <Home>
-cnoremap <C-f>	  <Right>
-cnoremap <C-b>	  <Left>
-cnoremap <C-d>	  <Delete>
-cnoremap <C-k>	  <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
+cnoremap <C-a>  <Home>
+cnoremap <C-f>  <Right>
+cnoremap <C-b>  <Left>
+cnoremap <C-d>  <Delete>
+cnoremap <C-k>  <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
 
 " <TAB>: indent.
-vnoremap <TAB>	>
+vnoremap <TAB> >
 " <S-TAB>: unindent.
 vnoremap <S-TAB>  <
 
 " Indent
 vnoremap > >gv
 vnoremap < <gv
-			
+
 " Insert mode keymappings:
 " <C-d>: delete char.
-inoremap <C-d>	<Del>
+inoremap <C-d> <Del>
 
 " 挿入モードでのカーソル移動
 inoremap <C-p> <Up>
@@ -279,12 +277,12 @@ let g:quickrun_config["_"] = {
 let $JS_CMD='node'
 
 function! s:QuickTest(arg1)
-	execute "e ~/Dropbox/vim/test.".a:arg1
+  execute "e ~/Dropbox/vim/test.".a:arg1
 endfunction
 command! -nargs=1 Quick call s:QuickTest(<f-args>)
 
 function! s:OpenMemo()
-	execute "e ~/Dropbox/vim/memo.txt"
+  execute "e ~/Dropbox/vim/memo.txt"
 endfunction
 command! Memo call s:OpenMemo()
 
@@ -315,10 +313,10 @@ nnoremap <Space>op :Popen<CR>
 "----------------------------------------
 " savevers.vim
 ":VersDiff - :VersDiff + :VersDiff -c :Purge -a 0
-set patchmode=.clean			" バックアップファイルの設定savevers.vimのためにパッチモードにします
-let savevers_types = "*"		" カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
-let savevers_dirs = &backupdir	" バックアップファイルが書き込まれるディレクトリです
-let versdiff_no_resize=1		" バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
+set patchmode=.clean      " バックアップファイルの設定savevers.vimのためにパッチモードにします
+let savevers_types = "*"    " カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
+let savevers_dirs = &backupdir  " バックアップファイルが書き込まれるディレクトリです
+let versdiff_no_resize=1    " バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
 let savevers_max = 99
 
 "----------------------------------------
@@ -345,9 +343,9 @@ set completeopt=menuone
 let g:neocomplcache_dictionary_filetype_lists = {
       \ 'default' : '',
       \ 'vimshell': $HOME.'/.vimshell_hist',
-      \ 'php'	  : $HOME . '/dotfiles/.vim/dict/php.dict',
-      \ 'tpl'	  : $HOME . '/dotfiles/.vim/dict/php.dict',
-      \ 'ctp'	  : $HOME . '/dotfiles/.vim/dict/php.dict',
+      \ 'php'  : $HOME . '/dotfiles/.vim/dict/php.dict',
+      \ 'tpl'  : $HOME . '/dotfiles/.vim/dict/php.dict',
+      \ 'ctp'  : $HOME . '/dotfiles/.vim/dict/php.dict',
       \ }
 
 " Define keyword.
@@ -412,7 +410,7 @@ let g:neomru#directory_mru_path=expand('~/.vim/.neomru_direcroty')
 
 " カレントディレクトリ移動
 nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
-" バッファ一覧	-auto-resize
+" バッファ一覧 -auto-resize
 nnoremap <silent> <Space>b :<C-u>Unite buffer -horizontal -direction=botright<CR>
 " 最近使用したファイル一覧
 nnoremap <silent> <Space>m :<C-u>Unite file_mru -horizontal -direction=botright<CR>
@@ -480,19 +478,19 @@ nnoremap <silent> <Space>e  :VimFilerBufferDir<cr>
 "------------------------------------
 " EnhCommentify.vim
 function! EnhCommentifyCallback(ft)
-	if a:ft == 'objc'
-		let b:ECcommentOpen = '//'
-		let b:ECcommentClose = ''
-	endif
-	if a:ft == 'objcpp'
-		let b:ECcommentOpen = '//'
-		let b:ECcommentClose = ''
-	endif
-	if a:ft == 'smarty'
-		let b:ECcommentOpen = '\{* '
-		let b:ECcommentMiddle = ''
-		let b:ECcommentClose = ' *\}'
-	endif
+  if a:ft == 'objc'
+    let b:ECcommentOpen = '//'
+    let b:ECcommentClose = ''
+  endif
+  if a:ft == 'objcpp'
+    let b:ECcommentOpen = '//'
+    let b:ECcommentClose = ''
+  endif
+  if a:ft == 'smarty'
+    let b:ECcommentOpen = '\{* '
+    let b:ECcommentMiddle = ''
+    let b:ECcommentClose = ' *\}'
+  endif
 endfunction
 let g:EnhCommentifyCallbackExists = 'Yes'
 
@@ -550,7 +548,7 @@ autocmd FileType gitcommit call s:gitcommit_my_settings()
 function! s:gitcommit_my_settings()
   nnoremap <silent><buffer> <C-[> :close<CR>
 endfunction
- 
+
 "------------------------------------
 " gitv
 autocmd FileType gitv call s:my_gitv_settings()
@@ -563,7 +561,7 @@ function! s:my_gitv_settings()
   nnoremap <silent><buffer> Rv :<C-u>Git revert <C-r>=GitvGetCurrentHash()<CR><CR>
   nnoremap <silent><buffer> P  :<C-u>Git cherry-pick <C-r>=GitvGetCurrentHash()<CR><CR>
   nnoremap <silent><buffer> Rh :<C-u>Git reset --hard <C-r>=GitvGetCurrentHash()<CR>
-	nnoremap <silent><buffer> t :<C-u>windo call <SID>toggle_git_folding()<CR>1<C-w>w
+  nnoremap <silent><buffer> t :<C-u>windo call <SID>toggle_git_folding()<CR>1<C-w>w
 endfunction
 
 " これは外に定義!
@@ -587,31 +585,29 @@ nmap U :<C-u>GundoToggle<CR>
 "------------------------------------
 " lightline.vim
 let g:lightline = {
-        \ 'colorscheme': 'powerline',
-        \ 'mode_map': {'c': 'NORMAL'},
-        \ 'active': {
-        \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
-        \ },
-        \ 'component_function': {
-        \   'modified': 'MyModified',
-        \   'readonly': 'MyReadonly',
-        \   'fugitive': 'MyFugitive',
-        \   'filename': 'MyFilename',
-        \   'fileformat': 'MyFileformat',
-        \   'filetype': 'MyFiletype',
-        \   'fileencoding': 'MyFileencoding',
-        \   'mode': 'MyMode'
-        \ }
-        \ }
+      \ 'colorscheme': 'powerline',
+      \ 'mode_map': {'c': 'NORMAL'},
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
+      \ },
+      \ 'component_function': {
+      \   'modified': 'MyModified',
+      \   'readonly': 'MyReadonly',
+      \   'fugitive': 'MyFugitive',
+      \   'filename': 'MyFilename',
+      \   'fileformat': 'MyFileformat',
+      \   'filetype': 'MyFiletype',
+      \   'fileencoding': 'MyFileencoding',
+      \   'mode': 'MyMode'
+      \ }
+      \ }
 
 function! MyModified()
   return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
-
 function! MyReadonly()
   return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? 'x' : ''
 endfunction
-
 function! MyFilename()
   return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
         \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
@@ -620,7 +616,6 @@ function! MyFilename()
         \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
         \ ('' != MyModified() ? ' ' . MyModified() : '')
 endfunction
-
 function! MyFugitive()
   try
     if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
@@ -630,19 +625,15 @@ function! MyFugitive()
   endtry
   return ''
 endfunction
-
 function! MyFileformat()
   return winwidth('.') > 70 ? &fileformat : ''
 endfunction
-
 function! MyFiletype()
   return winwidth('.') > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
 endfunction
-
 function! MyFileencoding()
   return winwidth('.') > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
 endfunction
-
 function! MyMode()
   return winwidth('.') > 60 ? lightline#mode() : ''
 endfunction
@@ -654,10 +645,14 @@ let g:ctrlp_user_command = 'ag %s -l'
 let g:ctrlp_regexp = 1
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:10'
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.(git|hg|svn)|cache)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-  \ }
+      \ 'dir':  '\v[\/](\.(git|hg|svn)|cache)$',
+      \ 'file': '\v\.(exe|so|dll)$',
+      \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+      \ }
+let g:ctrlp_buffer_func = {'enter': 'CtrlPEnter'}
+function! CtrlPEnter()
+  let w:lightline = 0
+endfunction
 
 "------------------------------------
 " vim-ref
@@ -689,10 +684,6 @@ omap z <Plug>(easymotion-s2)
 nmap g/ <Plug>(easymotion-sn)
 xmap g/ <Plug>(easymotion-sn)
 omap g/ <Plug>(easymotion-tn)
-"map  / <Plug>(easymotion-sn)
-"omap / <Plug>(easymotion-tn)
-"map  n <Plug>(easymotion-next)
-"map  N <Plug>(easymotion-prev)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
