@@ -41,6 +41,7 @@ NeoBundle 'vim-scripts/savevers.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'acustodioo/vim-enter-indent'
 NeoBundle 'majutsushi/tagbar'
+NeoBundle 'soramugi/auto-ctags.vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'vim-scripts/Align'
 NeoBundle 'sjl/gundo.vim'
@@ -131,7 +132,7 @@ if os=="macvim"
   " macvimではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-  let $PATH='/usr/local/Cellar/php55/5.5.7/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
+	let $PATH='/usr/local/Cellar/php55/5.5.7/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
@@ -148,6 +149,7 @@ nnoremap <silent> h zv<Left>
 nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
+nnoremap <silent> <C-]> g<C-]>
 
 " windo diffthis
 " diffoff!
@@ -257,7 +259,7 @@ autocmd FileType vim,text setlocal textwidth=0
 autocmd FileType smarty setlocal tabstop=2 shiftwidth=2 omnifunc=htmlcomplete#CompleteTags
 autocmd FileType php setlocal tabstop=4 shiftwidth=4 omnifunc=phpcomplete#CompletePHP
 autocmd FileType css setlocal tabstop=2 shiftwidth=2 omnifunc=csscomplete#CompleteCSS
-autocmd BufNewFile,BufRead *.php let g:vim_tags_project_tags_command = "ctags --languages=php -f ~/php.tags `pwd` 2>/dev/null &"
+"autocmd BufNewFile,BufRead *.php let g:vim_tags_project_tags_command = "ctags --languages=php -f ~/php.tags `pwd` 2>/dev/null &"
 
 " 拡張子で読み込みタグ変更                                                      
 autocmd BufNewFile,BufRead *.php set tags+=$HOME/php.tags  
@@ -695,4 +697,7 @@ let g:clever_f_smart_case = 1
 " vim-autoclose
 " autoclose.vim function! s:CreateExtraMaps() を書き換えてる
 let g:AutoClosePreserveDotReg = 0
+
+let g:auto_ctags_bin_path = '/usr/local/bin/ctags'
+let g:auto_ctags = 1
 
