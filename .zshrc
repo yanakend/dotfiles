@@ -157,6 +157,34 @@ zstyle ':vcs_info:*' actionformats '[%r:%b|%a]'
 RPROMPT="%1(v|%F{blue}%1v%f|)"
 
 #-------------------------------------------------------------------------------
+# for go lang
+if [ -x "`which go`" ]; then
+  export GOROOT=`go env GOROOT`
+  export GOPATH=$HOME/go
+  path=(
+    ${path}
+    $GOROOT/bin(N-/)
+    $GOPATH/bin(N-/)
+  )
+fi
+
+function peco-select-history() {
+    local tac
+    if which tac > /dev/null; then
+        tac="tac"
+    else
+        tac="tail -r"
+    fi
+    BUFFER=$(history -n 1 | \
+        eval $tac | \
+        peco --query "$LBUFFER")
+    CURSOR=$#BUFFER
+    zle clear-screen
+}
+zle -N peco-select-history
+bindkey '^r' peco-select-history
+
+#-------------------------------------------------------------------------------
 # path
 # 重複パスを登録しない
 typeset -U path PATH cdpath fpath manpath sudo_path
