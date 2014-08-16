@@ -32,14 +32,12 @@
 
 [alias]
 	br = branch -v
-	sw = "!git checkout $(git branch -v | peco | cut -d' ' -f3,3)"
-	swr = "!git checkout $(git branch -av | grep remotes/ | grep -v remotes/origin/HEAD | peco | cut -d' ' -f3,3 | cut -c16-)"
-	br-del = "!BR=$(git branch -v | peco | cut -d' ' -f3,3) && git branch -D $BR"
-	br-delall = "!BR=$(git branch -v | peco | cut -d' ' -f3,3) && git branch -D $BR && git push --delete origin $BR"
+  co = "![ -z \"$1\" ] && BR=$(git branch -av | grep -v remotes/origin/HEAD | peco --prompt 'BRANCH>' | sed -e s@remotes/origin/@@ | cut -d' ' -f3 ); git checkout $BR"
+  brdel = "![ -z \"$1\" ] && BR=$(git branch -v | peco --prompt 'DEL-BRANCH>' | cut -d' ' -f3); git branch -D $BR"
+  brdelall = "![ -z \"$1\" ] && BR=$(git branch -v | peco --prompt 'DEL-REMOTE-BRANCH>' | cut -d' ' -f3,3) && git branch -D $BR && git push --delete origin $BR"
 	a = add -A
 	c = commit -v
 	cp = cherry-pick -x
-	co = checkout
 	d = diff
 	ds = diff --staged
 	dt = difftool -d 
