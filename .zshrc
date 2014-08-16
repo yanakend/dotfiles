@@ -75,6 +75,7 @@ alias neu='nkf -uEw8m0'
 alias nes='nkf -uEsm0'
 alias ag='ag -S --stats --pager "less -F"'
 alias agh='ag --hidden'
+alias g='git'
 
 # バイナリファイルにはマッチさせない。
 # 可能なら色を付ける。
