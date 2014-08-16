@@ -40,12 +40,10 @@ NeoBundle 'vim-scripts/EnhCommentify.vim'
 NeoBundle 'vim-scripts/savevers.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'acustodioo/vim-enter-indent'
-NeoBundle 'majutsushi/tagbar'
 NeoBundle 'soramugi/auto-ctags.vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'vim-scripts/Align'
 NeoBundle 'sjl/gundo.vim'
-NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'gregsexton/gitv'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'kien/ctrlp.vim'
@@ -132,7 +130,7 @@ if os=="macvim"
   " macvimではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-	let $PATH='/usr/local/Cellar/php55/5.5.7/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
+  let $PATH='/usr/local/Cellar/php55/5.5.7/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
@@ -236,11 +234,6 @@ inoremap <C-b> <Left>
 inoremap <C-f> <Right>
 inoremap <silent> <C-a> <C-o>0
 
-" 選択した文字列を置換
-vnoremap s "xy:%s/<C-R>=escape(@x, '\\/.*$^~[]')<CR>//gc<Left><Left><Left>
-
-" Like gv, but select the last changed text.
-nnoremap gc  `[v`]
 " Auto escape / and ? in search command.
 cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
 
@@ -259,10 +252,6 @@ autocmd FileType vim,text setlocal textwidth=0
 autocmd FileType smarty setlocal tabstop=2 shiftwidth=2 omnifunc=htmlcomplete#CompleteTags
 autocmd FileType php setlocal tabstop=4 shiftwidth=4 omnifunc=phpcomplete#CompletePHP
 autocmd FileType css setlocal tabstop=2 shiftwidth=2 omnifunc=csscomplete#CompleteCSS
-"autocmd BufNewFile,BufRead *.php let g:vim_tags_project_tags_command = "ctags --languages=php -f ~/php.tags `pwd` 2>/dev/null &"
-
-" 拡張子で読み込みタグ変更                                                      
-autocmd BufNewFile,BufRead *.php set tags+=$HOME/php.tags  
 
 "----------------------------------------
 " quickrun.vim
@@ -454,8 +443,6 @@ let s:bundle = neobundle#get('vimfiler')
 function! s:bundle.hooks.on_source(bundle)
   autocmd FileType vimfiler call s:vimfiler_my_settings()
   function! s:vimfiler_my_settings()
-    nunmap <buffer> j
-    nunmap <buffer> k
     nmap <silent><buffer> <Space><Space> <Plug>(vimfiler_toggle_mark_current_line)k
     " ESCキーを押すと終了する
     nmap <silent><buffer> <C-[> q
@@ -671,23 +658,6 @@ endfunction
 "------------------------------------
 " PreserveNoEOL
 let g:PreserveNoEOL = 1
-
-"------------------------------------
-" EasyMotion
-let g:EasyMotion_do_mapping = 0
-let g:EasyMotion_smartcase = 1
-let g:EasyMotion_startofline = 0
-let g:EasyMotion_use_upper = 1
-let g:EasyMotion_enter_jump_first = 1
-let g:EasyMotion_space_jump_first = 1
-nmap s <Plug>(easymotion-s2)
-xmap s <Plug>(easymotion-s2)
-omap z <Plug>(easymotion-s2)
-nmap g/ <Plug>(easymotion-sn)
-xmap g/ <Plug>(easymotion-sn)
-omap g/ <Plug>(easymotion-tn)
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
 
 "------------------------------------
 " clever-f.vim
