@@ -35,7 +35,6 @@ NeoBundle 'Shougo/neomru.vim', {
       \ 'depends' : 'Shougo/unite.vim'
       \ }
 NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'vim-scripts/EnhCommentify.vim'
 NeoBundle 'vim-scripts/savevers.vim'
 NeoBundle 'vim-scripts/sudo.vim'
@@ -317,6 +316,23 @@ vnoremap <Space>/ :call EnhancedCommentify('yes', 'comment')<CR>
 nnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 vnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
 
+function! EnhCommentifyCallback(ft)
+  if a:ft == 'objc'
+    let b:ECcommentOpen = '//'
+    let b:ECcommentClose = ''
+  endif
+  if a:ft == 'objcpp'
+    let b:ECcommentOpen = '//'
+    let b:ECcommentClose = ''
+  endif
+  if a:ft == 'smarty'
+    let b:ECcommentOpen = '\{* '
+    let b:ECcommentMiddle = ''
+    let b:ECcommentClose = ' *\}'
+  endif
+endfunction
+let g:EnhCommentifyCallbackExists = 'Yes'
+
 ""-------------------------------------------------------------------
 " neocomplcache.git
 " neocomplcacheを起動時に有効化する
@@ -463,57 +479,6 @@ function! s:bundle.hooks.on_source(bundle)
   " ココにvimfilerの設定とか記述する。
 endfunction
 nnoremap <silent> <Space>e  :VimFilerBufferDir<cr>
-
-"------------------------------------
-" EnhCommentify.vim
-function! EnhCommentifyCallback(ft)
-  if a:ft == 'objc'
-    let b:ECcommentOpen = '//'
-    let b:ECcommentClose = ''
-  endif
-  if a:ft == 'objcpp'
-    let b:ECcommentOpen = '//'
-    let b:ECcommentClose = ''
-  endif
-  if a:ft == 'smarty'
-    let b:ECcommentOpen = '\{* '
-    let b:ECcommentMiddle = ''
-    let b:ECcommentClose = ' *\}'
-  endif
-endfunction
-let g:EnhCommentifyCallbackExists = 'Yes'
-
-"------------------------------------
-" vimdoc-ja.git
-helptags $VIMHOME/doc
-set helplang=ja,en
-
-"------------------------------------
-" gtags
-nnoremap <Space>td :AltGtags<CR>
-nnoremap <Space>tr :AltGtags -r<CR>
-nnoremap <Space>ts :AltGtags -s<CR>
-nnoremap <Space>tf :AltGtags -f<CR>
-nnoremap <silent> <C-n> :cn<CR>
-nnoremap <silent> <C-p> :cp<CR>
-nnoremap <silent> <C-q> :ccl<CR>
-
-"QuickFixウィンドウでq/ESCで閉じる
-autocmd FileType qf nnoremap <silent> <buffer> <CR> <CR>:ccl<CR>
-autocmd FileType qf nnoremap <silent> <buffer> q :ccl<CR>
-autocmd FileType qf nnoremap <silent> <buffer> <ESC> :ccl<CR>
-
-"------------------------------------
-" 空白→タブ変換
-set list
-set listchars=tab:.\ 
-function! s:CleanSpace()
-  let cursor = getpos(".")
-  %s@^\v(%( {4})+)@\=repeat("\t", len(submatch(1))/4)@e
-  call setpos(".", cursor)
-  unlet cursor
-endfunction
-"autocmd BufWritePre *.php call <SID>CleanSpace()
 
 "------------------------------------
 " vim-fugitive
