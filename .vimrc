@@ -16,8 +16,6 @@ if has('vim_starting')
 endif
 call neobundle#rc(expand($VIMHOME.'/bundle/'))
 
-" originalrepos on github
-" 自動でリポジトリと同期するプラグイン
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', {
       \'build': {
@@ -55,6 +53,7 @@ NeoBundle 'thinca/vim-localrc'
 NeoBundle 'rhysd/clever-f.vim'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'yanakend/vim-autoclose'
+NeoBundle 'terryma/vim-multiple-cursors'
 
 filetype plugin indent on
 NeoBundleCheck
@@ -122,6 +121,8 @@ set diffopt=filler,vertical,foldcolumn:0
 set fileformats=unix,dos,mac
 set nofoldenable
 set noundofile
+set list
+set listchars=tab:.\ 
 
 " Don't redraw while macro executing.
 set lazyredraw
@@ -129,7 +130,7 @@ if os=="macvim"
   " macvimではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-  let $PATH='/usr/local/Cellar/php55/5.5.7/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
+  let $PATH=$HOME.'/.phpbrew/php/php-5.5.13/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
 endif
 syntax on
 set backupskip=/tmp/*,/private/tmp/*
