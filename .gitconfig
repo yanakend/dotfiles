@@ -57,6 +57,7 @@
 	coclean = !git checkout . && git clean -fd
 	ignore = "!f() { [ -z \"$1\" ] && exit 1; curl http://gitignore.io/api/$1 ;}; f"
 	amend = commit -v --amend --no-edit
+	set-upstream = "!git branch -u origin/`git rev-parse --abbrev-ref HEAD` `git rev-parse --abbrev-ref HEAD`"
 
 [help]
 	autocorrect = 30
@@ -86,3 +87,5 @@
 [difftool "sourcetree"]
 	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
 	path = 
+[fetch]
+	prune = true
