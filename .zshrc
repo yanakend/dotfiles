@@ -199,6 +199,8 @@ path=(
   ~/bin(N-/)
   ~/dotfiles/bin(N-/)
   /usr/local/bin(N-/)
+  /usr/local/heroku/bin(N-/)
+  $(brew --prefix ruby)/bin(N-/)
   ${path}
 )
 
