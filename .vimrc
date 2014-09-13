@@ -1,22 +1,12 @@
 "--------------------------------------------------------------------------------
-" home
-if $VIMHOME == ""
-  if has('win32') || has ('win64')
-    let $VIMHOME = $VIM."/vimfiles"
-  else
-    let $VIMHOME = $HOME."/.vim"
-  endif
-endif
-
-"--------------------------------------------------------------------------------
 " plugin
-set nocp
 if has('vim_starting')
-  set runtimepath+=$VIMHOME/bundle/neobundle.vim
+  set nocp
+  set runtimepath+=$HOME/.vim/bundle/neobundle.vim
 endif
-call neobundle#rc(expand($VIMHOME.'/bundle/'))
+call neobundle#rc(expand($HOME.'/.vim/bundle/'))
 
-NeoBundle 'Shougo/neobundle.vim'
+NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc', {
       \'build': {
       \  'cygwin': 'make -f make_cygwin.mak',
@@ -26,14 +16,10 @@ NeoBundle 'Shougo/vimproc', {
       \ }
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neocomplcache'
-NeoBundle "Shougo/neosnippet"
-NeoBundle "Shougo/neosnippet-snippets"
 NeoBundle 'Shougo/vimfiler'
-NeoBundle 'Shougo/neomru.vim', {
-      \ 'depends' : 'Shougo/unite.vim'
-      \ }
+NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'thinca/vim-quickrun'
-NeoBundle 'vim-scripts/EnhCommentify.vim'
+NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'vim-scripts/savevers.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'acustodioo/vim-enter-indent'
@@ -45,34 +31,15 @@ NeoBundle 'gregsexton/gitv'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'thinca/vim-ref'
 NeoBundle 'vim-scripts/PreserveNoEOL'
-NeoBundle 'gist:yanakend/7113121', { 'script_type' : 'plugin' }
-NeoBundle 'nathanaelkane/vim-indent-guides.git'
-NeoBundle 'thinca/vim-localrc'
-NeoBundle 'rhysd/clever-f.vim'
+NeoBundle 'thinca/vim-localrc'           " .local.vimrc
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'yanakend/vim-autoclose'
-NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'vim-scripts/DirDiff.vim'
+NeoBundle 'vim-scripts/delimitMate.vim'
 
+call neobundle#end()
 filetype plugin indent on
 NeoBundleCheck
-
-"--------------------------------------
-" Get running OS
-function! GetRunningOS()
-  if has("win32")
-    return "win"
-  endif
-  if has("unix")
-    if has('gui_macvim')
-      return "macvim"
-    else
-      return "linux"
-    endif
-  endif
-endfunction
-let os=GetRunningOS()
 
 "----------------------------------------
 " settings
@@ -83,62 +50,49 @@ colorscheme desert
 hi SpecialKey ctermfg=darkgreen
 
 set encoding=utf-8
-set fileencodings=utf-8,iso-2022-jp,euc-jp,sjis
 set guioptions=mr
-set nonumber            " 行数表示
-set hlsearch            " 索文字列を色づけ
 set ignorecase          " 文字小文字を判別しない
 set incsearch           " インクリメンタルサーチ
-set nowrapscan          " 検索をファイルの末尾まで検索したら、ファイルの先頭へループする
-set noterse             " ファイルの端まで検索してしまったときのメッセージが表示しない
 set smartcase           " でも大文字小文字が混ざって入力されたら区別する
-set tabstop=2           " 4タブ
-set shiftwidth=2        " 4タブ
+set tabstop=2           " 2タブ
+set shiftwidth=2        " 2タブ
 set expandtab           " タブを空白に
 set nowrap              " 折り返さない
+set nowrapscan          " ファイルの末尾で折り返さない
 set cmdheight=1         " コマンドラインの高さ(GUI使用時)
-set ignorecase
-set smartcase
 set showcmd             " 入力中のコマンドをステータスに表示する
 set laststatus=2        " ステータスラインを常に表示
 set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l\|%c\|%L>
 set autoindent
 set cindent
 set ambiwidth=double      " □や○の文字があってもカーソル位置がずれないようにする
-set whichwrap=b,s,[,],<,> " カーソルキーで行末／行頭の移動可能に設定
 set title                 " タイトルをウインドウ枠に表示する
 set virtualedit=block     " ブロック選択時にフリーカーソルモード
 set hidden                " バッファを切替えてもundoの効力を失わない
 set backup
-set writebackup
-set backupdir=$VIMHOME/backup
-set directory=$VIMHOME/swap
+set backupdir=$HOME/.vim/backup
+set directory=$HOME/.vim/swap
 set imsearch=0
 set iminsert=0
-set formatoptions-=ro
 set linespace=4
 set diffopt=filler,vertical,foldcolumn:0
-set fileformats=unix,dos,mac
-set nofoldenable
 set noundofile
 set list
 set listchars=tab:.\ 
 
 " Don't redraw while macro executing.
 set lazyredraw
-if os=="macvim"
-  " macvimではデフォルトの'iskeyword'がcp932に対応しきれていないので修正
+if has('gui_macvim')
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
   let $PATH=$HOME.'/.phpbrew/php/php-5.5.13/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
 endif
 syntax on
-set backupskip=/tmp/*,/private/tmp/*
 set shortmess+=A " 警告を無効にする
 
 "----------------------------------------
 " map
-if os=="win" || os=="macvim"
+if has('gui_macvim')
   nnoremap <silent> <C-[> :noh<CR>
 else
   nnoremap <silent> <C-[><C-[> :noh<CR>
@@ -148,10 +102,10 @@ nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
 nnoremap <silent> <C-]> g<C-]>
+nnoremap <silent> Y y$
 
 " windo diffthis
 " diffoff!
-" diff diff更新
 nnoremap <silent> <Up> [c
 nnoremap <silent> <Down> ]c
 nnoremap <silent> <Left> dp
@@ -176,82 +130,39 @@ function! Prevdiff()
   endif
 endfunction
 
-" set imd
-if os=="linux"
-  nnoremap y "ay
-  vnoremap y "ay
-  nnoremap Y "ay$
-  vnoremap Y "ay$
-  nnoremap p "agp
-  vnoremap p "agp
-  nnoremap P "agP
-  vnoremap P "agP
-  vnoremap x "ax
-  inoremap <C-v> <C-R>a
-  cnoremap <C-v> <C-R>a
-else
-  nnoremap y "+y
-  vnoremap y "+y
-  nnoremap Y "+y$
-  vnoremap Y "+y$
-  nnoremap p "+gp
-  vnoremap p "+gp
-  nnoremap P "+gP
-  vnoremap P "+gP
-  vnoremap x "+x
-  inoremap <C-v> <C-R>+
-  cnoremap <C-v> <C-R>+
-endif
-
 nnoremap ZZ <Nop>
 nnoremap <silent><Space>w  :write<CR>
-nnoremap <silent><Space>vi :e $VIMHOME/../.vimrc<CR>
-
+nnoremap <silent><Space>vi :e $HOME/.vimrc<CR>
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
+" Command mode keymappings:
 cnoremap <C-a>  <Home>
 cnoremap <C-f>  <Right>
 cnoremap <C-b>  <Left>
 cnoremap <C-d>  <Delete>
 cnoremap <C-k>  <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
-
-" <TAB>: indent.
-vnoremap <TAB> >
-" <S-TAB>: unindent.
-vnoremap <S-TAB>  <
-
-" Indent
-vnoremap > >gv
-vnoremap < <gv
+cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
 
 " Insert mode keymappings:
-" <C-d>: delete char.
 inoremap <C-d> <Del>
-
-" 挿入モードでのカーソル移動
 inoremap <C-p> <Up>
 inoremap <C-b> <Left>
 inoremap <C-f> <Right>
 inoremap <silent> <C-a> <C-o>0
 
-" Auto escape / and ? in search command.
-cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
-
 "----------------------------------------
 " command
-autocmd FileType html setlocal tabstop=2 shiftwidth=2 omnifunc=htmlcomplete#CompleteTags includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
-autocmd FileType objc setlocal tabstop=2 shiftwidth=2 expandtab
-autocmd FileType objcpp setlocal tabstop=2 shiftwidth=2 expandtab
-autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType html.php setlocal tabstop=2 shiftwidth=2
-autocmd FileType vim setlocal tabstop=2 shiftwidth=2 expandtab
-autocmd BufRead,BufNewFile *.blade.php setlocal tabstop=2 shiftwidth=2 expandtab
-autocmd BufRead,BufNewFile *.csv set filetype=csv
 autocmd BufRead,BufNewFile *.mm set filetype=objc
 autocmd FileType vim,text setlocal textwidth=0
-autocmd FileType smarty setlocal tabstop=2 shiftwidth=2 omnifunc=htmlcomplete#CompleteTags
-autocmd FileType php setlocal tabstop=4 shiftwidth=4 omnifunc=phpcomplete#CompletePHP
-autocmd FileType css setlocal tabstop=2 shiftwidth=2 omnifunc=csscomplete#CompleteCSS
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType html,smarty setlocal omnifunc=htmlcomplete#CompleteTags includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
+autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+
+function! s:OpenMemo()
+  execute "e $HOME/Dropbox/vim/memo.txt"
+endfunction
+command! Memo call s:OpenMemo()
 
 "----------------------------------------
 " quickrun.vim
@@ -268,38 +179,9 @@ let g:quickrun_config["_"] = {
 let $JS_CMD='node'
 
 function! s:QuickTest(arg1)
-  execute "e ~/Dropbox/vim/test.".a:arg1
+  execute "e $HOME/Dropbox/vim/test.".a:arg1
 endfunction
 command! -nargs=1 Quick call s:QuickTest(<f-args>)
-
-function! s:OpenMemo()
-  execute "e ~/Dropbox/vim/memo.txt"
-endfunction
-command! Memo call s:OpenMemo()
-
-"----------------------------------------
-" project
-function! s:OpenTest(arg1)
-  let filepath = expand("%:p")
-  if (a:arg1 == 'view')
-    if (stridx(filepath, '/fp/') == -1)
-      execute "e ".substitute(filepath, 'sp', 'fp', "g")
-    elseif (stridx(filepath, '/sp/') == -1)
-      execute "e ".substitute(filepath, 'fp', 'sp', "g")
-    endif
-  endif
-  if (a:arg1 == 'pj')
-    if (stridx(filepath, '/god/') == -1)
-      execute "e ".substitute(filepath, 'king', 'god', "g")
-    elseif (stridx(filepath, '/king/') == -1)
-      execute "e ".substitute(filepath, 'god', 'king', "g")
-    endif
-  endif
-endfunction
-command! Vopen call s:OpenTest('view')
-command! Popen call s:OpenTest('pj')
-nnoremap <Space>ov :Vopen<CR>
-nnoremap <Space>op :Popen<CR>
 
 "----------------------------------------
 " savevers.vim
@@ -309,30 +191,6 @@ let savevers_types = "*"    " カンマで区切られたバックアップを�
 let savevers_dirs = &backupdir  " バックアップファイルが書き込まれるディレクトリです
 let versdiff_no_resize=1    " バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
 let savevers_max = 99
-
-"----------------------------------------
-" EnhancedCommentify.vim
-nnoremap <Space>/ :call EnhancedCommentify('yes', 'comment')<CR>
-vnoremap <Space>/ :call EnhancedCommentify('yes', 'comment')<CR>
-nnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
-vnoremap <Space>? :call EnhancedCommentify('no', 'decomment')<CR>
-
-function! EnhCommentifyCallback(ft)
-  if a:ft == 'objc'
-    let b:ECcommentOpen = '//'
-    let b:ECcommentClose = ''
-  endif
-  if a:ft == 'objcpp'
-    let b:ECcommentOpen = '//'
-    let b:ECcommentClose = ''
-  endif
-  if a:ft == 'smarty'
-    let b:ECcommentOpen = '\{* '
-    let b:ECcommentMiddle = ''
-    let b:ECcommentClose = ' *\}'
-  endif
-endfunction
-let g:EnhCommentifyCallbackExists = 'Yes'
 
 ""-------------------------------------------------------------------
 " neocomplcache.git
@@ -393,28 +251,14 @@ inoremap <expr><C-g> neocomplcache#undo_completion()
 " vim標準のキーワード補完を置き換える
 inoremap <expr><C-n> pumvisible() ? neocomplcache#manual_keyword_complete() : "\<Down>"
 
-"------------------------------------
-" neosnippet.vim
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable() <Bar><bar> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
-
 "----------------------------------------
 " unite.vim
-" 入力モードで開始する
 let g:unite_enable_start_insert = 1
 let g:unite_enable_short_source_names = 1
 let g:unite_split_rule = 'botright'
-"let g:unite_source_file_mru_limit = 200
-let g:neomru#file_mru_path=expand('~/.vim/.neomru_file')
-let g:neomru#directory_mru_path=expand('~/.vim/.neomru_direcroty')
+let g:neomru#file_mru_path=expand($HOME.'/.vim/.neomru_file')
+let g:neomru#directory_mru_path=expand($HOME.'/.vim/.neomru_direcroty')
+let g:unite_source_history_yank_enable = 1  "history/yankの有効化
 
 " カレントディレクトリ移動
 nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
@@ -426,6 +270,8 @@ nnoremap <silent> <Space>m :<C-u>Unite file_mru -horizontal -direction=botright<
 nnoremap <silent> <Space>gr :<C-u>Unite grep:. -buffer-name=search-buffer -auto-preview<CR>
 " grep検索結果の再呼出
 nnoremap <silent> <Space>r :<C-u>UniteResume search-buffer<CR>
+" yank履歴
+nnoremap <silent> <Space>y :<C-u>Unite history/yank<CR>
 
 " unite grep に ag(The Silver Searcher) を使う
 if executable('ag')
@@ -449,13 +295,6 @@ endfunction
 
 "----------------------------------------
 " vim-filer.vim
-" K ディレクトリ作成
-" i ファイル作成
-" I 特定ディレクトリへ異動
-" r リネーム
-" dd 削除
-" cc コピー
-" <C-J> 履歴
 let s:bundle = neobundle#get('vimfiler')
 function! s:bundle.hooks.on_source(bundle)
   autocmd FileType vimfiler call s:vimfiler_my_settings()
@@ -528,10 +367,24 @@ endfunction
 " ctrlp.vim
 let g:ctrlp_clear_cache_on_exit = 0   " 終了時キャッシュをクリアしない
 let g:ctrlp_mruf_max            = 500 " MRUの最大記録数
+let g:ctrlp_map = '<Space>p'
+let g:ctrlp_user_command = 'ag %s -l'
+let g:ctrlp_regexp = 1
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:10'
+let g:ctrlp_custom_ignore = {
+      \ 'dir':  '\v[\/](\.(git|hg|svn)|cache)$',
+      \ 'file': '\v\.(exe|so|dll)$',
+      \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+      \ }
+let g:ctrlp_buffer_func = {'enter': 'CtrlPEnter'}
+function! CtrlPEnter()
+  let w:lightline = 0
+endfunction
 
 "------------------------------------
 " syntastic.vim
 let g:syntastic_ignore_files=['\.tpl$','\.m$']
+let g:syntastic_always_populate_loc_list=1
 
 "------------------------------------
 " gundo.vim
@@ -556,7 +409,6 @@ let g:lightline = {
       \   'mode': 'MyMode'
       \ }
       \ }
-
 function! MyModified()
   return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
@@ -594,46 +446,39 @@ function! MyMode()
 endfunction
 
 "------------------------------------
-" ctrlp.vim
-let g:ctrlp_map = '<Space>p'
-let g:ctrlp_user_command = 'ag %s -l'
-let g:ctrlp_regexp = 1
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:10'
-let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v[\/](\.(git|hg|svn)|cache)$',
-      \ 'file': '\v\.(exe|so|dll)$',
-      \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-      \ }
-let g:ctrlp_buffer_func = {'enter': 'CtrlPEnter'}
-function! CtrlPEnter()
-  let w:lightline = 0
-endfunction
-
-"------------------------------------
-" vim-ref
-let g:ref_phpmanual_path = $VIMHOME.'/doc/php-chunked-xhtml'
-autocmd FileType ref call s:initialize_ref_viewer()
-function! s:initialize_ref_viewer()
-  nmap <buffer> b (ref-back)
-  nmap <buffer> f (ref-forward)
-  nnoremap <buffer> q c
-  nnoremap <buffer> c
-  setlocal nonumber
-endfunction
-
-"------------------------------------
 " PreserveNoEOL
 let g:PreserveNoEOL = 1
 
 "------------------------------------
-" clever-f.vim
-let g:clever_f_smart_case = 1
-
-"------------------------------------
-" vim-autoclose
-" autoclose.vim function! s:CreateExtraMaps() を書き換えてる
-let g:AutoClosePreserveDotReg = 0
-
+" auto-ctags
 let g:auto_ctags_bin_path = '/usr/local/bin/ctags'
 let g:auto_ctags = 1
+
+"------------------------------------
+" tcomment_vim
+let g:tcommentMapLeaderOp1="<Space>c"
+
+"----------------------------------------
+" project
+function! s:OpenTest(arg1)
+  let filepath = expand("%:p")
+  if (a:arg1 == 'view')
+    if (stridx(filepath, '/fp/') == -1)
+      execute "e ".substitute(filepath, 'sp', 'fp', "g")
+    elseif (stridx(filepath, '/sp/') == -1)
+      execute "e ".substitute(filepath, 'fp', 'sp', "g")
+    endif
+  endif
+  if (a:arg1 == 'pj')
+    if (stridx(filepath, '/god/') == -1)
+      execute "e ".substitute(filepath, 'king', 'god', "g")
+    elseif (stridx(filepath, '/king/') == -1)
+      execute "e ".substitute(filepath, 'god', 'king', "g")
+    endif
+  endif
+endfunction
+command! Vopen call s:OpenTest('view')
+command! Popen call s:OpenTest('pj')
+nnoremap <Space>ov :Vopen<CR>
+nnoremap <Space>op :Popen<CR>
 
