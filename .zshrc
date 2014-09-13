@@ -58,9 +58,6 @@ setopt pushd_ignore_dups # 重複しないようにする
 
 #-------------------------------------------------------------------------------
 # alias
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
 alias vi="vim"
 alias ls="ls -FG"
 alias la="ls -aFG"
@@ -196,6 +193,7 @@ typeset -U path PATH cdpath fpath manpath sudo_path
 #            -: シンボリックリンク先のパスを評価。
 #            /: ディレクトリのみ残す。
 path=(
+  /usr/local/heroku/bin(N-/)
   ~/bin(N-/)
   ~/dotfiles/bin(N-/)
   /usr/local/bin(N-/)
@@ -216,3 +214,7 @@ fpath=(
 
 # phpbrew
 [ -f ~/.phpbrew/bashrc ] && source ~/.phpbrew/bashrc
+
+# rbenv
+eval "$(rbenv init -)"
+
