@@ -36,6 +36,9 @@ NeoBundle 'thinca/vim-localrc'           " .local.vimrc
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'vim-scripts/DirDiff.vim'
 NeoBundle 'vim-scripts/delimitMate.vim'
+NeoBundle 'thinca/vim-ref.git'
+NeoBundle 'taka84u9/vim-ref-ri.git'
+NeoBundle 'tmhedberg/matchit.git'
 
 call neobundle#end()
 filetype plugin indent on
@@ -50,6 +53,7 @@ colorscheme desert
 hi SpecialKey ctermfg=darkgreen
 
 set encoding=utf-8
+set fileencodings=utf-8,cp932,euc-jp
 set guioptions=mr
 set ignorecase          " 文字小文字を判別しない
 set incsearch           " インクリメンタルサーチ
@@ -85,7 +89,7 @@ set lazyredraw
 if has('gui_macvim')
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-  let $PATH=$HOME.'/.phpbrew/php/php-5.5.13/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
+  let $PATH=$HOME.'/.rbenv/shims:'.$HOME.'/.phpbrew/php/php-5.5.13/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
 endif
 syntax on
 set shortmess+=A " 警告を無効にする
@@ -208,10 +212,8 @@ set completeopt=menuone
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
       \ 'default' : '',
-      \ 'vimshell': $HOME.'/.vimshell_hist',
       \ 'php'  : $HOME . '/dotfiles/.vim/dict/php.dict',
-      \ 'tpl'  : $HOME . '/dotfiles/.vim/dict/php.dict',
-      \ 'ctp'  : $HOME . '/dotfiles/.vim/dict/php.dict',
+      \ 'ruby' : $HOME . '/dotfiles/.vim/dict/ruby.dict',
       \ }
 
 " Define keyword.
@@ -314,7 +316,6 @@ function! s:bundle.hooks.on_source(bundle)
   let g:vimfiler_safe_mode_by_default = 0
   " ファイル数が多い場合、これがないと/検索でヒットしない
   let g:vimfiler_draw_files_limit=1000
-
 endfunction
 nnoremap <silent> <Space>e  :VimFilerBufferDir<cr>
 
@@ -480,3 +481,11 @@ command! Popen call s:OpenTest('pj')
 nnoremap <Space>ov :Vopen<CR>
 nnoremap <Space>op :Popen<CR>
 
+"------------------------------------
+" vim-ref
+" ruby: sudo gem install refe2 bitclust-dev
+let g:ref_phpmanual_path = $HOME.'/.vim/doc/php-chunked-xhtml'
+autocmd FileType ref-phpmanual,ref-refe call s:initialize_ref_viewer()
+function! s:initialize_ref_viewer()
+  nnoremap <buffer> q c
+endfunction

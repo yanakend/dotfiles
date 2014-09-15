@@ -30,10 +30,6 @@ mkdir -p ${installer_path}/.vim/backup
 if [ ! -e "${installer_path}/.vim/bundle/neobundle.vim" ]; then
     git clone git://github.com/Shougo/neobundle.vim.git ${installer_path}/.vim/bundle/neobundle.vim
 fi
-if [ ! -e "${installer_path}/.vim/bundle/vimdoc-ja" ]; then
-    git clone git://github.com/vim-jp/vimdoc-ja.git ${installer_path}/.vim/bundle/vimdoc-ja
-    cp -r ${installer_path}/.vim/bundle/vimdoc-ja/doc/* ${install_path}/.vim/doc
-fi
 vim -N -u NONE -i NONE -V1 -e -s --cmd "source ${installer_path}/.vimrc" +NeoBundleInstall! +qa
 
 # link git tools
@@ -43,11 +39,5 @@ if which brew > /dev/null 2>&1; then
     ln -s "$(brew --prefix git)/share/git-core/contrib/diff-highlight/diff-highlight" ${installer_path}/bin
     [ $? -eq 0 ] && echo "create symbolic link diff-highlight."
   fi
-
-#if [ ! -e ~/local/zsh/functions/_git ]; then
-#  mkdir -p ~/local/zsh/functions
-#  ln -s "$PWD/modules/git/contrib/completion/git-completion.zsh" ~/local/zsh/functions/_git
-#  [ $? -eq 0 ] && echo "create symbolic link git-completion.zsh to _git"
-#fi
 fi
 
