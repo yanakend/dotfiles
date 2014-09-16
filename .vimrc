@@ -89,7 +89,7 @@ set lazyredraw
 if has('gui_macvim')
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-  let $PATH=$HOME.'/.rbenv/shims:'.$HOME.'/.phpbrew/php/php-5.5.13/bin:/usr/local/bin:/usr/local/sbin:'.$PATH
+  "sudo mv /etc/zshenv /etc/zprofile
 endif
 syntax on
 set shortmess+=A " 警告を無効にする
@@ -316,6 +316,7 @@ function! s:bundle.hooks.on_source(bundle)
   let g:vimfiler_safe_mode_by_default = 0
   " ファイル数が多い場合、これがないと/検索でヒットしない
   let g:vimfiler_draw_files_limit=1000
+	"call vimfiler#set_execute_file('_', 'vim')
 endfunction
 nnoremap <silent> <Space>e  :VimFilerBufferDir<cr>
 
@@ -326,7 +327,7 @@ nnoremap <silent> <Space>gb :Gblame<CR>
 nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gD :Gdiff HEAD<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gl :Gitv!<CR>
-nnoremap <silent> <Space>gr :Gread<CR>
+"nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
 function! s:toggle_git_folding()
   if &filetype ==# 'git'
@@ -484,6 +485,7 @@ nnoremap <Space>op :Popen<CR>
 "------------------------------------
 " vim-ref
 " ruby: sudo gem install refe2 bitclust-dev
+"       bitclust setup
 let g:ref_phpmanual_path = $HOME.'/.vim/doc/php-chunked-xhtml'
 autocmd FileType ref-phpmanual,ref-refe call s:initialize_ref_viewer()
 function! s:initialize_ref_viewer()

@@ -12,6 +12,7 @@ tags
 !/.bashrc
 !/.zshrc
 !/.zshenv
+!/.zprofile
 !/.gvimrc
 !/.vimrc
 !/.vim
