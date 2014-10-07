@@ -35,10 +35,11 @@ NeoBundle 'vim-scripts/PreserveNoEOL'
 NeoBundle 'thinca/vim-localrc'           " .local.vimrc
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'vim-scripts/DirDiff.vim'
-NeoBundle 'vim-scripts/delimitMate.vim'
+NeoBundle 'Townk/vim-autoclose'
 NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'taka84u9/vim-ref-ri.git'
 NeoBundle 'tmhedberg/matchit.git'
+NeoBundle 'Lokaltog/vim-easymotion'
 
 call neobundle#end()
 filetype plugin indent on
@@ -53,7 +54,6 @@ colorscheme desert
 hi SpecialKey ctermfg=darkgreen
 
 set encoding=utf-8
-set fileencodings=utf-8,cp932,euc-jp
 set guioptions=mr
 set ignorecase          " 文字小文字を判別しない
 set incsearch           " インクリメンタルサーチ
@@ -230,11 +230,9 @@ if !exists('g:neocomplcache_delimiter_patterns')
 endif
 let g:neocomplcache_delimiter_patterns['php'] = ['->', '::', '\']
 
-" smartyはhtmlと同じに
 if !exists('g:neocomplcache_next_keyword_patterns')
   let g:neocomplcache_next_keyword_patterns = {}
 endif
-let g:neocomplcache_next_keyword_patterns['smarty'] = '[[:alnum:]_:-]*>\|[^"]*"'
 
 " 改行で補完ウィンドウを閉じる
 inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
@@ -309,6 +307,7 @@ function! s:bundle.hooks.on_source(bundle)
     nunmap <buffer> N
     " i を新規作成にする
     nmap <silent><buffer> i <Plug>(vimfiler_new_file)
+    nmap <buffer><expr> l vimfiler#smart_cursor_map( "\<Plug>(vimfiler_smart_l)", "\<Plug>(vimfiler_edit_file)")
   endfunction
   " vimfilerをデフォルトのファイラにする
   let g:vimfiler_as_default_explorer = 1
@@ -316,9 +315,8 @@ function! s:bundle.hooks.on_source(bundle)
   let g:vimfiler_safe_mode_by_default = 0
   " ファイル数が多い場合、これがないと/検索でヒットしない
   let g:vimfiler_draw_files_limit=1000
-	"call vimfiler#set_execute_file('_', 'vim')
 endfunction
-nnoremap <silent> <Space>e  :VimFilerBufferDir<cr>
+nnoremap <silent> <Space>e  :VimFilerBufferDir<CR>
 
 "------------------------------------
 " vim-fugitive
@@ -491,3 +489,16 @@ autocmd FileType ref-phpmanual,ref-refe call s:initialize_ref_viewer()
 function! s:initialize_ref_viewer()
   nnoremap <buffer> q c
 endfunction
+
+"------------------------------------
+" easymotion
+let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_enter_jump_first = 1
+let g:EasyMotion_space_jump_first = 1
+nmap s <Plug>(easymotion-s2)
+xmap s <Plug>(easymotion-s2)
+map f <Plug>(easymotion-fl)
+map t <Plug>(easymotion-tl)
+map F <Plug>(easymotion-Fl)
+map T <Plug>(easymotion-Tl)
