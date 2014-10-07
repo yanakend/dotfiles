@@ -73,6 +73,7 @@ alias nes='nkf -uEsm0'
 alias ag='ag -S --stats --pager "less -F"'
 alias agh='ag --hidden'
 alias g='git'
+alias be='bundle exec'
 
 # バイナリファイルにはマッチさせない。
 # 可能なら色を付ける。
