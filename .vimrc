@@ -35,11 +35,9 @@ NeoBundle 'vim-scripts/PreserveNoEOL'
 NeoBundle 'thinca/vim-localrc'           " .local.vimrc
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'vim-scripts/DirDiff.vim'
-NeoBundle 'Townk/vim-autoclose'
 NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'taka84u9/vim-ref-ri.git'
 NeoBundle 'tmhedberg/matchit.git'
-NeoBundle 'Lokaltog/vim-easymotion'
 
 call neobundle#end()
 filetype plugin indent on
@@ -106,7 +104,28 @@ nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
 nnoremap <silent> <C-]> g<C-]>
-nnoremap <silent> Y y$
+
+if has('gui_macvim')
+  nnoremap y "+y
+  vnoremap y "+y
+  nnoremap Y "+y$
+  vnoremap Y "+y$
+  nnoremap p "+p
+  vnoremap p "+p
+  nnoremap P "+P
+  vnoremap P "+P
+  vnoremap x "+x
+else
+  nnoremap y "ay
+  vnoremap y "ay
+  nnoremap Y "ay$
+  vnoremap Y "ay$
+  nnoremap p "ap
+  vnoremap p "ap
+  nnoremap P "aP
+  vnoremap P "aP
+  vnoremap x "ax
+endif
 
 " windo diffthis
 " diffoff!
@@ -258,7 +277,6 @@ let g:unite_enable_short_source_names = 1
 let g:unite_split_rule = 'botright'
 let g:neomru#file_mru_path=expand($HOME.'/.vim/.neomru_file')
 let g:neomru#directory_mru_path=expand($HOME.'/.vim/.neomru_direcroty')
-let g:unite_source_history_yank_enable = 1  "history/yankの有効化
 
 " カレントディレクトリ移動
 nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
@@ -270,8 +288,6 @@ nnoremap <silent> <Space>m :<C-u>Unite file_mru -horizontal -direction=botright<
 nnoremap <silent> <Space>gr :<C-u>Unite grep:. -buffer-name=search-buffer -auto-preview<CR>
 " grep検索結果の再呼出
 nnoremap <silent> <Space>r :<C-u>UniteResume search-buffer<CR>
-" yank履歴
-nnoremap <silent> <Space>y :<C-u>Unite history/yank<CR>
 
 " unite grep に ag(The Silver Searcher) を使う
 if executable('ag')
@@ -490,15 +506,3 @@ function! s:initialize_ref_viewer()
   nnoremap <buffer> q c
 endfunction
 
-"------------------------------------
-" easymotion
-let g:EasyMotion_do_mapping = 0
-let g:EasyMotion_smartcase = 1
-let g:EasyMotion_enter_jump_first = 1
-let g:EasyMotion_space_jump_first = 1
-nmap s <Plug>(easymotion-s2)
-xmap s <Plug>(easymotion-s2)
-map f <Plug>(easymotion-fl)
-map t <Plug>(easymotion-tl)
-map F <Plug>(easymotion-Fl)
-map T <Plug>(easymotion-Tl)

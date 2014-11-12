@@ -10,7 +10,6 @@ typeset -U path PATH cdpath fpath manpath sudo_path
 #            -: シンボリックリンク先のパスを評価。
 #            /: ディレクトリのみ残す。
 path=(
-  /usr/local/heroku/bin(N-/)
   ~/bin(N-/)
   ~/dotfiles/bin(N-/)
   /usr/local/opt/ruby/bin/refe(N-/)
