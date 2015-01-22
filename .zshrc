@@ -56,6 +56,16 @@ setopt auto_cd # ディレクトリ名だけでcdする
 setopt auto_pushd # cdの履歴
 setopt pushd_ignore_dups # 重複しないようにする
 
+# cdr, add-zsh-hook を有効にする
+autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+add-zsh-hook chpwd chpwd_recent_dirs
+ 
+# cdr の設定
+zstyle ':completion:*' recent-dirs-insert both
+zstyle ':chpwd:*' recent-dirs-max 500
+zstyle ':chpwd:*' recent-dirs-default true
+zstyle ':chpwd:*' recent-dirs-pushd true
+
 #-------------------------------------------------------------------------------
 # alias
 alias vi="vim"
@@ -74,6 +84,7 @@ alias ag='ag -S --stats --pager "less -F"'
 alias agh='ag --hidden'
 alias g='git'
 alias be='bundle exec'
+alias brew="env PATH=${PATH/~\/\.phpbrew\/php\/php-5.5.13\/bin:/} brew"
 
 # バイナリファイルにはマッチさせない。
 # 可能なら色を付ける。
@@ -99,26 +110,16 @@ fi
 
 # tmux
 if which tmux > /dev/null 2>&1; then
-	ssh_tmux() {
-		ssh_cmd="\ssh $@"
-		tmux new-window -n "$*" "$ssh_cmd"
-	}
-	if [ $TERM = "screen" ] ; then
-		tmux lsw
-		if [ $? -eq 0 ] ; then
-			alias tssh=ssh_tmux
-		fi
-	fi
-  # ログイン時にtmux 起動
-  #if [ $SHLVL = 1 ]; then
-  #  tmux attach || tmux
-  #fi
-fi
-
-# z.git
-if [ -f $(brew --prefix z)/etc/profile.d/z.sh ] ; then
-  _Z_CMD=j
-  source $(brew --prefix z)/etc/profile.d/z.sh
+  ssh_tmux() {
+    ssh_cmd="\ssh $@"
+    tmux new-window -n "$*" "$ssh_cmd"
+  }
+  if [ $TERM = "screen" ] ; then
+    tmux lsw
+    if [ $? -eq 0 ] ; then
+      alias tssh=ssh_tmux
+    fi
+  fi
 fi
 
 # hook function
@@ -126,7 +127,6 @@ precmd () {
   psvar=()
   LANG=en_US.UTF-8 vcs_info
   [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
-  _z --add "$(pwd -P)"
 }
 
 # vis
@@ -150,13 +150,13 @@ autoload -Uz vcs_info
 # %r レポジトリ
 # %b ブランチ情報
 # %a アクション名(mergeなど)
-zstyle ':vcs_info:*' formats '[%r:%b]'
-zstyle ':vcs_info:*' actionformats '[%r:%b|%a]'
+zstyle ':vcs_info:*' formats '|%r:%b'
+zstyle ':vcs_info:*' actionformats '|%r:%b<%a'
 # バージョン管理されているディレクトリにいれば表示，そうでなければ非表示
 RPROMPT="%1(v|%F{blue}%1v%f|)"
 
 #-------------------------------------------------------------------------------
-# for go lang
+# by go-lang
 if [ -x "`which go`" ]; then
   export GOROOT=`go env GOROOT`
   export GOPATH=$HOME/go
@@ -176,10 +176,19 @@ function peco-select-history() {
     fi
     BUFFER=$(history -n 1 | \
         eval $tac | \
-        peco --query "$LBUFFER")
+        peco --query "$LBUFFER" --prompt 'HIST>')
     CURSOR=$#BUFFER
 }
 zle -N peco-select-history
 bindkey '^r' peco-select-history
 
+function peco-cdr () {
+    local selected_dir=$(cdr -l | awk '{ print $2 }' | peco --prompt 'CD>')
+    if [ -n "$selected_dir" ]; then
+        BUFFER="cd ${selected_dir}"
+        zle accept-line
+    fi
+}
+zle -N peco-cdr
+bindkey '^g' peco-cdr
 
