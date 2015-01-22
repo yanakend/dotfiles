@@ -4,9 +4,10 @@ if has('vim_starting')
   set nocp
   set runtimepath+=$HOME/.vim/bundle/neobundle.vim
 endif
-call neobundle#rc(expand($HOME.'/.vim/bundle/'))
-
+call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
+call neobundle#end()
+
 NeoBundle 'Shougo/vimproc', {
       \'build': {
       \  'cygwin': 'make -f make_cygwin.mak',
@@ -16,7 +17,7 @@ NeoBundle 'Shougo/vimproc', {
       \ }
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neocomplcache'
-NeoBundle 'Shougo/vimfiler'
+NeoBundleLazy 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'tomtom/tcomment_vim'
@@ -38,6 +39,9 @@ NeoBundle 'vim-scripts/DirDiff.vim'
 NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'taka84u9/vim-ref-ri.git'
 NeoBundle 'tmhedberg/matchit.git'
+NeoBundle 'kannokanno/previm'
+NeoBundle 'mattn/webapi-vim'
+NeoBundle 'mattn/excitetranslate-vim'
 
 call neobundle#end()
 filetype plugin indent on
@@ -175,6 +179,7 @@ inoremap <silent> <C-a> <C-o>0
 
 "----------------------------------------
 " command
+autocmd BufRead,BufNewFile *.jbuilder set filetype=ruby
 autocmd BufRead,BufNewFile *.mm set filetype=objc
 autocmd FileType vim,text setlocal textwidth=0
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
@@ -396,9 +401,9 @@ function! CtrlPEnter()
 endfunction
 
 "------------------------------------
-" syntastic.vim
+" syntastic.vim :Errors
 let g:syntastic_ignore_files=['\.tpl$','\.m$']
-let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list=2
 
 "------------------------------------
 " gundo.vim
@@ -472,30 +477,6 @@ let g:auto_ctags = 1
 " tcomment_vim
 let g:tcommentMapLeaderOp1="<Space>c"
 
-"----------------------------------------
-" project
-function! s:OpenTest(arg1)
-  let filepath = expand("%:p")
-  if (a:arg1 == 'view')
-    if (stridx(filepath, '/fp/') == -1)
-      execute "e ".substitute(filepath, 'sp', 'fp', "g")
-    elseif (stridx(filepath, '/sp/') == -1)
-      execute "e ".substitute(filepath, 'fp', 'sp', "g")
-    endif
-  endif
-  if (a:arg1 == 'pj')
-    if (stridx(filepath, '/god/') == -1)
-      execute "e ".substitute(filepath, 'king', 'god', "g")
-    elseif (stridx(filepath, '/king/') == -1)
-      execute "e ".substitute(filepath, 'god', 'king', "g")
-    endif
-  endif
-endfunction
-command! Vopen call s:OpenTest('view')
-command! Popen call s:OpenTest('pj')
-nnoremap <Space>ov :Vopen<CR>
-nnoremap <Space>op :Popen<CR>
-
 "------------------------------------
 " vim-ref
 " ruby: sudo gem install refe2 bitclust-dev
@@ -506,3 +487,10 @@ function! s:initialize_ref_viewer()
   nnoremap <buffer> q c
 endfunction
 
+"------------------------------------
+" markdown
+let g:previm_open_cmd = 'open -a "Google Chrome"'
+augroup PrevimSettings
+    autocmd!
+    autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
+augroup END
