@@ -84,7 +84,7 @@ alias ag='ag -S --stats --pager "less -F"'
 alias agh='ag --hidden'
 alias g='git'
 alias be='bundle exec'
-alias brew="env PATH=${PATH/~\/\.phpbrew\/php\/php-5.5.13\/bin:/} brew"
+#alias brew="env PATH=${PATH/~\/\.phpbrew\/php\/php-5.5.13\/bin:/} brew"
 
 # バイナリファイルにはマッチさせない。
 # 可能なら色を付ける。

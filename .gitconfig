@@ -1,91 +1,65 @@
 [include]
-	path = ~/.gitconfig.local
+  path = ~/.gitconfig.local
 
 [color]
-	ui = true
-	diff = true
-	quotepath = false
+  ui = true
+  diff = true
+  quotepath = false
 
 [color "branch"]
-	current = cyan reverse
-	local = yellow
-	remote = magenta
-
-; [color "diff"]
-;     meta = yellow bold
-;     frag = magenta bold
-;     old = red reverse
-;     new = green reverse
-;     whitespace = white reverse
+  current = cyan reverse
+  local = yellow
+  remote = magenta
 
 [color "status"]
-	added = yellow
-	changed = green
-	untracked = cyan reverse
-	branch = magenta
+  added = yellow
+  changed = green
+  untracked = cyan reverse
+  branch = magenta
 
 [core]
-	autocrlf = input
-	editor = /usr/bin/vim
-	excludesfile = ~/.gitignore_global
-	pager = less -R
+  autocrlf = input
+  editor = /usr/bin/vim
+  excludesfile = ~/.gitignore.global
+  pager = less -R
 
 [alias]
-	br = branch -v
+  br = branch -v
   co = "![ -z \"$1\" ] && BR=$(git branch -av | grep -v remotes/origin/HEAD | peco --prompt 'BRANCH>' | sed -e s@remotes/origin/@@ | cut -d' ' -f3 ); git checkout $BR"
   brdel = "![ -z \"$1\" ] && BR=$(git branch -v | peco --prompt 'DEL-BRANCH>' | cut -d' ' -f3); git branch -D $BR"
   brdelall = "![ -z \"$1\" ] && BR=$(git branch -v | peco --prompt 'DEL-REMOTE-BRANCH>' | cut -d' ' -f3,3) && git branch -D $BR && git push --delete origin $BR"
-	a = add -A
-	c = commit -v
-	cp = cherry-pick -x
-	d = diff
-	ds = diff --staged
-	dt = difftool -d 
-	dts = difftool -d --staged 
-	h = help
-	l = log --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=iso8601
-	graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=iso8601
-	pl = pull
-	pr = pull --rebase
-	ps = push
-	s = status -sb
-	ss = stash
-	ss-save = stash save -k -u
-	contains = branch -r --contains
-	subup = submodule update
-	subpl = submodule foreach 'git checkout master && git pull origin master'
-	coclean = !git checkout . && git clean -fd
-	ignore = "!f() { curl -L -s https://www.gitignore.io/api/$@ ;}; f"
-	amend = commit -v --amend --no-edit
-	set-upstream = "!git branch -u origin/`git rev-parse --abbrev-ref HEAD` `git rev-parse --abbrev-ref HEAD`"
+  a = add -A
+  c = commit -v
+  cp = cherry-pick -x
+  d = diff
+  ds = diff --staged
+  dt = difftool -d 
+  dts = difftool -d --staged 
+  l = log --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=iso8601
+  graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=iso8601
+  pl = pull
+  pr = pull --rebase
+  ps = push
+  s = status -sb
+  ss = stash
+  contains = branch -r --contains
+  subup = submodule update
+  subpl = submodule foreach 'git checkout master && git pull origin master'
+  coclean = !git checkout . && git clean -fd
+  ignore = "!f() { curl -L -s https://www.gitignore.io/api/$@ ;}; f"
+  amend = commit -v --amend --no-edit
+  set-upstream = "!git branch -u origin/`git rev-parse --abbrev-ref HEAD` `git rev-parse --abbrev-ref HEAD`"
 
 [help]
-	autocorrect = 30
+  autocorrect = 30
 [push]
-	default = current
-[pager]
-	log = diff-highlight | less
-	show = diff-highlight | less
-	diff = diff-highlight | less
-[diff]
-	tool = vim-diff
+  default = current
 [difftool]
-	prompt = false
-[difftool "vim-diff"]
-	cmd = /Applications/MacVim.app/Contents/MacOS/mvim -f '+next' '+execute \"DirDiff\" argv(0) argv(1)' $LOCAL $REMOTE
-[merge]
-	tool = sourcetree
-	conflictstyle = diff3
+  prompt = false
 [mergetool]
-	keepBackup = false
-	prompt = false
-[mergetool "sourcetree"]
-	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
-	trustExitCode = true
+  keepBackup = false
+  prompt = false
 [rebase]
-	autosquash = true
-[difftool "sourcetree"]
-	cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
-	path = 
+  autosquash = true
 [fetch]
   prune = true

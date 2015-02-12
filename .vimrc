@@ -30,7 +30,6 @@ NeoBundle 'vim-scripts/Align'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'gregsexton/gitv'
 NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'vim-scripts/PreserveNoEOL'
 NeoBundle 'thinca/vim-localrc'           " .local.vimrc
@@ -42,6 +41,8 @@ NeoBundle 'tmhedberg/matchit.git'
 NeoBundle 'kannokanno/previm'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'mattn/excitetranslate-vim'
+" NeoBundle 'vim-scripts/argtextobj.vim'
+NeoBundle 'wellle/targets.vim'
 
 call neobundle#end()
 filetype plugin indent on
@@ -293,6 +294,7 @@ nnoremap <silent> <Space>m :<C-u>Unite file_mru -horizontal -direction=botright<
 nnoremap <silent> <Space>gr :<C-u>Unite grep:. -buffer-name=search-buffer -auto-preview<CR>
 " grep検索結果の再呼出
 nnoremap <silent> <Space>r :<C-u>UniteResume search-buffer<CR>
+nnoremap <silent> <Space>p :<C-u>Unite file_rec/async:!<CR>
 
 " unite grep に ag(The Silver Searcher) を使う
 if executable('ag')
@@ -383,27 +385,15 @@ function! s:gitv_get_current_hash()
 endfunction
 
 "------------------------------------
-" ctrlp.vim
-let g:ctrlp_clear_cache_on_exit = 0   " 終了時キャッシュをクリアしない
-let g:ctrlp_mruf_max            = 500 " MRUの最大記録数
-let g:ctrlp_map = '<Space>p'
-let g:ctrlp_user_command = 'ag %s -l'
-let g:ctrlp_regexp = 1
-let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:10'
-let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v[\/](\.(git|hg|svn)|cache)$',
-      \ 'file': '\v\.(exe|so|dll)$',
-      \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-      \ }
-let g:ctrlp_buffer_func = {'enter': 'CtrlPEnter'}
-function! CtrlPEnter()
-  let w:lightline = 0
-endfunction
-
-"------------------------------------
 " syntastic.vim :Errors
 let g:syntastic_ignore_files=['\.tpl$','\.m$']
 let g:syntastic_auto_loc_list=2
+let g:syntastic_mode_map={ 
+  \ 'mode': 'active', 
+  \ 'active_filetypes': ['javascript'], 
+  \ 'passive_filetypes': [] 
+\ }
+let g:syntastic_javascript_jshint_args = '--config "' . $HOME . '/.jshintrc"'
 
 "------------------------------------
 " gundo.vim
@@ -471,7 +461,6 @@ let g:PreserveNoEOL = 1
 "------------------------------------
 " auto-ctags
 let g:auto_ctags_bin_path = '/usr/local/bin/ctags'
-let g:auto_ctags = 1
 
 "------------------------------------
 " tcomment_vim
