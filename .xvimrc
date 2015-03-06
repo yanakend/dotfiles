@@ -1,0 +1,54 @@
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set complete+=k
+set nocursorcolumn
+set nocursorline
+set t_Co=256
+set splitright
+set blinkcursor
+
+nnoremap y "*y
+vnoremap y "*y
+nnoremap Y "*y$
+vnoremap Y "*y$
+nnoremap p "*p
+vnoremap p "*p
+nnoremap P "*P
+vnoremap P "*P
+vnoremap x "*x
+nnoremap <Space>e :xccmd openQuickly<CR>
+nnoremap <Space>w :write<CR>
+nnoremap <C-[>    :noh<CR>
+nnoremap gf       <C-]>
+nnoremap <C-i>    :xccmd goForwardInHistoryByCommand<CR>
+nnoremap <C-t>    <C-o>
+noremap <Space>h ^
+noremap <Space>l $
+
+" for fast scroll
+syntax sync minlines=256
+
+" current selected
+nnoremap gc `[V`]
+vnoremap gc :<C-u>normal gc<Enter>
+onoremap gc :<C-u>normal gc<Enter>
+
+" Comment out lines selected, Comment out current line
+nnoremap <Space>c :xccmd commentAndUncommentCurrentLines<CR>
+vnoremap <Space>c :xccmd commentAndUncommentCurrentLines<CR>
+
+" next issue, previous issue
+nnoremap <C-N> :ni<CR>
+nnoremap <C-P> :pi<CR>
+
+" show quick help for current word
+noremap <C-h> :xhelp<CR>
+
+" search document for text cursor points to.
+noremap <C-H> :xccmd searchDocumentationForSelectedText<CR>
+
+" switch between .h/.m
+noremap <Space>s :xccmd jumpToNextCounterpart<CR>
+

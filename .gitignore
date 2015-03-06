@@ -14,6 +14,7 @@ tags
 !/.zshenv
 !/.zprofile
 !/.gvimrc
+!/.xvimrc
 !/.vimrc
 !/.vim
 !/.gitignore

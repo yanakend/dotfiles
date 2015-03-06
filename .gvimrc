@@ -14,12 +14,13 @@ if has('win32')
   endif
 endif
 if has('gui_macvim')
-  set guifont=Ricty-Regular:h13
+  set guifont=Ricty-Regular:h15
   set transparency=10	" 透明度を指定
   set antialias
   set guioptions-=r
   set guioptions-=R
   set noimdisableactivate
+  set lsp=0
 endif
 
 set cmdheight=1      " コマンドラインの高さ(GUI使用時)

@@ -21,12 +21,10 @@ NeoBundleLazy 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'vim-scripts/savevers.vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'acustodioo/vim-enter-indent'
-NeoBundle 'soramugi/auto-ctags.vim'
 NeoBundle 'scrooloose/syntastic'
-NeoBundle 'vim-scripts/Align'
+NeoBundle 'vim-scripts/Align'            " :Align =>
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'gregsexton/gitv'
 NeoBundle 'tpope/vim-fugitive'
@@ -38,11 +36,16 @@ NeoBundle 'vim-scripts/DirDiff.vim'
 NeoBundle 'thinca/vim-ref.git'
 NeoBundle 'taka84u9/vim-ref-ri.git'
 NeoBundle 'tmhedberg/matchit.git'
-NeoBundle 'kannokanno/previm'
-NeoBundle 'mattn/webapi-vim'
-NeoBundle 'mattn/excitetranslate-vim'
-" NeoBundle 'vim-scripts/argtextobj.vim'
+" NeoBundle 'kannokanno/previm'
 NeoBundle 'wellle/targets.vim'
+if has("mac")
+  NeoBundle 'toyamarinyon/vim-swift'
+  NeoBundle 'Keithbsmiley/swift.vim'
+endif
+NeoBundleLazy 'lambdalisue/unite-grep-vcs', {
+    \ 'autoload': {
+    \    'unite_sources': ['grep/git', 'grep/hg'],
+    \}}
 
 call neobundle#end()
 filetype plugin indent on
@@ -92,10 +95,9 @@ set lazyredraw
 if has('gui_macvim')
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
-  "sudo mv /etc/zshenv /etc/zprofile
 endif
 syntax on
-set shortmess+=A " 警告を無効にする
+set shortmess+=A " swapファイルの警告を無効にする
 
 "----------------------------------------
 " map
@@ -132,13 +134,14 @@ else
   vnoremap x "ax
 endif
 
+" 前回終了したカーソル行に移動
+autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
+
+noremap <Space>h ^
+noremap <Space>l $
+
 " windo diffthis
 " diffoff!
-nnoremap <silent> <Up> [c
-nnoremap <silent> <Down> ]c
-nnoremap <silent> <Left> dp
-nnoremap <silent> <Right> do
-
 nnoremap <silent> <C-j> :call NextDiff()<CR>
 nnoremap <silent> <C-k> :call Prevdiff()<CR>
 nnoremap <silent> <C-l> dp
@@ -162,6 +165,7 @@ nnoremap ZZ <Nop>
 nnoremap <silent><Space>w  :write<CR>
 nnoremap <silent><Space>vi :e $HOME/.vimrc<CR>
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
+vnoremap <silent> ? y?<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
 " Command mode keymappings:
 cnoremap <C-a>  <Home>
@@ -207,19 +211,19 @@ let g:quickrun_config["_"] = {
       \ }
 let $JS_CMD='node'
 
+if has("mac")
+  " quickrun
+  let g:quickrun_config['swift'] = {
+  \ 'command': 'swift',
+  \ 'cmdopt': '-sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk',
+  \ 'exec': '%c %o %s',
+  \}
+endif
+
 function! s:QuickTest(arg1)
   execute "e $HOME/Dropbox/vim/test.".a:arg1
 endfunction
 command! -nargs=1 Quick call s:QuickTest(<f-args>)
-
-"----------------------------------------
-" savevers.vim
-":VersDiff - :VersDiff + :VersDiff -c :Purge -a 0
-set patchmode=.clean      " バックアップファイルの設定savevers.vimのためにパッチモードにします
-let savevers_types = "*"    " カンマで区切られたバックアップを作成するファイル名です *.c,*.h,*.vim
-let savevers_dirs = &backupdir  " バックアップファイルが書き込まれるディレクトリです
-let versdiff_no_resize=1    " バックアップファイルとの比較でウィンドウのサイズを変更する場合は0
-let savevers_max = 99
 
 ""-------------------------------------------------------------------
 " neocomplcache.git
@@ -294,7 +298,22 @@ nnoremap <silent> <Space>m :<C-u>Unite file_mru -horizontal -direction=botright<
 nnoremap <silent> <Space>gr :<C-u>Unite grep:. -buffer-name=search-buffer -auto-preview<CR>
 " grep検索結果の再呼出
 nnoremap <silent> <Space>r :<C-u>UniteResume search-buffer<CR>
-nnoremap <silent> <Space>p :<C-u>Unite file_rec/async:!<CR>
+" fuzzy-finder
+nnoremap <silent> <Space>p :<C-u>call DispatchUniteFileRecAsyncOrGit()<CR>
+function! DispatchUniteFileRecAsyncOrGit()
+  if isdirectory(getcwd()."/.git")
+    Unite file_rec/git
+  else
+    Unite file_rec/async
+  endif
+endfunction
+
+" Auto change local current directory to git-root
+function! ChangeCurrentDirectoryToProjectRoot()
+  let root = unite#util#path2project_directory(expand('%'))
+  execute 'lcd' root
+endfunction
+autocmd BufEnter * :call ChangeCurrentDirectoryToProjectRoot()
 
 " unite grep に ag(The Silver Searcher) を使う
 if executable('ag')
@@ -379,7 +398,6 @@ function! s:my_gitv_settings()
   nnoremap <silent><buffer> t :<C-u>windo call <SID>toggle_git_folding()<CR>1<C-w>w
 endfunction
 
-" これは外に定義!
 function! s:gitv_get_current_hash()
   return matchstr(getline('.'), '\[\zs.\{7\}\ze\]$')
 endfunction
@@ -459,10 +477,6 @@ endfunction
 let g:PreserveNoEOL = 1
 
 "------------------------------------
-" auto-ctags
-let g:auto_ctags_bin_path = '/usr/local/bin/ctags'
-
-"------------------------------------
 " tcomment_vim
 let g:tcommentMapLeaderOp1="<Space>c"
 
@@ -476,10 +490,4 @@ function! s:initialize_ref_viewer()
   nnoremap <buffer> q c
 endfunction
 
-"------------------------------------
-" markdown
-let g:previm_open_cmd = 'open -a "Google Chrome"'
-augroup PrevimSettings
-    autocmd!
-    autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
-augroup END
+
