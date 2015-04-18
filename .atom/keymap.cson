@@ -1,0 +1,33 @@
+# Your keymap
+#
+# Atom keymaps work similarly to stylesheets. Just as stylesheets use selectors
+# to apply styles to elements, Atom keymaps use selectors to associate
+# keystrokes with events in specific contexts.
+#
+# You can create a new keybinding in this file by typing "key" and then hitting
+# tab.
+#
+# Here's an example taken from Atom's built-in keymap:
+#
+# '.editor':
+#   'enter': 'editor:newline'
+#
+# '.workspace':
+#   'ctrl-P': 'core:move-up'
+#   'ctrl-p': 'core:move-down'
+#
+
+##vim-mode
+'.vim-mode.command-mode':
+  'ctrl-i': 'open-recent:open-recent-file-1'
+  'ctrl-o': 'open-recent:open-recent-file-1'
+  'ctrl-t': 'symbols-view:return-from-declaration'
+
+#autocomplete-plus
+'atom-text-editor:not(mini) .autocomplete-plus.autocomplete-suggestion-list':
+  'enter': 'autocomplete-plus:confirm'
+  'tab': 'autocomplete-plus:select-next'
+  'shift-tab': 'autocomplete-plus:select-previous'
+
+'.platform-darwin':
+  'shift-cmd-O': 'fuzzy-finder:toggle-file-finder'

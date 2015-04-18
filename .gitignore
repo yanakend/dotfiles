@@ -3,11 +3,6 @@
 # さらにdotfileを無視
 /.*
 
-Thumbs.db
-desktop.ini
-.DS_Store
-tags
-
 # 無視したくないファイルを![filename]で指定
 !/.bashrc
 !/.zshrc
@@ -28,6 +23,7 @@ tags
 !/.zsh
 !/syntax
 !/bin
+!/.atom
 
 /.vim/colors/*
 /.vim/bundle/*
@@ -40,3 +36,12 @@ tags
 /.vim/.netrwhist.clean
 /.vim/.neomru_direcroty
 /.vim/.neomru_file
+
+/.atom/.apm
+/.atom/.node-gyp
+/.atom/compile-cache
+/.atom/npm-debug.log
+/.atom/packages
+/.atom/projects.cson
+/.atom/storage
+/.atom/local-history

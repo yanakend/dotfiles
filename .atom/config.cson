@@ -1,0 +1,47 @@
+"*":
+  editor:
+    invisibles: {}
+    fontFamily: "Ricty"
+    lineHeight: 1
+    showIndentGuide: true
+    showLineNumbers: false
+    completions: [
+      "."
+    ]
+  core:
+    disabledPackages: [
+      "save-session"
+      "file-icons"
+      "autohide-tree-view"
+      "open-recent"
+      "tree-view-open-files"
+    ]
+    themes: [
+      "one-dark-ui"
+      "desert256-syntax"
+    ]
+  "exception-reporting":
+    userId: "c2586b7d-2606-a180-3070-d32c7357e7e0"
+  welcome:
+    showOnStartup: false
+  metrics:
+    userId: "db0bf47a06782c776c669ede3ed8a3a8d8bfc2e0"
+  "git-log": {}
+  term2:
+    colors: {}
+  "open-recent": {}
+  "tree-view":
+    hideVcsIgnoredFiles: true
+  "atom-memolist":
+    memo_dir_path: "/Users/monet/Dropbox/vim/"
+  "markdown-preview":
+    breakOnSingleNewline: true
+  "tree-view-open-files": {}
+  "autohide-tree-view": {}
+  "git-blame": {}
+  linter: {}
+  "vim-mode":
+    useSmartcaseForSearch: true
+    wrapLeftRightMotion: true
+    useClipboardAsDefaultRegister: true
+  "atom-terminal": {}
