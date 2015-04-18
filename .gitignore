@@ -20,6 +20,8 @@ tags
 !/.gitignore
 !/.gitconfig
 !/.gitmodules
+!/.jshintrc
+!/.gemrc
 !/.tmux.conf
 !/install.sh
 !/install.bat
@@ -27,6 +29,7 @@ tags
 !/syntax
 !/bin
 
+/.vim/colors/*
 /.vim/bundle/*
 /.vim/test.*
 /.vim/doc/*

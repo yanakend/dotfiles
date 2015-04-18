@@ -1,21 +1,22 @@
+[ "$INCLUDED_ZPROFILE" -eq "1" ] && return
+export INCLUDED_ZPROFILE=1
+
 #-------------------------------------------------------------------------------
 # path
-# 重複パスを登録しない
 typeset -U path PATH cdpath fpath manpath sudo_path
 
-# (N-/): 存在しないディレクトリは登録しない。
-#    パス(...): ...という条件にマッチするパスのみ残す。
-#            N: NULL_GLOBオプションを設定。
-#               globがマッチしなかったり存在しないパスを無視する。
-#            -: シンボリックリンク先のパスを評価。
-#            /: ディレクトリのみ残す。
 path=(
   ~/bin(N-/)
   ~/dotfiles/bin(N-/)
+  ~/.cabal/bin(N-/)
   /usr/local/opt/ruby/bin/refe(N-/)
   /usr/local/bin(N-/)
   /usr/local/sbin(N-/)
   /usr/local/heroku/bin(N-/)
+  ${path}
+)
+
+path=(
   $(brew --prefix ruby)/bin(N-/)
   ${path}
 )

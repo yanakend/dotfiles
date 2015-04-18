@@ -46,9 +46,12 @@
   subup = submodule update
   subpl = submodule foreach 'git checkout master && git pull origin master'
   coclean = !git checkout . && git clean -fd
-  ignore = "!f() { curl -L -s https://www.gitignore.io/api/$@ ;}; f"
+  #ignore = "!f() { curl -L -s https://www.gitignore.io/api/$@ ;}; f"
   amend = commit -v --amend --no-edit
   set-upstream = "!git branch -u origin/`git rev-parse --abbrev-ref HEAD` `git rev-parse --abbrev-ref HEAD`"
+  ignore = update-index --assume-unchanged
+  unignore = update-index --no-assume-unchanged
+  ignored = !git ls-files -v | grep "^[[:lower:]]"
 
 [help]
   autocorrect = 30

@@ -112,33 +112,10 @@ nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
 nnoremap <silent> <C-]> g<C-]>
 
-if has('gui_macvim')
-  nnoremap y "+y
-  vnoremap y "+y
-  nnoremap Y "+y$
-  vnoremap Y "+y$
-  nnoremap p "+p
-  vnoremap p "+p
-  nnoremap P "+P
-  vnoremap P "+P
-  vnoremap x "+x
-else
-  nnoremap y "ay
-  vnoremap y "ay
-  nnoremap Y "ay$
-  vnoremap Y "ay$
-  nnoremap p "ap
-  vnoremap p "ap
-  nnoremap P "aP
-  vnoremap P "aP
-  vnoremap x "ax
-endif
+set clipboard+=autoselect,unnamed
 
 " 前回終了したカーソル行に移動
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
-
-noremap <Space>h ^
-noremap <Space>l $
 
 " windo diffthis
 " diffoff!
@@ -150,16 +127,18 @@ function! NextDiff()
   if &diff
     silent normal! ]c
   else
-    silent normal! <C-j>
+    silent normal! <C-w>j
   endif
 endfunction
 function! Prevdiff()
   if &diff
     silent normal! [c
   else
-    silent normal! <C-k>
+    silent normal! <C-w>k
   endif
 endfunction
+noremap <C-h> <C-w>h
+noremap <C-l> <C-w>l
 
 nnoremap ZZ <Nop>
 nnoremap <silent><Space>w  :write<CR>
@@ -191,6 +170,7 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType html,smarty setlocal omnifunc=htmlcomplete#CompleteTags includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType haskell setlocal tabstop=4 shiftwidth=4
 
 function! s:OpenMemo()
   execute "e $HOME/Dropbox/vim/memo.txt"
@@ -210,6 +190,9 @@ let g:quickrun_config["_"] = {
       \ "outputter" : "error",
       \ }
 let $JS_CMD='node'
+let g:quickrun_config["java"] = {
+      \ 'exec' : ['javac -J-Dfile.encoding=UTF8 %o %s', '%c -Dfile.encoding=UTF8 %s:t:r %a']
+\}
 
 if has("mac")
   " quickrun

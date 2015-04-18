@@ -1,5 +1,5 @@
 #!/bin/zsh
- 
+source ~/.zprofile
 #-------------------------------------------------------------------------------
 bindkey -e
 autoload -Uz compinit
