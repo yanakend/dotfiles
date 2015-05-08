@@ -25,6 +25,8 @@ do
 	install_file "${installer_path}/${file}" "${install_path}/${file}"
 done
 
+install_file "${installer_path}/Xcode/UserData" "${install_path}/Library/Developer/Xcode/UserData"
+
 mkdir -p ${installer_path}/.vim/swap
 mkdir -p ${installer_path}/.vim/backup
 if [ ! -e "${installer_path}/.vim/bundle/neobundle.vim" ]; then

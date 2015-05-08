@@ -112,7 +112,27 @@ nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
 nnoremap <silent> <C-]> g<C-]>
 
-set clipboard+=autoselect,unnamed
+if has('gui_macvim')
+  nnoremap y "+y
+  vnoremap y "+y
+  nnoremap Y "+y$
+  vnoremap Y "+y$
+  nnoremap p "+p
+  vnoremap p "+p
+  nnoremap P "+P
+  vnoremap P "+P
+  vnoremap x "+x
+else
+  nnoremap y "ay
+  vnoremap y "ay
+  nnoremap Y "ay$
+  vnoremap Y "ay$
+  nnoremap p "ap
+  vnoremap p "ap
+  nnoremap P "aP
+  vnoremap P "aP
+  vnoremap x "ax
+endif
 
 " 前回終了したカーソル行に移動
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif

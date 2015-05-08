@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<root>
+    <appdef>
+        <appname>INTELLIJ</appname>
+        <equal>com.jetbrains.intellij</equal>
+    </appdef>
+    <appdef>
+        <appname>ATOM</appname>
+        <equal>com.github.atom</equal>
+    </appdef>
+    <item>
+		<name>Original Mode</name>
+		<item>
+			<name>LeaveInsMode with EISUU (Xcode)</name>
+			<identifier>remap.jis_escape2eisuuAndEscape_xcode</identifier>
+			<only>XCODE</only>
+      		<autogen>--KeyToKey-- KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::JIS_EISUU</autogen>
+      		<autogen>--KeyToKey-- KeyCode::ESCAPE, KeyCode::ESCAPE, KeyCode::JIS_EISUU</autogen>
+		</item>
+		<item>
+			<name>LeaveInsMode with EISUU (Terminal)</name>
+			<identifier>remap.jis_escape2eisuuAndEscape_terminal</identifier>
+			<only>TERMINAL</only>
+      		<autogen>--KeyToKey-- KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::JIS_EISUU</autogen>
+      		<autogen>--KeyToKey-- KeyCode::ESCAPE, KeyCode::ESCAPE, KeyCode::JIS_EISUU</autogen>
+		</item>
+		<item>
+			<name>LeaveInsMode with EISUU (intelliJ)</name>
+			<identifier>remap.jis_escape2eisuuAndEscape_intelliJ</identifier>
+			<only>INTELLIJ</only>
+      		<autogen>--KeyToKey-- KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::JIS_EISUU</autogen>
+      		<autogen>--KeyToKey-- KeyCode::ESCAPE, KeyCode::ESCAPE, KeyCode::JIS_EISUU</autogen>
+		</item>
+		<item>
+			<name>LeaveInsMode with EISUU (atom)</name>
+			<identifier>remap.jis_escape2eisuuAndEscape_atom</identifier>
+			<only>ATOM</only>
+      		<autogen>--KeyToKey-- KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::JIS_EISUU</autogen>
+      		<autogen>--KeyToKey-- KeyCode::ESCAPE, KeyCode::ESCAPE, KeyCode::JIS_EISUU</autogen>
+		</item>
+		<item>
+			<name>Append Media Key</name>
+			<identifier>remap.append_edia_key</identifier>
+			<autogen>--KeyToConsumer-- KeyCode::A, ModifierFlag::COMMAND_R, ConsumerKeyCode::VOLUME_DOWN</autogen>
+			<autogen>--KeyToConsumer-- KeyCode::S, ModifierFlag::COMMAND_R, ConsumerKeyCode::VOLUME_UP</autogen>
+			<autogen>--KeyToConsumer-- KeyCode::D, ModifierFlag::COMMAND_R, ConsumerKeyCode::VOLUME_MUTE</autogen>
+			<autogen>--KeyToConsumer-- KeyCode::Z, ModifierFlag::COMMAND_R, ConsumerKeyCode::MUSIC_PREV</autogen>
+			<autogen>--KeyToConsumer-- KeyCode::X, ModifierFlag::COMMAND_R, ConsumerKeyCode::MUSIC_PLAY</autogen>
+			<autogen>--KeyToConsumer-- KeyCode::C, ModifierFlag::COMMAND_R, ConsumerKeyCode::MUSIC_NEXT</autogen>
+		</item>
+		<item>
+			<name>Enable HHK compatible Arrow Key Mode COMMAND_R</name>
+			<identifier>remap.hhkmode_OPTION_L</identifier>
+			<autogen>--KeyToKey-- KeyCode::BRACKET_LEFT, ModifierFlag::COMMAND_R, KeyCode::CURSOR_UP</autogen>
+			<autogen>--KeyToKey-- KeyCode::SEMICOLON,    ModifierFlag::COMMAND_R, KeyCode::CURSOR_LEFT</autogen>
+			<autogen>--KeyToKey-- KeyCode::QUOTE,        ModifierFlag::COMMAND_R, KeyCode::CURSOR_RIGHT</autogen>
+			<autogen>--KeyToKey-- KeyCode::SLASH,        ModifierFlag::COMMAND_R, KeyCode::CURSOR_DOWN</autogen>
+			<autogen>--KeyToKey-- KeyCode::L,            ModifierFlag::COMMAND_R, KeyCode::PAGEUP</autogen>
+			<autogen>--KeyToKey-- KeyCode::DOT,          ModifierFlag::COMMAND_R, KeyCode::PAGEDOWN</autogen>
+			<autogen>--KeyToKey-- KeyCode::K,            ModifierFlag::COMMAND_R, KeyCode::HOME</autogen>
+			<autogen>--KeyToKey-- KeyCode::COMMA,        ModifierFlag::COMMAND_R, KeyCode::END</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_1,        ModifierFlag::COMMAND_R, KeyCode::F1</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_2,        ModifierFlag::COMMAND_R, KeyCode::F2</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_3,        ModifierFlag::COMMAND_R, KeyCode::F3</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_4,        ModifierFlag::COMMAND_R, KeyCode::F4</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_5,        ModifierFlag::COMMAND_R, KeyCode::F5</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_6,        ModifierFlag::COMMAND_R, KeyCode::F6</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_7,        ModifierFlag::COMMAND_R, KeyCode::F7</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_8,        ModifierFlag::COMMAND_R, KeyCode::F8</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_9,        ModifierFlag::COMMAND_R, KeyCode::F9</autogen>
+			<autogen>--KeyToKey-- KeyCode::KEY_0,        ModifierFlag::COMMAND_R, KeyCode::F10</autogen>
+			<autogen>--KeyToKey-- KeyCode::MINUS,        ModifierFlag::COMMAND_R, KeyCode::F11</autogen>
+			<autogen>--KeyToKey-- KeyCode::EQUAL,        ModifierFlag::COMMAND_R, KeyCode::F12</autogen>
+			<autogen>--KeyToKey-- KeyCode::DELETE,       ModifierFlag::COMMAND_R, KeyCode::FORWARD_DELETE</autogen>
+		</item>
+		<item>
+			<name>For Filco MINILA</name>
+			<identifier>remap.MINILA</identifier>
+			<autogen>--KeyToKey-- KeyCode::BACKSLASH,        KeyCode::BACKQUOTE</autogen>
+			<autogen>--KeyToKey-- KeyCode::BACKQUOTE,        KeyCode::BACKSLASH</autogen>
+		</item>
+	</item>
+</root>

@@ -191,4 +191,3 @@ function peco-cdr () {
 }
 zle -N peco-cdr
 bindkey '^g' peco-cdr
-

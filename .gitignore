@@ -24,6 +24,9 @@
 !/syntax
 !/bin
 !/.atom
+!/private.xml
+!/BlackTheme
+!/Xcode
 
 /.vim/colors/*
 /.vim/bundle/*
