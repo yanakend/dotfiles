@@ -82,10 +82,9 @@ alias neu='nkf -uEw8m0'
 alias nes='nkf -uEsm0'
 alias ag='ag -S --stats --pager "less -F"'
 alias agh='ag --hidden'
-alias g='git'
+alias g='hub'
 alias be='bundle exec'
 #alias brew="env PATH=${PATH/~\/\.phpbrew\/php\/php-5.5.13\/bin:/} brew"
-
 # バイナリファイルにはマッチさせない。
 # 可能なら色を付ける。
 # 拡張子が.tmpのファイルは無視する。

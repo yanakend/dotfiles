@@ -6,8 +6,6 @@ if has('vim_starting')
 endif
 call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
-call neobundle#end()
-
 NeoBundle 'Shougo/vimproc', {
       \'build': {
       \  'cygwin': 'make -f make_cygwin.mak',
@@ -17,6 +15,7 @@ NeoBundle 'Shougo/vimproc', {
       \ }
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'tsukkee/unite-tag'
 NeoBundleLazy 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'thinca/vim-quickrun'
@@ -110,7 +109,6 @@ nnoremap <silent> h zv<Left>
 nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
-nnoremap <silent> <C-]> g<C-]>
 
 if has('gui_macvim')
   nnoremap y "+y
@@ -140,25 +138,37 @@ autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "norm
 " windo diffthis
 " diffoff!
 nnoremap <silent> <C-j> :call NextDiff()<CR>
-nnoremap <silent> <C-k> :call Prevdiff()<CR>
-nnoremap <silent> <C-l> dp
-nnoremap <silent> <C-h> do
+nnoremap <silent> <C-k> :call PrevDiff()<CR>
+nnoremap <silent> <C-l> :call CopyLeftDiff()<CR>
+nnoremap <silent> <C-h> :call CopyRightDiff()<CR>
 function! NextDiff()
   if &diff
     silent normal! ]c
   else
-    silent normal! <C-w>j
+    silent exe "normal \<c-w>j"
   endif
 endfunction
-function! Prevdiff()
+function! PrevDiff()
   if &diff
     silent normal! [c
   else
-    silent normal! <C-w>k
+    silent exe "normal \<c-w>k"
   endif
 endfunction
-noremap <C-h> <C-w>h
-noremap <C-l> <C-w>l
+function! CopyLeftDiff()
+  if &diff
+    silent normal! dp
+  else
+    silent exe "normal \<c-w>l"
+  endif
+endfunction
+function! CopyRightDiff()
+  if &diff
+    silent normal! do
+  else
+    silent exe "normal \<c-w>h"
+  endif
+endfunction
 
 nnoremap ZZ <Nop>
 nnoremap <silent><Space>w  :write<CR>
@@ -193,7 +203,7 @@ autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType haskell setlocal tabstop=4 shiftwidth=4
 
 function! s:OpenMemo()
-  execute "e $HOME/Dropbox/vim/memo.txt"
+  execute "e $HOME/Dropbox/vim/Amemo.txt"
 endfunction
 command! Memo call s:OpenMemo()
 
@@ -493,4 +503,14 @@ function! s:initialize_ref_viewer()
   nnoremap <buffer> q c
 endfunction
 
+"------------------------------------
+" unite-tag
+autocmd BufEnter *
+\   if empty(&buftype)
+\|      nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -buffer-name=tag<CR>
+\|  endif
 
+autocmd BufEnter *
+\   if empty(&buftype)
+\|      nnoremap <buffer> <C-t> :<C-u>Unite jump<CR>
+\|  endif
