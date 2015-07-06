@@ -40,8 +40,8 @@
   graph = log --graph --date-order -C -M --pretty=format:\"%C(green)%h %C(reset)[%ad] %C(yellow)%an %C(cyan reverse)%d%C(reset) %s\" --date=iso8601
   pl = pull
   pr = pull --rebase
-  ps = push
-  s = "! git status -sb; echo \"sc `git stash list | wc -l | bc`\""
+  ps = push -u
+  s = "! git status -sb; SC=$(git stash list | wc -l | bc); [ $SC -ge 1 ] && echo \"[stash `git stash list | wc -l | bc`]\""
   ss = stash
   save = "!f () { BR=$(git rev-parse --abbrev-ref HEAD); git checkout -b yanakend_local/`date +'%Y%m%d%k%M%S'`; git add .; git commit -m '[WIP]Stash save'; git checkout $BR; }; f"
   contains = branch -r --contains
@@ -65,3 +65,5 @@
   autosquash = true
 [fetch]
   prune = true
+[branch]
+	autosetupmerge = true

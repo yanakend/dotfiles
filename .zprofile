@@ -1,6 +1,3 @@
-[ "$INCLUDED_ZPROFILE" -eq "1" ] && return
-export INCLUDED_ZPROFILE=1
-
 #-------------------------------------------------------------------------------
 # path
 typeset -U path PATH cdpath fpath manpath sudo_path
@@ -9,15 +6,12 @@ path=(
   ~/bin(N-/)
   ~/dotfiles/bin(N-/)
   ~/.cabal/bin(N-/)
+  ~/.rbenv/shims(N-/)
+  /opt/chefdk/bin(N-/)
   /usr/local/opt/ruby/bin/refe(N-/)
   /usr/local/bin(N-/)
   /usr/local/sbin(N-/)
   /usr/local/heroku/bin(N-/)
-  ${path}
-)
-
-path=(
-  $(brew --prefix ruby)/bin(N-/)
   ${path}
 )
 

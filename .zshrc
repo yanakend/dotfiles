@@ -1,5 +1,8 @@
 #!/bin/zsh
-source ~/.zprofile
+if [ -z "$TMUX" ]; then
+  source ~/.zprofile
+fi
+
 #-------------------------------------------------------------------------------
 bindkey -e
 autoload -Uz compinit
@@ -84,6 +87,9 @@ alias ag='ag -S --stats --pager "less -F"'
 alias agh='ag --hidden'
 alias g='hub'
 alias be='bundle exec'
+alias ce='chef exec'
+alias rmt='rmtrash'
+
 #alias brew="env PATH=${PATH/~\/\.phpbrew\/php\/php-5.5.13\/bin:/} brew"
 # バイナリファイルにはマッチさせない。
 # 可能なら色を付ける。
@@ -126,19 +132,6 @@ precmd () {
   psvar=()
   LANG=en_US.UTF-8 vcs_info
   [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
-}
-
-# vis
-function vis() {
-  args=()
-  for i in "$@"; do
-    if [ -e "$i" ]; then
-      args[$(( $#args + 1))]="sudo:$i"
-    else
-      args[$(( $#args + 1))]="$i"
-    fi
-  done
-  command vim $args
 }
 
 #-------------------------------------------------------------------------------
@@ -190,3 +183,17 @@ function peco-cdr () {
 }
 zle -N peco-cdr
 bindkey '^g' peco-cdr
+
+#-------------------------------------------------------------------------------
+# switch back by ctrl-z
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    BUFFER="fg"
+    zle accept-line
+  else
+    zle push-input
+    zle clear-screen
+  fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z

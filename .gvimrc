@@ -15,7 +15,6 @@ if has('win32')
 endif
 if has('gui_macvim')
   set guifont=Ricty-Regular:h16
-  set transparency=10	" 透明度を指定
   set antialias
   set guioptions-=r
   set guioptions-=R

@@ -6,6 +6,7 @@ if has('vim_starting')
 endif
 call neobundle#begin(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundle 'tpope/vim-sensible'            " Think of sensible.vim as one step above `'nocompatible'` mode: a universal set of defaults that (hopefully) everyone can agree on
 NeoBundle 'Shougo/vimproc', {
       \'build': {
       \  'cygwin': 'make -f make_cygwin.mak',
@@ -18,33 +19,32 @@ NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'tsukkee/unite-tag'
 NeoBundleLazy 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'thinca/vim-quickrun'
+NeoBundleLazy 'thinca/vim-quickrun'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'acustodioo/vim-enter-indent'
 NeoBundle 'scrooloose/syntastic'
-NeoBundle 'vim-scripts/Align'            " :Align =>
-NeoBundle 'sjl/gundo.vim'
+NeoBundleLazy 'vim-scripts/Align'        " :Align =>
+NeoBundleLazy 'sjl/gundo.vim'
 NeoBundle 'gregsexton/gitv'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'vim-scripts/PreserveNoEOL'
-NeoBundle 'thinca/vim-localrc'           " .local.vimrc
+NeoBundle 'thinca/vim-localrc'           " Enable configuration file of each directory. .local.vimrc
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'vim-scripts/DirDiff.vim'
-NeoBundle 'thinca/vim-ref.git'
-NeoBundle 'taka84u9/vim-ref-ri.git'
-NeoBundle 'tmhedberg/matchit.git'
-" NeoBundle 'kannokanno/previm'
-NeoBundle 'wellle/targets.vim'
-if has("mac")
-  NeoBundle 'toyamarinyon/vim-swift'
-  NeoBundle 'Keithbsmiley/swift.vim'
-endif
-NeoBundleLazy 'lambdalisue/unite-grep-vcs', {
-    \ 'autoload': {
-    \    'unite_sources': ['grep/git', 'grep/hg'],
-    \}}
+NeoBundleLazy 'vim-scripts/DirDiff.vim'
+NeoBundleLazy 'thinca/vim-ref.git'
+NeoBundleLazy 'taka84u9/vim-ref-ri.git'
+NeoBundle 'wellle/targets.vim'           " Targets.vim adds various |text-objects| to give you more targets to operate on
+" NeoBundle 'mustache/vim-mustache-handlebars'
+NeoBundle 'terryma/vim-expand-region'    " vim-expand-regions brings the incremental visual selection feature from other text editors into Vim.
+" NeoBundle 'tpope/vim-sleuth'             " This plugin automatically adjusts 'shiftwidth' and 'expandtab' heuristically based on the current file
+NeoBundle "kana/vim-smartinput"          " smartinput is a Vim plugin to provide smart input assistant.
+NeoBundle 'tpope/vim-rsi'                " This plugin provides Readline (Emacs) mappings for insert and command line mode
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'svermeulen/vim-easyclip'      " Simplified clipboard functionality for Vim.
+NeoBundleLazy 'lambdalisue/unite-grep-vcs', { 'autoload': { 'unite_sources': ['grep/git', 'grep/hg'] }}
+NeoBundleLazy 'OrangeT/vim-csharp', { 'autoload': { 'filetypes': [ 'cs', 'csi', 'csx' ] } }
 
 call neobundle#end()
 filetype plugin indent on
@@ -69,10 +69,7 @@ set expandtab           " タブを空白に
 set nowrap              " 折り返さない
 set nowrapscan          " ファイルの末尾で折り返さない
 set cmdheight=1         " コマンドラインの高さ(GUI使用時)
-set showcmd             " 入力中のコマンドをステータスに表示する
-set laststatus=2        " ステータスラインを常に表示
 set statusline=%n\:%F%=\ \|%Y\|%{(&fenc!=''?&fenc:&enc).'\|'.&ff.'\|'}%m%r<%l\|%c\|%L>
-set autoindent
 set cindent
 set ambiwidth=double      " □や○の文字があってもカーソル位置がずれないようにする
 set title                 " タイトルをウインドウ枠に表示する
@@ -95,7 +92,6 @@ if has('gui_macvim')
   set iskeyword=@,48-57,_,128-167,224-235
   set macmeta
 endif
-syntax on
 set shortmess+=A " swapファイルの警告を無効にする
 
 "----------------------------------------
@@ -110,37 +106,15 @@ nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
 
-if has('gui_macvim')
-  nnoremap y "+y
-  vnoremap y "+y
-  nnoremap Y "+y$
-  vnoremap Y "+y$
-  nnoremap p "+p
-  vnoremap p "+p
-  nnoremap P "+P
-  vnoremap P "+P
-  vnoremap x "+x
-else
-  nnoremap y "ay
-  vnoremap y "ay
-  nnoremap Y "ay$
-  vnoremap Y "ay$
-  nnoremap p "ap
-  vnoremap p "ap
-  nnoremap P "aP
-  vnoremap P "aP
-  vnoremap x "ax
-endif
-
 " 前回終了したカーソル行に移動
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
 " windo diffthis
 " diffoff!
+nnoremap <silent> <C-h> :call CopyRightDiff()<CR>
 nnoremap <silent> <C-j> :call NextDiff()<CR>
 nnoremap <silent> <C-k> :call PrevDiff()<CR>
 nnoremap <silent> <C-l> :call CopyLeftDiff()<CR>
-nnoremap <silent> <C-h> :call CopyRightDiff()<CR>
 function! NextDiff()
   if &diff
     silent normal! ]c
@@ -177,19 +151,10 @@ vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 vnoremap <silent> ? y?<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
 " Command mode keymappings:
-cnoremap <C-a>  <Home>
-cnoremap <C-f>  <Right>
-cnoremap <C-b>  <Left>
-cnoremap <C-d>  <Delete>
 cnoremap <C-k>  <C-\>e getcmdpos() == 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
+inoremap <C-k>  <C-o>D
 cnoremap <expr> / getcmdtype() == '/' ? '\/' : '/'
-
-" Insert mode keymappings:
-inoremap <C-d> <Del>
-inoremap <C-p> <Up>
-inoremap <C-b> <Left>
-inoremap <C-f> <Right>
-inoremap <silent> <C-a> <C-o>0
+cnoremap <C-v> <C-r>"
 
 "----------------------------------------
 " command
@@ -301,14 +266,11 @@ let g:unite_split_rule = 'botright'
 let g:neomru#file_mru_path=expand($HOME.'/.vim/.neomru_file')
 let g:neomru#directory_mru_path=expand($HOME.'/.vim/.neomru_direcroty')
 
-" カレントディレクトリ移動
-nnoremap <Space>gg :cd <C-r>=expand("%:p:h")<CR>
-" バッファ一覧 -auto-resize
-nnoremap <silent> <Space>b :<C-u>Unite buffer -horizontal -direction=botright<CR>
 " 最近使用したファイル一覧
 nnoremap <silent> <Space>m :<C-u>Unite file_mru -horizontal -direction=botright<CR>
 " grep
-nnoremap <silent> <Space>gr :<C-u>Unite grep:. -buffer-name=search-buffer -auto-preview<CR>
+"nnoremap <Space>gr :<C-u>Unite -buffer-name=search-buffer -auto-preview grep:.<CR><C-R><C-w>
+nnoremap <Space>gr :<C-u>Unite -buffer-name=search-buffer -auto-preview grep:.<CR>
 " grep検索結果の再呼出
 nnoremap <silent> <Space>r :<C-u>UniteResume search-buffer<CR>
 " fuzzy-finder
@@ -341,7 +303,6 @@ autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
   " 単語単位からパス単位で削除するように変更
   inoremap <silent><buffer> <C-w> <Plug>(unite_delete_backward_path)
-  " ESCキーを押すと終了する
   imap <silent><buffer> <C-j> <Down>
   imap <silent><buffer> <C-k> <Up>
   nmap <silent><buffer> <C-[> <Plug>(unite_exit)
@@ -358,9 +319,9 @@ function! s:bundle.hooks.on_source(bundle)
     " ESCキーを押すと終了する
     nmap <silent><buffer> <C-[> q
     nmap <silent><buffer> <ESC> q
-    " N は検索として
+    " map N as search
     nunmap <buffer> N
-    " i を新規作成にする
+    " map i as new file
     nmap <silent><buffer> i <Plug>(vimfiler_new_file)
     nmap <buffer><expr> l vimfiler#smart_cursor_map( "\<Plug>(vimfiler_smart_l)", "\<Plug>(vimfiler_edit_file)")
   endfunction
@@ -380,7 +341,6 @@ nnoremap <silent> <Space>gb :Gblame<CR>
 nnoremap <silent> <Space>gd :Gdiff<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gD :Gdiff HEAD<CR>zR<C-W>hgg]c
 nnoremap <silent> <Space>gl :Gitv!<CR>
-"nnoremap <silent> <Space>gr :Gread<CR>
 nnoremap <silent> <Space>gs :Gstatus<CR>
 function! s:toggle_git_folding()
   if &filetype ==# 'git'
@@ -507,10 +467,14 @@ endfunction
 " unite-tag
 autocmd BufEnter *
 \   if empty(&buftype)
-\|      nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -buffer-name=tag<CR>
+\|      nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately tag<CR>
 \|  endif
 
 autocmd BufEnter *
 \   if empty(&buftype)
 \|      nnoremap <buffer> <C-t> :<C-u>Unite jump<CR>
 \|  endif
+
+let g:mustache_abbreviations = 1
+
+set clipboard=unnamed,unnamedplus
