@@ -19,7 +19,7 @@ NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'tsukkee/unite-tag'
 NeoBundleLazy 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim'
-NeoBundleLazy 'thinca/vim-quickrun'
+NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'acustodioo/vim-enter-indent'
@@ -269,8 +269,8 @@ let g:neomru#directory_mru_path=expand($HOME.'/.vim/.neomru_direcroty')
 " 最近使用したファイル一覧
 nnoremap <silent> <Space>m :<C-u>Unite file_mru -horizontal -direction=botright<CR>
 " grep
-"nnoremap <Space>gr :<C-u>Unite -buffer-name=search-buffer -auto-preview grep:.<CR><C-R><C-w>
 nnoremap <Space>gr :<C-u>Unite -buffer-name=search-buffer -auto-preview grep:.<CR>
+nnoremap <Space>ggr :<C-u>UniteWithInputDirectory -buffer-name=search-buffer -auto-preview grep:--unrestricted<CR>
 " grep検索結果の再呼出
 nnoremap <silent> <Space>r :<C-u>UniteResume search-buffer<CR>
 " fuzzy-finder
