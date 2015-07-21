@@ -51,6 +51,7 @@
   ignore = update-index --assume-unchanged
   unignore = update-index --no-assume-unchanged
   ignored = !git ls-files -v | grep "^[[:lower:]]"
+  sshow = "!f() { git show stash@{$@} ;}; f"
 
 [help]
   autocorrect = 30
