@@ -88,6 +88,8 @@ alias agh='ag --hidden'
 alias g='hub'
 alias be='bundle exec'
 alias ce='chef exec'
+alias ne='PATH=$(npm bin):$PATH'
+alias ge='gom exec'
 alias rmt='rmtrash'
 
 #alias brew="env PATH=${PATH/~\/\.phpbrew\/php\/php-5.5.13\/bin:/} brew"
@@ -148,16 +150,6 @@ zstyle ':vcs_info:*' actionformats '|%r:%b<%a'
 RPROMPT="%1(v|%F{blue}%1v%f|)"
 
 #-------------------------------------------------------------------------------
-# by go-lang
-if [ -x "`which go`" ]; then
-  export GOROOT=`go env GOROOT`
-  export GOPATH=$HOME/go
-  path=(
-    ${path}
-    $GOROOT/bin(N-/)
-    $GOPATH/bin(N-/)
-  )
-fi
 
 function peco-select-history() {
     local tac

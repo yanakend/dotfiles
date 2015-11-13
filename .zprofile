@@ -2,6 +2,9 @@
 # path
 typeset -U path PATH cdpath fpath manpath sudo_path
 
+# android
+export ANDROID_HOME=~/Library/Android/sdk
+
 path=(
   ~/bin(N-/)
   ~/dotfiles/bin(N-/)
@@ -12,6 +15,8 @@ path=(
   /usr/local/bin(N-/)
   /usr/local/sbin(N-/)
   /usr/local/heroku/bin(N-/)
+  $ANDROID_HOME/tools(N-/)
+  $ANDROID_HOME/platform-tools(N-/)
   ${path}
 )
 
@@ -28,6 +33,19 @@ fpath=(
 # phpbrew
 [ -f ~/.phpbrew/bashrc ] && source ~/.phpbrew/bashrc
 
+# node
+export NVM_DIR=~/.nvm
+[ -f $(brew --prefix nvm)/nvm.sh ] && source $(brew --prefix nvm)/nvm.sh
+
+source ~/.gvm/scripts/gvm
+# golang
+if [ -x "`which go`" ]; then
+  export GOPATH=$HOME/repos/go
+  path=(
+    ${path}
+    $GOPATH/bin(N-/)
+  )
+fi
 # rbenv
 if [ -x "`which rbenv`" ]; then
   eval "$(rbenv init -)"

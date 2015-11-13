@@ -8,6 +8,10 @@
         <appname>ATOM</appname>
         <equal>com.github.atom</equal>
     </appdef>
+    <appdef>
+        <appname>SEQUEL</appname>
+        <equal>com.sequelpro.SequelPro</equal>
+    </appdef>
     <item>
 		<name>Original Mode</name>
 		<item>
@@ -37,6 +41,12 @@
 			<only>ATOM</only>
       		<autogen>--KeyToKey-- KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::BRACKET_LEFT, VK_CONTROL, KeyCode::JIS_EISUU</autogen>
       		<autogen>--KeyToKey-- KeyCode::ESCAPE, KeyCode::ESCAPE, KeyCode::JIS_EISUU</autogen>
+		</item>
+		<item>
+			<name>Enable CTRL-H (sequel)</name>
+			<identifier>remap.ctrl_h_sequel</identifier>
+			<only>SEQUEL</only>
+      		<autogen>--KeyToKey-- KeyCode::H, VK_CONTROL, KeyCode::DELETE</autogen>
 		</item>
 		<item>
 			<name>Append Media Key</name>

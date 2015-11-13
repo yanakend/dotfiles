@@ -3,19 +3,28 @@
 if has('vim_starting')
   set nocp
   set runtimepath+=$HOME/.vim/bundle/neobundle.vim
+  set rtp+=$GOPATH/src/github.com/mattn/gom/misc/vim
 endif
-call neobundle#begin(expand('~/.vim/bundle/'))
+
+call neobundle#begin(expand('$HOME/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'tpope/vim-sensible'            " Think of sensible.vim as one step above `'nocompatible'` mode: a universal set of defaults that (hopefully) everyone can agree on
-NeoBundle 'Shougo/vimproc', {
-      \'build': {
-      \  'cygwin': 'make -f make_cygwin.mak',
-      \  'mac': 'make -f make_mac.mak',
-      \  'unix': 'make -f make_unix.mak',
-      \},
-      \ }
+NeoBundle 'Shougo/vimproc.vim', {
+\   'build' : {
+\     'windows' : 'tools\\update-dll-mingw',
+\     'cygwin' : 'make -f make_cygwin.mak',
+\     'mac' : 'make -f make_mac.mak',
+\     'linux' : 'make',
+\     'unix' : 'gmake',
+\   }
+\ }
 NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neocomplcache'
+NeoBundleLazy 'Shougo/neocomplete.vim', {
+\   'autoload' : {
+\     'insert' : 1,
+\ },
+\   'depends' : 'Shougo/context_filetype.vim',
+\ }
 NeoBundle 'tsukkee/unite-tag'
 NeoBundleLazy 'Shougo/vimfiler'
 NeoBundle 'Shougo/neomru.vim'
@@ -35,16 +44,28 @@ NeoBundle 'tpope/vim-surround'
 NeoBundleLazy 'vim-scripts/DirDiff.vim'
 NeoBundleLazy 'thinca/vim-ref.git'
 NeoBundleLazy 'taka84u9/vim-ref-ri.git'
+NeoBundle 'mattn/sonictemplate-vim.git'  "　Easy and high speed coding method.
 NeoBundle 'wellle/targets.vim'           " Targets.vim adds various |text-objects| to give you more targets to operate on
 " NeoBundle 'mustache/vim-mustache-handlebars'
 NeoBundle 'terryma/vim-expand-region'    " vim-expand-regions brings the incremental visual selection feature from other text editors into Vim.
-" NeoBundle 'tpope/vim-sleuth'             " This plugin automatically adjusts 'shiftwidth' and 'expandtab' heuristically based on the current file
-NeoBundle "kana/vim-smartinput"          " smartinput is a Vim plugin to provide smart input assistant.
+NeoBundle "kana/vim-smartinput"          " <C-v>{ smartinput is a Vim plugin to provide smart input assistant.
 NeoBundle 'tpope/vim-rsi'                " This plugin provides Readline (Emacs) mappings for insert and command line mode
 NeoBundle 'tpope/vim-repeat'
+NeoBundle 'pangloss/vim-javascript'      " Syntax highlighting and indenting for JSX
+NeoBundle 'mxw/vim-jsx'                  " Syntax highlighting and indenting for JSX
 NeoBundle 'svermeulen/vim-easyclip'      " Simplified clipboard functionality for Vim.
+NeoBundle 'moll/vim-node'                " Tools to make Vim superb for developing with Node.js.
 NeoBundleLazy 'lambdalisue/unite-grep-vcs', { 'autoload': { 'unite_sources': ['grep/git', 'grep/hg'] }}
 NeoBundleLazy 'OrangeT/vim-csharp', { 'autoload': { 'filetypes': [ 'cs', 'csi', 'csx' ] } }
+NeoBundle 'cohama/vim-hier'
+NeoBundleLazy 'fatih/vim-go', { 'autoload' : { 'filetypes' : 'go'  } }
+" NeoBundleLazy 'Blackrush/vim-gocode', { 'autoload' : { 'filetypes' : 'go'  } }
+" NeoBundleLazy 'dgryski/vim-godef.git', { 'autoload' : { 'filetypes' : 'go'  } }
+NeoBundle 'nixprime/cpsm'
+
+if has("mac")
+  NeoBundle 'Keithbsmiley/swift.vim'
+endif
 
 call neobundle#end()
 filetype plugin indent on
@@ -52,7 +73,7 @@ NeoBundleCheck
 
 "----------------------------------------
 " settings
-set nocompatible        " viとの互換性を取らない
+set nocompatible
 set t_Co=256            " 256色に
 " カラースキーム設定
 colorscheme desert
@@ -85,6 +106,7 @@ set diffopt=filler,vertical,foldcolumn:0
 set noundofile
 set list
 set listchars=tab:.\ 
+set clipboard=unnamed,unnamedplus
 
 " Don't redraw while macro executing.
 set lazyredraw
@@ -93,6 +115,7 @@ if has('gui_macvim')
   set macmeta
 endif
 set shortmess+=A " swapファイルの警告を無効にする
+set completeopt=menuone,longest
 
 "----------------------------------------
 " map
@@ -105,9 +128,6 @@ nnoremap <silent> h zv<Left>
 nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> l zv<Right>
-
-" 前回終了したカーソル行に移動
-autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
 
 " windo diffthis
 " diffoff!
@@ -146,7 +166,7 @@ endfunction
 
 nnoremap ZZ <Nop>
 nnoremap <silent><Space>w  :write<CR>
-nnoremap <silent><Space>vi :e $HOME/.vimrc<CR>
+nnoremap <silent><Space>vi :e $HOME/dotfiles/.vimrc<CR>
 vnoremap <silent> / y/<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 vnoremap <silent> ? y?<C-R>=escape(@", '\\/.*$^~[]')<CR><CR>
 
@@ -158,14 +178,26 @@ cnoremap <C-v> <C-r>"
 
 "----------------------------------------
 " command
+" Auto change local current directory to git-root
+" 前回終了したカーソル行に移動
+autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
+
+function! ChangeCurrentDirectoryToProjectRoot()
+  let root = unite#util#path2project_directory(expand('%'))
+  execute 'lcd' root
+endfunction
+autocmd BufEnter * :call ChangeCurrentDirectoryToProjectRoot()
+
 autocmd BufRead,BufNewFile *.jbuilder set filetype=ruby
 autocmd BufRead,BufNewFile *.mm set filetype=objc
 autocmd FileType vim,text setlocal textwidth=0
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType html,smarty setlocal omnifunc=htmlcomplete#CompleteTags includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
-autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,smarty setlocal includeexpr=substitute(v:fname,'^\\/','','') | setlocal path+=;/
 autocmd FileType haskell setlocal tabstop=4 shiftwidth=4
+
+autocmd BufEnter *.go SetGomEnv
+" autocmd FileType go :syn keyword goType err
+autocmd FileType go :hi goErr guifg=Yellow
+autocmd FileType go :match goErr /\<err\>/
 
 function! s:OpenMemo()
   execute "e $HOME/Dropbox/vim/Amemo.txt"
@@ -203,60 +235,80 @@ function! s:QuickTest(arg1)
 endfunction
 command! -nargs=1 Quick call s:QuickTest(<f-args>)
 
-""-------------------------------------------------------------------
-" neocomplcache.git
-" neocomplcacheを起動時に有効化する
-let g:neocomplcache_enable_at_startup = 1
-" 'smartcase'と同様に、大文字が入力されるまで大文字小文字の区別を無視する
-let g:neocomplcache_enable_smart_case = 1
-" _区切りの補完を有効化
-let g:neocomplcache_enable_underbar_completion = 1
-" シンタックスをキャッシュするときの最小文字長を3
-let g:neocomplcache_min_syntax_length = 3
-" これをしないと候補選択時に Scratch ウィンドウが開いてしまう
-set completeopt=menuone
+"----------------------------------------
+" neocomplete.vim
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+let g:neocomplete#enable_auto_delimiter             = 1
+let g:neocomplete#enable_refresh_always             = 1
+
+" for vim-lua-plugin
+let g:neocomplete#force_overwrite_completefunc      = 1
+if !exists('g:neocomplete#sources#omni#functions')
+    let g:neocomplete#sources#omni#functions        = {}
+endif
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns     = {}
+endif
+let g:neocomplete#sources#omni#functions.lua        = 'xolox#lua#omnifunc'
+" let g:neocomplete#sources#omni#input_patterns.lua = '\w\+[.:]\|require\s*(\?["'']\w*'
+let g:neocomplete#force_omni_input_patterns.lua     = '\w\+[.:]\|require\s*(\?["'']\w*'
 
 " Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
-      \ 'default' : '',
-      \ 'php'  : $HOME . '/dotfiles/.vim/dict/php.dict',
-      \ 'ruby' : $HOME . '/dotfiles/.vim/dict/ruby.dict',
-      \ }
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
 
 " Define keyword.
-" smartyはhtmlと同じに
-if !exists('g:neocomplcache_keyword_patterns')
-  let g:neocomplcache_keyword_patterns = {}
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
 endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-let g:neocomplcache_keyword_patterns['smarty'] = '</\?\%([[:alnum:]_:-]\+\s*\)\?\%(/\?>\)\?\|&amp;\h\%(\w*;\)\?\|\h[[:alnum:]_-]*="\%([^"]*"\?\)\?\|\h[[:alnum:]_:-]*'
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" 関数を補完するための区切り文字パターン
-if !exists('g:neocomplcache_delimiter_patterns')
-  let g:neocomplcache_delimiter_patterns = {}
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
 endif
-let g:neocomplcache_delimiter_patterns['php'] = ['->', '::', '\']
 
-if !exists('g:neocomplcache_next_keyword_patterns')
-  let g:neocomplcache_next_keyword_patterns = {}
-endif
-
-" 改行で補完ウィンドウを閉じる
-inoremap <expr><CR> neocomplcache#smart_close_popup() . "\<CR>"
-" tabで補完候補の選択を行う
-inoremap <expr><TAB> pumvisible() ? "\<Down>" : "\<TAB>"
-inoremap <expr><S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
-" C-h, BSで補完ウィンドウを確実に閉じる
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<BS>"
-" C-yで補完候補の確定
-inoremap <expr><C-y> neocomplcache#close_popup()
-" C-eで補完のキャンセルし、ウィンドウを閉じる。ポップアップが開いていないときはEndキー
-inoremap <expr><C-e> pumvisible() ? neocomplcache#cancel_popup() : "\<End>"
-" C-gで補完を元に戻す
-inoremap <expr><C-g> neocomplcache#undo_completion()
-" vim標準のキーワード補完を置き換える
-inoremap <expr><C-n> pumvisible() ? neocomplcache#manual_keyword_complete() : "\<Down>"
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.go = '\h\w\.\w*'
 
 "----------------------------------------
 " unite.vim
@@ -282,13 +334,6 @@ function! DispatchUniteFileRecAsyncOrGit()
     Unite file_rec/async
   endif
 endfunction
-
-" Auto change local current directory to git-root
-function! ChangeCurrentDirectoryToProjectRoot()
-  let root = unite#util#path2project_directory(expand('%'))
-  execute 'lcd' root
-endfunction
-autocmd BufEnter * :call ChangeCurrentDirectoryToProjectRoot()
 
 " unite grep に ag(The Silver Searcher) を使う
 if executable('ag')
@@ -377,14 +422,15 @@ endfunction
 
 "------------------------------------
 " syntastic.vim :Errors
-let g:syntastic_ignore_files=['\.tpl$','\.m$']
+let g:syntastic_ignore_files=['\.tpl$','\.m$','\.jsx$']
 let g:syntastic_auto_loc_list=2
 let g:syntastic_mode_map={ 
   \ 'mode': 'active', 
-  \ 'active_filetypes': ['javascript'], 
+  \ 'active_filetypes': ['javascript', 'go'], 
   \ 'passive_filetypes': [] 
 \ }
 let g:syntastic_javascript_jshint_args = '--config "' . $HOME . '/.jshintrc"'
+let g:syntastic_go_checkers = ['go', 'golint']
 
 "------------------------------------
 " gundo.vim
@@ -465,16 +511,23 @@ endfunction
 
 "------------------------------------
 " unite-tag
-autocmd BufEnter *
-\   if empty(&buftype)
-\|      nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately tag<CR>
-\|  endif
+" autocmd BufEnter *
+" \   if empty(&buftype)
+" \|      nnoremap <buffer> <C-]> :<C-u>UniteWithCursorWord -immediately tag<CR>
+" \|  endif
+" autocmd BufEnter *
+" \   if empty(&buftype)
+" \|      nnoremap <buffer> <C-t> :<C-u>Unite jump<CR>
+" \|  endif
 
-autocmd BufEnter *
-\   if empty(&buftype)
-\|      nnoremap <buffer> <C-t> :<C-u>Unite jump<CR>
-\|  endif
+"------------------------------------
+" mustache/vim-mustache-handlebars
+" let g:mustache_abbreviations = 1
 
-let g:mustache_abbreviations = 1
-
-set clipboard=unnamed,unnamedplus
+"------------------------------------
+" fatih/vim-go
+let g:go_fmt_autosave = 1
+let g:go_fmt_fail_silently = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1

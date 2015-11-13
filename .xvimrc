@@ -7,8 +7,9 @@ set nocursorcolumn
 set nocursorline
 set splitright
 set blinkcursor
-
 set clipboard=autoselect
+
+highlight Search guibg=blue
 
 nnoremap <Space>e :xccmd openQuickly<CR>
 nnoremap <Space>w :write<CR>
@@ -18,14 +19,15 @@ nnoremap <C-w><C-l> <C-w>l
 nnoremap <C-w><C-h> <C-w>h
 nnoremap gf       <C-]>
 nnoremap <C-i>    :xccmd goForwardInHistoryByCommand<CR>
-nnoremap <C-t>    <C-o>
+nnoremap <C-t>    :xccmd goBackInHistoryByCommand<CR>
+nnoremap <C-o>    :xccmd goBackInHistoryByCommand<CR>
+nnoremap Y y$
 noremap <Space>h ^
 noremap <Space>l $
 noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
-
 
 " Comment out lines selected, Comment out current line
 nnoremap <Space>c :xccmd commentAndUncommentCurrentLines<CR>

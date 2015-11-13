@@ -63,8 +63,12 @@
   keepBackup = false
   prompt = false
 [rebase]
-  autosquash = true
+	autosquash = true
 [fetch]
   prune = true
 [branch]
 	autosetupmerge = true
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true

@@ -94,6 +94,28 @@
 				<key>Title</key>
 				<string>Re-Indent</string>
 			</dict>
+			<dict>
+				<key>Action</key>
+				<string>indentSelection:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandGroupID</key>
+				<string>Xcode.IDESourceEditor.CmdDefinition.ReIndent</string>
+				<key>CommandID</key>
+				<string>Xcode.IDESourceEditor.CmdDefinition.ReIndent</string>
+				<key>Group</key>
+				<string>Editor Menu for Xcode.IDEKit.EditorDocument.SourceCode-from-Asset-Catalog-title</string>
+				<key>GroupID</key>
+				<string>Xcode.IDESourceCodeComparisonEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Structure</string>
+				<key>Title</key>
+				<string>Re-Indent</string>
+			</dict>
 		</array>
 		<key>Version</key>
 		<integer>3</integer>

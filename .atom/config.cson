@@ -12,7 +12,6 @@
     disabledPackages: [
       "save-session"
       "file-icons"
-      "autohide-tree-view"
       "open-recent"
       "tree-view-open-files"
     ]
