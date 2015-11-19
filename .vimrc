@@ -22,8 +22,10 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundleLazy 'Shougo/neocomplete.vim', {
 \   'autoload' : {
 \     'insert' : 1,
-\ },
+\   },
 \   'depends' : 'Shougo/context_filetype.vim',
+\   'disabled': !has('lua'),
+\   'vim_version':'7.3.885',
 \ }
 NeoBundle 'tsukkee/unite-tag'
 NeoBundleLazy 'Shougo/vimfiler'
@@ -59,8 +61,6 @@ NeoBundleLazy 'lambdalisue/unite-grep-vcs', { 'autoload': { 'unite_sources': ['g
 NeoBundleLazy 'OrangeT/vim-csharp', { 'autoload': { 'filetypes': [ 'cs', 'csi', 'csx' ] } }
 NeoBundle 'cohama/vim-hier'
 NeoBundleLazy 'fatih/vim-go', { 'autoload' : { 'filetypes' : 'go'  } }
-" NeoBundleLazy 'Blackrush/vim-gocode', { 'autoload' : { 'filetypes' : 'go'  } }
-" NeoBundleLazy 'dgryski/vim-godef.git', { 'autoload' : { 'filetypes' : 'go'  } }
 NeoBundle 'nixprime/cpsm'
 
 if has("mac")
@@ -107,6 +107,7 @@ set noundofile
 set list
 set listchars=tab:.\ 
 set clipboard=unnamed,unnamedplus
+set omnifunc=syntaxcomplete#Complete
 
 " Don't redraw while macro executing.
 set lazyredraw
@@ -309,6 +310,7 @@ endif
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.go = '\h\w\.\w*'
+let g:neocomplete#sources#omni#input_patterns.php = '\h\w*->\h\w*\|\h\w\.\w*|\h\w*::'
 
 "----------------------------------------
 " unite.vim
@@ -431,6 +433,7 @@ let g:syntastic_mode_map={
 \ }
 let g:syntastic_javascript_jshint_args = '--config "' . $HOME . '/.jshintrc"'
 let g:syntastic_go_checkers = ['go', 'golint']
+let g:syntastic_php_checkers = ['php']
 
 "------------------------------------
 " gundo.vim
