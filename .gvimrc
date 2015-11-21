@@ -29,3 +29,5 @@ hi SpecialKey guibg=NONE guifg=Gray40
 if has("gui_running")
   set lines=10000 columns=10000
 endif 
+
+
